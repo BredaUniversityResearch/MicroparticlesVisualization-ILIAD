@@ -331,7 +331,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1474925795996362578}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc054043880e7a5448a97ebba9ce43a5, type: 3}
   m_Name: 
@@ -339,18 +339,20 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: e00a961f21f809e4db778c16499cb2c8, type: 2}
+    - {fileID: 11400000, guid: 8963150413527394ca5473f38e8fa973, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
     - Name: colorNormal
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: colorHighlight
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 1
     - Name: colorDisabled
       Entry: 6
       Data: 
