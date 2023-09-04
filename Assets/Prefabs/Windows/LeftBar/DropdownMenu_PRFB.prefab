@@ -109,8 +109,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 109.5, y: -60}
-  m_SizeDelta: {x: 219, y: 32}
+  m_AnchoredPosition: {x: 0, y: -44}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6148439985167700850
 MonoBehaviour:
@@ -658,8 +658,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Dropdown Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 18cee9760efcb4e4492ca32ba61f5acc, type: 2}
-  m_sharedMaterial: {fileID: 7939425901369369162, guid: 18cee9760efcb4e4492ca32ba61f5acc,
+  m_fontAsset: {fileID: 11400000, guid: 26fada9d2c102e84a95a856f74d61958, type: 2}
+  m_sharedMaterial: {fileID: 3251825312225276567, guid: 26fada9d2c102e84a95a856f74d61958,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
