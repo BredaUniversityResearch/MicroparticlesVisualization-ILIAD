@@ -24,11 +24,11 @@ public class AlertCreationManager : MonoBehaviour
     CustomButton m_createAlertButton;
 
     [SerializeField]
-    GameObject m_popOutWindow;
+    GameObject m_popOutWindow, m_canvasOutliner;
 
     private void Awake()
     {
-        m_createAlertButton.onClick.AddListener(() => { m_alertEntry.AlertCreation(m_inputName, m_inputRule, m_variableDropdown, m_isRealTimeToggle, m_isSimulatedToggle, m_realTimeTable, m_simulatedTable); CleanUp(); });
+        m_createAlertButton.onClick.AddListener(() => { m_alertEntry.AlertCreation(m_inputName, m_inputRule, m_variableDropdown, m_isRealTimeToggle, m_isSimulatedToggle, m_realTimeTable, m_simulatedTable); CleanUp(); m_canvasOutliner.SetActive(false); });
     }
 
     private void CleanUp()

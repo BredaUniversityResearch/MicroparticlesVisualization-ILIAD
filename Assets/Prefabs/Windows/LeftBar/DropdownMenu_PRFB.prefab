@@ -282,9 +282,9 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 8963150413527394ca5473f38e8fa973, type: 2}
+    - {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
     - {fileID: 11400000, guid: e50ffccc6003ed84a9d32602e643d3f9, type: 2}
-    - {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+    - {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -328,8 +328,8 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: e50ffccc6003ed84a9d32602e643d3f9, type: 2}
-    - {fileID: 11400000, guid: 8963150413527394ca5473f38e8fa973, type: 2}
-    - {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+    - {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
+    - {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -372,8 +372,8 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 8963150413527394ca5473f38e8fa973, type: 2}
-    - {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+    - {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
+    - {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -389,8 +389,8 @@ MonoBehaviour:
       Entry: 10
       Data: 1
     - Name: colorSelectedHighlight
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
     - Name: colorDisabled
       Entry: 6
       Data: 
@@ -602,6 +602,7 @@ GameObject:
   - component: {fileID: 7963855677811875876}
   - component: {fileID: 5188930562388612363}
   - component: {fileID: 8318912117189807476}
+  - component: {fileID: 5472363406900607415}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -726,3 +727,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5472363406900607415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8375109011029710463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef4c00f50fb0be243a14fabcb408cd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colourAsset: {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
+  graphics: []
+  colourChanged:
+    m_PersistentCalls:
+      m_Calls: []

@@ -8,10 +8,10 @@ public class OpenWindow : MonoBehaviour
     CustomButton m_openWindowButton;
 
     [SerializeField]
-    GameObject m_window;
+    GameObject m_window, m_canvasOutliner;
 
     private void Awake()
     {
-        m_openWindowButton.onClick.AddListener(() => m_window.SetActive(true));
+        m_openWindowButton.onClick.AddListener(() => { m_window.SetActive(true); m_canvasOutliner.SetActive(true); } );
     }
 }

@@ -95,8 +95,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 5.5
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4c00f50fb0be243a14fabcb408cd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colourAsset: {fileID: 11400000, guid: 361b02c278ba7c44cb843afba9792f39, type: 2}
+  colourAsset: {fileID: 11400000, guid: e00a961f21f809e4db778c16499cb2c8, type: 2}
   graphics:
   - {fileID: 8652561927382919918}
   colourChanged:
@@ -186,8 +186,7 @@ GameObject:
   - component: {fileID: 4989479257762474010}
   - component: {fileID: 4479210151750987654}
   - component: {fileID: 395728476777335870}
-  - component: {fileID: 127047517261631082}
-  - component: {fileID: 6407342853192433202}
+  - component: {fileID: 3603698871346020524}
   m_Layer: 5
   m_Name: GenericTextField_PRFB
   m_TagString: Untagged
@@ -263,7 +262,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 6407342853192433202}
+  m_TargetGraphic: {fileID: 3603698871346020524}
   m_TextViewport: {fileID: 6127551764636034832}
   m_TextComponent: {fileID: 4547591265407272945}
   m_Placeholder: {fileID: 8652561927382919918}
@@ -280,7 +279,7 @@ MonoBehaviour:
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 0
   m_RegexValue: 
-  m_GlobalPointSize: 36
+  m_GlobalPointSize: 24
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
@@ -324,43 +323,7 @@ MonoBehaviour:
   m_onRightClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &127047517261631082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1474925795996362578}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc054043880e7a5448a97ebba9ce43a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: e00a961f21f809e4db778c16499cb2c8, type: 2}
-    - {fileID: 11400000, guid: 8963150413527394ca5473f38e8fa973, type: 2}
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: colorNormal
-      Entry: 10
-      Data: 0
-    - Name: colorHighlight
-      Entry: 10
-      Data: 1
-    - Name: colorDisabled
-      Entry: 6
-      Data: 
-  targetGraphics:
-  - {fileID: 0}
-  useHighlightColor: 1
-  useDisabledColor: 0
---- !u!114 &6407342853192433202
+--- !u!114 &3603698871346020524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -369,11 +332,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1474925795996362578}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: b742792d5f8b2e64e9ce90c5610628fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.47843137}
+  m_Color: {r: 0.85098046, g: 0.2901961, b: 0.16470589, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -391,6 +354,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  colourAsset: {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
 --- !u!1 &4454745453600386157
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,8 +501,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 5.5
@@ -591,7 +555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef4c00f50fb0be243a14fabcb408cd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colourAsset: {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+  colourAsset: {fileID: 11400000, guid: 8963150413527394ca5473f38e8fa973, type: 2}
   graphics:
   - {fileID: 4547591265407272945}
   colourChanged:

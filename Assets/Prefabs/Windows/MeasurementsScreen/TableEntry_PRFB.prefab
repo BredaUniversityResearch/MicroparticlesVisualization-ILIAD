@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.46274513, b: 0.5019608, a: 1}
+  m_Color: {r: 0.10196079, g: 0.20000002, b: 0.36078432, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -135,11 +135,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: e4c4a9aa06ace9445a3d32ada2619351, type: 3}
-    m_FontSize: 36
+    m_Font: {fileID: 12800000, guid: db33cf3c6fc086841925a787f30b6c17, type: 3}
+    m_FontSize: 24
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 16/04/2023 - 00:00
-  colourAsset: {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+  colourAsset: {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
 --- !u!1 &5221354589731278113
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.46274513, b: 0.5019608, a: 1}
+  m_Color: {r: 0.10196079, g: 0.20000002, b: 0.36078432, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -215,11 +215,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: e4c4a9aa06ace9445a3d32ada2619351, type: 3}
-    m_FontSize: 36
+    m_Font: {fileID: 12800000, guid: db33cf3c6fc086841925a787f30b6c17, type: 3}
+    m_FontSize: 24
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -228,7 +228,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Entry 01
-  colourAsset: {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+  colourAsset: {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
 --- !u!1 &5580389952141688661
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,7 +239,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8438037883758548707}
   - component: {fileID: 7439819498509778191}
-  - component: {fileID: 4279923297434459793}
+  - component: {fileID: 8223047298736797568}
   m_Layer: 5
   m_Name: LineDivider
   m_TagString: Untagged
@@ -274,7 +274,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5580389952141688661}
   m_CullTransparentMesh: 1
---- !u!114 &4279923297434459793
+--- !u!114 &8223047298736797568
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -283,11 +283,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5580389952141688661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: b742792d5f8b2e64e9ce90c5610628fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.10196079, g: 0.20000002, b: 0.36078432, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -304,6 +304,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+  colourAsset: {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
 --- !u!1 &7178842357459877556
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.46274513, b: 0.5019608, a: 1}
+  m_Color: {r: 0.10196079, g: 0.20000002, b: 0.36078432, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -370,11 +371,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: e4c4a9aa06ace9445a3d32ada2619351, type: 3}
-    m_FontSize: 36
+    m_Font: {fileID: 12800000, guid: db33cf3c6fc086841925a787f30b6c17, type: 3}
+    m_FontSize: 24
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
+    m_MinSize: 2
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -383,4 +384,4 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Buoy 1 - Munkholmen
-  colourAsset: {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+  colourAsset: {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
