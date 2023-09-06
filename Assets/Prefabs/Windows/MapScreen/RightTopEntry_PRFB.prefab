@@ -328,8 +328,8 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: f350145a1f769684b9b8644b5652437c, type: 2}
-    - {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+    - {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
+    - {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
     - {fileID: 11400000, guid: 033799c9fcf3bb24582632b1d4815e66, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}

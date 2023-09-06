@@ -665,7 +665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5921569, g: 0.7058824, b: 0.6509804, a: 1}
+  m_Color: {r: 0.1764706, g: 0.3647059, b: 0.7490196, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -683,7 +683,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  colourAsset: {fileID: 11400000, guid: f350145a1f769684b9b8644b5652437c, type: 2}
+  colourAsset: {fileID: 11400000, guid: 392d712b6451e7644aa83df6caf7cee6, type: 2}
 --- !u!1001 &3444403602061588097
 PrefabInstance:
   m_ObjectHideFlags: 0

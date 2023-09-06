@@ -25,8 +25,8 @@ public class CollapseLeftBar : MonoBehaviour
         RectTransform leftBarTransform = m_leftBar.GetComponent<RectTransform>();
         RectTransform mainScreenTransform = m_mainScreen.GetComponent<RectTransform>();
 
-        leftBarTransform.sizeDelta = new Vector2(100, 1080);
-        mainScreenTransform.offsetMin = new Vector3(100, 0, 0);
+        leftBarTransform.sizeDelta = new Vector2(-10, 1080);
+        mainScreenTransform.offsetMin = new Vector3(0, 0, 0);
         //mainScreenTransform.sizeDelta = new Vector2(100, 0);
 
         foreach (GameObject item in m_itemsToDeactivate)

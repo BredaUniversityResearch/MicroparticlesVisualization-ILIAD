@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 2279439161293441154}
   - component: {fileID: 6821138090155609515}
   - component: {fileID: 8448251001696479035}
+  - component: {fileID: 4844634113039980764}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -211,6 +212,24 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4844634113039980764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3169885541848330887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef4c00f50fb0be243a14fabcb408cd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colourAsset: {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
+  graphics:
+  - {fileID: 8448251001696479035}
+  colourChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4248731087881767721
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,39 +332,19 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+    - {fileID: 11400000, guid: 2ae7a299001dd454ebc88680bc006f17, type: 2}
+    - {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
     - Name: colorNormal
-      Entry: 7
-      Data: 0|ColourPalette.ConstColour, Assembly-CSharp-firstpass
-    - Name: m_colour
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: colorHighlight
       Entry: 10
       Data: 0
+    - Name: colorHighlight
+      Entry: 10
+      Data: 1
     - Name: colorDisabled
       Entry: 6
       Data: 
@@ -451,15 +450,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.46274513, b: 0.5019608, a: 1}
+  m_Color: {r: 0.85098046, g: 0.2901961, b: 0.16470589, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 79cedf72843c2694492323060ddeb6e5, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: -8264085886342769870, guid: f28ec2ed53fb3994cbf705a783d9667b,
+    type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -468,7 +468,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  colourAsset: {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
+  colourAsset: {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
 --- !u!114 &3806595511214766873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -537,8 +537,8 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: e50ffccc6003ed84a9d32602e643d3f9, type: 2}
-    - {fileID: 11400000, guid: a4e152ecd5d68654db38d409c8c035de, type: 2}
-    - {fileID: 11400000, guid: 392d712b6451e7644aa83df6caf7cee6, type: 2}
+    - {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
+    - {fileID: 11400000, guid: 9670b5200b46ba14b8c1cd9728f7bfd1, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -624,15 +624,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7411765, g: 0.8196079, b: 0.8196079, a: 1}
+  m_Color: {r: 0.7019608, g: 0.7254902, b: 0.7803922, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 79cedf72843c2694492323060ddeb6e5, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: -8979681160531363234, guid: 6117c506e0af9be4e984c77822b3c64e,
+    type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -641,4 +642,4 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  colourAsset: {fileID: 11400000, guid: 033799c9fcf3bb24582632b1d4815e66, type: 2}
+  colourAsset: {fileID: 11400000, guid: b9b650f9dce4aa249850e6cb77e5392f, type: 2}

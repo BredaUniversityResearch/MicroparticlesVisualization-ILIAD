@@ -8,10 +8,10 @@ public class CloseWindow : MonoBehaviour
     CustomButton m_closeWindowButton;
 
     [SerializeField]
-    GameObject m_window;
+    GameObject m_window, m_canvasOutliner;
 
     private void Awake()
     {
-        m_closeWindowButton.onClick.AddListener(() => m_window.SetActive(false));
+        m_closeWindowButton.onClick.AddListener(() => { m_window.SetActive(false); m_canvasOutliner.SetActive(false); } );
     }
 }
