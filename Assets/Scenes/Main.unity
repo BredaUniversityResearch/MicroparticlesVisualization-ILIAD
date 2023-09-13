@@ -2026,6 +2026,53 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -160}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
+--- !u!1 &349775763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 349775765}
+  - component: {fileID: 349775764}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &349775764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 349775763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c81b8044323fc34478858190e6d561e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  depthCSVFile: {fileID: 4900000, guid: 3259769b3cb518446b782f1cbef1b45b, type: 3}
+  latitudeCSVFile: {fileID: 4900000, guid: d3d64ac375e8e7b429a685af9e095735, type: 3}
+  longitudeCSVFile: {fileID: 4900000, guid: 56e92732cd5fbb140a8582566154d3e8, type: 3}
+--- !u!4 &349775765
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 349775763}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &350890606
 GameObject:
   m_ObjectHideFlags: 0
@@ -11114,3 +11161,4 @@ SceneRoots:
   - {fileID: 2134192993}
   - {fileID: 1923430388}
   - {fileID: 697037011}
+  - {fileID: 349775765}
