@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 
 public class TableEntry : MonoBehaviour
 {
     [SerializeField]
-    Text m_name, m_buoy, m_date;
+    TextMeshProUGUI m_name, m_buoy, m_date;
 
     [SerializeField]
     CustomButton m_entryButton;

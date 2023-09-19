@@ -13,7 +13,7 @@ public class AlertEntryManager : MonoBehaviour
     GameObject m_alert;
 
     [SerializeField]
-    CustomText m_name, m_variable, m_alertRule;
+    TextMeshProUGUI m_name, m_variable, m_alertRule;
 
     private void Awake()
     {
