@@ -42,6 +42,20 @@ public partial struct ParticleSpawnSystem : ISystem
 				Scale = 0.0001f
 			};
 			ecb.SetComponent(newParticle, newTransform);
+
+			NativeArray<float> partLats = new NativeArray<float>(spawnData.ValueRO.m_entriesPerParticle, Allocator.Persistent);
+			NativeArray<float>.Copy(spawnData.ValueRO.m_lats, i, partLats, 0, spawnData.ValueRO.m_entriesPerParticle);
+			NativeArray<float> partLons = new NativeArray<float>(spawnData.ValueRO.m_entriesPerParticle, Allocator.Persistent);
+			NativeArray<float>.Copy(spawnData.ValueRO.m_lons, i, partLons, 0, spawnData.ValueRO.m_entriesPerParticle);
+			NativeArray<float> partDepths = new NativeArray<float>(spawnData.ValueRO.m_entriesPerParticle, Allocator.Persistent);
+			NativeArray<float>.Copy(spawnData.ValueRO.m_depths, i, partDepths, 0, spawnData.ValueRO.m_entriesPerParticle);
+
+			ecb.AddComponent(newParticle, new ParticleProperties
+			{
+				m_depths = partDepths,
+				m_lats = partLats,
+				m_lons = partLons
+			}) ;
 			i += spawnData.ValueRO.m_entriesPerParticle;
 		}
 		ecb.RemoveComponent<ParticleSpawnData>(settingsEntity);

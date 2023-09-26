@@ -12,6 +12,7 @@ public class LoadParticlesOnStart : MonoBehaviour
 	public TextAsset m_depthCSVFile;
 	public TextAsset m_latitudeCSVFile;
 	public TextAsset m_longitudeCSVFile;
+	public float m_timePerTimeIndex;
 
 	public void Start()
 	{
@@ -31,6 +32,14 @@ public class LoadParticlesOnStart : MonoBehaviour
 				m_entriesPerParticle = entriesPerParticle
 			};
 			entityManager.AddComponentData(root, spawnData);
+			ParticleTimingData timingData = new ParticleTimingData
+			{
+				m_numberIndices = entriesPerParticle,
+				m_timeIndex = 0,
+				m_timePassed = 0f,
+				m_timePerIndex = m_timePerTimeIndex
+			};
+			entityManager.AddComponentData(root, timingData);
 		}
 	}
 
