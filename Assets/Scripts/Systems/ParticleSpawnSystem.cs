@@ -1,65 +1,151 @@
 ﻿using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.VisualScripting;
+using static UnityEngine.InputManagerEntry;
+using UnityEngine.UIElements;
+using UnityEngine.Rendering.VirtualTexturing;
+using UnityEngine;
 
 [BurstCompile]
 [UpdateInGroup(typeof(InitializationSystemGroup))]
-public partial struct ParticleSpawnSystem : ISystem
+public partial class ParticleSpawnSystem : SystemBase
 {
 	[BurstCompile]
-	public void OnCreate(ref SystemState a_state)
+	protected override void OnCreate()
 	{
 		//a_state.RequireForUpdate(a_state.GetEntityQuery(ComponentType.ReadOnly<ParticleSpawnData>(), ComponentType.ReadOnly<ParticleVisualizationSettingsData>()));
-		a_state.RequireForUpdate<ParticleSpawnData>();
-		a_state.RequireForUpdate<ParticleVisualizationSettingsData>();
+		RequireForUpdate<ParticleSpawnData>();
+		RequireForUpdate<ParticleVisualizationSettingsData>();
 	}
 
 	[BurstCompile]
-	public void OnDestroy(ref SystemState a_state)
+	protected override void OnDestroy()
 	{ }
 
 	[BurstCompile]
-	public void OnUpdate(ref SystemState a_state)
+	protected override void OnUpdate()
 	{
-		a_state.Enabled = false;
+		Enabled = false;
 
-		Entity settingsEntity = SystemAPI.GetSingletonEntity<ParticleSpawnData>();
-		RefRO<ParticleSpawnData> spawnData = SystemAPI.GetComponentRO<ParticleSpawnData>(settingsEntity);
+		Entity settingsEntity = SystemAPI.GetSingletonEntity<ParticleVisualizationSettingsData>();
+		RefRW<ParticleSpawnData> spawnData = SystemAPI.GetComponentRW<ParticleSpawnData>(settingsEntity);
 		RefRO<ParticleVisualizationSettingsData> visualizationData = SystemAPI.GetComponentRO<ParticleVisualizationSettingsData>(settingsEntity);
-		var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-		int i = 0;
-		while (i < spawnData.ValueRO.m_lats.Length)
+		var ecbSystem = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
+		//var ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
+		Debug.Log($"Number particles expected: {spawnData.ValueRO.Value.Value.m_depths.Length / spawnData.ValueRO.m_entriesPerParticle}");
+
+		var job = new SpawnParticleJob
 		{
-			Entity newParticle = ecb.Instantiate(visualizationData.ValueRO.m_particlePrefab);
-			LocalTransform newTransform = new LocalTransform
-			{
-				Position = new float3 { x = spawnData.ValueRO.m_lons[i] - 10.476f, y = spawnData.ValueRO.m_lats[i] - 63.583f, z = spawnData.ValueRO.m_depths[i] },
-				Rotation = quaternion.identity,
-				Scale = 0.0001f
-			};
-			ecb.SetComponent(newParticle, newTransform);
+			m_entriesPerParticle = spawnData.ValueRO.m_entriesPerParticle,
+			m_prefab = visualizationData.ValueRO.m_particlePrefab,
+			m_spawnData = spawnData.ValueRO.Value,
+			m_ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter()
+		};
+		//job.Run(spawnData.ValueRO.Value.Value.m_depths.Length / spawnData.ValueRO.m_entriesPerParticle);
+		JobHandle jobHandle = job.Schedule(spawnData.ValueRO.Value.Value.m_depths.Length / spawnData.ValueRO.m_entriesPerParticle, 64);
+		//jobHandle.Complete();
 
-			NativeArray<float> partLats = new NativeArray<float>(spawnData.ValueRO.m_entriesPerParticle, Allocator.Persistent);
-			NativeArray<float>.Copy(spawnData.ValueRO.m_lats, i, partLats, 0, spawnData.ValueRO.m_entriesPerParticle);
-			NativeArray<float> partLons = new NativeArray<float>(spawnData.ValueRO.m_entriesPerParticle, Allocator.Persistent);
-			NativeArray<float>.Copy(spawnData.ValueRO.m_lons, i, partLons, 0, spawnData.ValueRO.m_entriesPerParticle);
-			NativeArray<float> partDepths = new NativeArray<float>(spawnData.ValueRO.m_entriesPerParticle, Allocator.Persistent);
-			NativeArray<float>.Copy(spawnData.ValueRO.m_depths, i, partDepths, 0, spawnData.ValueRO.m_entriesPerParticle);
+		EntityManager.SetComponentEnabled<ParticleSpawnData>(settingsEntity, false);
+		//ecbSingleton.AddJobHandleForProducer(this.Dependency);
+		ecbSystem.AddJobHandleForProducer(jobHandle);
+	}
 
-			ecb.AddComponent(newParticle, new ParticleProperties
-			{
-				m_depths = partDepths,
-				m_lats = partLats,
-				m_lons = partLons
-			}) ;
-			i += spawnData.ValueRO.m_entriesPerParticle;
+	//public void OnUpdate(ref SystemState a_state)
+	//{
+	//	a_state.Enabled = false;
+
+	//	Entity settingsEntity = SystemAPI.GetSingletonEntity<ParticleSpawnData>();
+	//	RefRO<ParticleSpawnData> spawnData = SystemAPI.GetComponentRO<ParticleSpawnData>(settingsEntity);
+	//	RefRO<ParticleVisualizationSettingsData> visualizationData = SystemAPI.GetComponentRO<ParticleVisualizationSettingsData>(settingsEntity);
+	//	var ecb = new EntityCommandBuffer(Allocator.Temp);
+
+	//	int i = 0;
+	//	while (i < spawnData.ValueRO.m_lats.Length)
+	//	{
+	//		Entity newParticle = ecb.Instantiate(visualizationData.ValueRO.m_particlePrefab);
+	//		LocalTransform newTransform = new LocalTransform
+	//		{
+	//			Position = float3.zero,
+	//			Rotation = quaternion.identity,
+	//			Scale = 0.0001f
+	//		};
+	//		ecb.SetComponent(newParticle, newTransform);
+
+	//		BlobBuilder builder = new BlobBuilder(Allocator.Temp);
+	//		ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
+	//		var depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, spawnData.ValueRO.m_entriesPerParticle);
+	//		var latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, spawnData.ValueRO.m_entriesPerParticle);
+	//		var lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, spawnData.ValueRO.m_entriesPerParticle);
+
+	//		for (var j = 0; j < spawnData.ValueRO.m_entriesPerParticle; j++)
+	//		{
+	//			depthArrayBuilder[j] = spawnData.ValueRO.m_depths[i + j];
+	//			latArrayBuilder[j] = spawnData.ValueRO.m_lats[i + j];
+	//			lonArrayBuilder[j] = spawnData.ValueRO.m_lons[i + j];
+	//		}
+
+	//		var blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
+	//		ecb.AddComponent(newParticle, new ParticleProperties
+	//		{
+	//			Value = blobAsset
+	//		});
+	//		builder.Dispose();
+	//		//Important note: the created blob assets are not currently disposed
+
+	//		i += spawnData.ValueRO.m_entriesPerParticle;
+	//	}
+	//	ecb.RemoveComponent<ParticleSpawnData>(settingsEntity);
+	//	ecb.Playback(a_state.EntityManager);
+	//}
+}
+
+[BurstCompile]
+public partial struct SpawnParticleJob : IJobParallelFor
+{
+	[ReadOnly] public Entity m_prefab;
+	[ReadOnly] public BlobAssetReference<ParticlePropertiesBlob> m_spawnData;
+	[ReadOnly] public int m_entriesPerParticle;
+	public EntityCommandBuffer.ParallelWriter m_ecb;
+
+	[BurstCompile]
+	public void Execute(int a_index)
+	{
+		Entity newParticle = m_ecb.Instantiate(a_index, m_prefab);
+		LocalTransform newTransform = new LocalTransform
+		{
+			Position = float3.zero,
+			Rotation = quaternion.identity,
+			Scale = 0.0001f
+		};
+		m_ecb.SetComponent(a_index, newParticle, newTransform);
+
+		BlobBuilder builder = new BlobBuilder(Allocator.Temp);
+		ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
+		var depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, m_entriesPerParticle);
+		var latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, m_entriesPerParticle);
+		var lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, m_entriesPerParticle);
+
+		for (var j = 0; j < m_entriesPerParticle; j++)
+		{
+			depthArrayBuilder[j] = m_spawnData.Value.m_depths[a_index* m_entriesPerParticle + j];
+			latArrayBuilder[j] = m_spawnData.Value.m_lats[a_index * m_entriesPerParticle + j];
+			lonArrayBuilder[j] = m_spawnData.Value.m_lons[a_index * m_entriesPerParticle + j];
 		}
-		ecb.RemoveComponent<ParticleSpawnData>(settingsEntity);
-		ecb.Playback(a_state.EntityManager);
+
+		var blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
+		m_ecb.AddComponent(a_index, newParticle, new ParticleProperties
+		{
+			Value = blobAsset
+		});
+		builder.Dispose();
+		Debug.Log($"Thread {a_index} complete");
+		//Important note: the created blob assets are not currently disposed
 	}
 }
 

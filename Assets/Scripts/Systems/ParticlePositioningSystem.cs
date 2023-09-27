@@ -22,19 +22,13 @@ public partial struct ParticlePositioningSystem : ISystem
 	[BurstCompile]
 	public void OnUpdate(ref SystemState a_state)
 	{
-		ParticleTimingData particleTimingData = SystemAPI.GetSingleton<ParticleTimingData>();
-		particleTimingData.m_timePassed += SystemAPI.Time.DeltaTime;
-		if(particleTimingData.m_timePassed > particleTimingData.m_timePerIndex)
-		{
-			particleTimingData.m_timePassed -= particleTimingData.m_timePerIndex;
-			particleTimingData.m_timeIndex += 1;
-			if(particleTimingData.m_timeIndex >= particleTimingData.m_numberIndices)
-				particleTimingData.m_timeIndex = 0;
-		}
+		Entity particleTimingEnt= SystemAPI.GetSingletonEntity<ParticleTimingData>();
+		ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
+		int timeiIndex = particleTimingAspect.PassTime(SystemAPI.Time.DeltaTime);
 
 		new PositionParticleJob
 		{
-			m_timeIndex = particleTimingData.m_timeIndex
+			m_timeIndex = timeiIndex
 		}.ScheduleParallel();
 	}
 }

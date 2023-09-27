@@ -234,7 +234,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -360,6 +360,7 @@ MonoBehaviour:
   m_depthCSVFile: {fileID: 4900000, guid: 3259769b3cb518446b782f1cbef1b45b, type: 3}
   m_latitudeCSVFile: {fileID: 4900000, guid: d3d64ac375e8e7b429a685af9e095735, type: 3}
   m_longitudeCSVFile: {fileID: 4900000, guid: 56e92732cd5fbb140a8582566154d3e8, type: 3}
+  m_timePerTimeIndex: 0.1
 --- !u!1 &1715493701
 GameObject:
   m_ObjectHideFlags: 0

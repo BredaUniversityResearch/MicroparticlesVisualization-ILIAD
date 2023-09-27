@@ -20,26 +20,37 @@ public class LoadParticlesOnStart : MonoBehaviour
 		float[] depth, lat, lon;
 		if (TryParseCSVVert(m_depthCSVFile, ref entriesPerParticle, out depth) && TryParseCSVVert(m_latitudeCSVFile, ref entriesPerParticle, out lat) && TryParseCSVVert(m_longitudeCSVFile, ref entriesPerParticle, out lon))
 		{
-			var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+			EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 			EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
 			Entity root = query.GetSingletonEntity();
 
-			ParticleSpawnData spawnData = new ParticleSpawnData
+			BlobBuilder builder = new BlobBuilder(Allocator.Temp);
+			ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
+			BlobBuilderArray<float> depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, entriesPerParticle);
+			BlobBuilderArray<float> latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, entriesPerParticle);
+			BlobBuilderArray<float> lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, entriesPerParticle);
+
+			for (var j = 0; j < entriesPerParticle; j++)
 			{
-				m_depths = new NativeArray<float>(depth, Allocator.Persistent),
-				m_lats = new NativeArray<float>(lat, Allocator.Persistent),
-				m_lons = new NativeArray<float>(lon, Allocator.Persistent),
+				depthArrayBuilder[j] = depth[j];
+				latArrayBuilder[j] = lat[j];
+				lonArrayBuilder[j] = lon[j];
+			}
+
+			BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
+			entityManager.AddComponentData(root, new ParticleSpawnData
+			{
+				Value = blobAsset,
 				m_entriesPerParticle = entriesPerParticle
-			};
-			entityManager.AddComponentData(root, spawnData);
-			ParticleTimingData timingData = new ParticleTimingData
+			});
+			builder.Dispose();
+			entityManager.AddComponentData(root, new ParticleTimingData
 			{
 				m_numberIndices = entriesPerParticle,
 				m_timeIndex = 0,
 				m_timePassed = 0f,
 				m_timePerIndex = m_timePerTimeIndex
-			};
-			entityManager.AddComponentData(root, timingData);
+			});
 		}
 	}
 

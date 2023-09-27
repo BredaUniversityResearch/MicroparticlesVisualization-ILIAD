@@ -1,10 +1,11 @@
 using Unity.Collections;
 using Unity.Entities;
 
-public struct ParticleSpawnData : IComponentData
+public struct ParticleSpawnData : IComponentData, IEnableableComponent
 {
-	public NativeArray<float> m_lats;
-	public NativeArray<float> m_lons;
-	public NativeArray<float> m_depths;
+	//public NativeArray<float> m_lats;
+	//public NativeArray<float> m_lons;
+	//public NativeArray<float> m_depths;
 	public int m_entriesPerParticle;
+	public BlobAssetReference<ParticlePropertiesBlob> Value;
 }
