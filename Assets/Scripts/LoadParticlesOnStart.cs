@@ -26,11 +26,11 @@ public class LoadParticlesOnStart : MonoBehaviour
 
 			BlobBuilder builder = new BlobBuilder(Allocator.Temp);
 			ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
-			BlobBuilderArray<float> depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, entriesPerParticle);
-			BlobBuilderArray<float> latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, entriesPerParticle);
-			BlobBuilderArray<float> lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, entriesPerParticle);
+			BlobBuilderArray<float> depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, depth.Length);
+			BlobBuilderArray<float> latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, lat.Length);
+			BlobBuilderArray<float> lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, lon.Length);
 
-			for (var j = 0; j < entriesPerParticle; j++)
+			for (var j = 0; j < depth.Length; j++)
 			{
 				depthArrayBuilder[j] = depth[j];
 				latArrayBuilder[j] = lat[j];

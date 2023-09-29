@@ -38,7 +38,6 @@ public partial class ParticleSpawnSystem : SystemBase
 
 		var ecbSystem = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
 		//var ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
-		Debug.Log($"Number particles expected: {spawnData.ValueRO.Value.Value.m_depths.Length / spawnData.ValueRO.m_entriesPerParticle}");
 
 		var job = new SpawnParticleJob
 		{
@@ -52,7 +51,6 @@ public partial class ParticleSpawnSystem : SystemBase
 		//jobHandle.Complete();
 
 		EntityManager.SetComponentEnabled<ParticleSpawnData>(settingsEntity, false);
-		//ecbSingleton.AddJobHandleForProducer(this.Dependency);
 		ecbSystem.AddJobHandleForProducer(jobHandle);
 	}
 
@@ -121,7 +119,8 @@ public partial struct SpawnParticleJob : IJobParallelFor
 		{
 			Position = float3.zero,
 			Rotation = quaternion.identity,
-			Scale = 0.0001f
+			//Scale = 0.001f
+			Scale = 1f
 		};
 		m_ecb.SetComponent(a_index, newParticle, newTransform);
 
@@ -144,8 +143,8 @@ public partial struct SpawnParticleJob : IJobParallelFor
 			Value = blobAsset
 		});
 		builder.Dispose();
-		Debug.Log($"Thread {a_index} complete");
-		//Important note: the created blob assets are not currently disposed
+		//Debug.Log($"Thread {a_index} complete");
+		//Important note: the created blob assets are not currently disposed, apply cleanup tags
 	}
 }
 
