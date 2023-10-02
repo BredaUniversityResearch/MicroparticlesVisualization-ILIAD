@@ -14,8 +14,14 @@ public class LoadParticlesOnStart : MonoBehaviour
 	public TextAsset m_longitudeCSVFile;
 	public float m_timePerTimeIndex;
 
-	public void Start()
+	bool m_initialized;
+
+	public void Update()
 	{
+		if (m_initialized)
+			return;
+		m_initialized = true;
+
 		int entriesPerParticle = -1;
 		float[] depth, lat, lon;
 		if (TryParseCSVVert(m_depthCSVFile, ref entriesPerParticle, out depth) && TryParseCSVVert(m_latitudeCSVFile, ref entriesPerParticle, out lat) && TryParseCSVVert(m_longitudeCSVFile, ref entriesPerParticle, out lon))
