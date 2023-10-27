@@ -22,7 +22,7 @@ public readonly partial struct AbstractMapAspect : IAspect
 
     public float ScaleFactor => m_abstractMapData.ValueRO.scaleFactor;
 
-    public float2 CenterMercator => m_abstractMapData.ValueRO.centerMercator;
+    public double2 CenterMercator => m_abstractMapData.ValueRO.centerMercator;
 
     public float WorldRelativeScale => m_abstractMapData.ValueRO.worldRelativeScale;
 
@@ -48,7 +48,8 @@ public readonly partial struct AbstractMapAspect : IAspect
     public float3 GeoToWorldPositionXZ(float2 latitudeLongitude, float depth)
     {
         var worldPosXY = GeoToWorldPosition(double2(latitudeLongitude), CenterMercator, WorldRelativeScale * ScaleFactor);
-        return float3((float)worldPosXY.x, depth * WorldRelativeScale * ScaleFactor, (float)worldPosXY.y);
+        //return float3((float)worldPosXY.x, depth * WorldRelativeScale * ScaleFactor, (float)worldPosXY.y);
+        return float3((float)worldPosXY.x, 1000 * WorldRelativeScale * ScaleFactor, (float)worldPosXY.y);
     }
 
     [BurstCompile]

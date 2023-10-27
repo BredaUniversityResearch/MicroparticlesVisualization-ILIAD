@@ -119,8 +119,8 @@ public partial struct SpawnParticleJob : IJobParallelFor
 		{
 			Position = float3.zero,
 			Rotation = quaternion.identity,
-			Scale = 0.001f
-			//Scale = 1f
+			//Scale = 0.001f
+			Scale = 5f
 		};
 		m_ecb.SetComponent(a_index, newParticle, newTransform);
 
