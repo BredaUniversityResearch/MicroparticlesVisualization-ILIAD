@@ -8,24 +8,31 @@ using static Unity.Mathematics.math;
 
 public readonly partial struct ParticlePositionAspect : IAspect
 {
-    public readonly Entity Entity;
-    public const float m_xyScale = 5f;
-    public const float m_zScale = 0.1f;
+    private const float m_xyScale = 5f;
+    private const float m_zScale = 0.1f;
 
+    private const int TileSize = 256;
+    /// <summary>according to https://wiki.openstreetmap.org/wiki/Zoom_levels</summary>
+    private const int EarthRadius = 6378137; //no seams with globe example
+    private const double InitialResolution = 2 * PI * EarthRadius / TileSize;
+    private const double OriginShift = 2 * PI * EarthRadius / 2;
+
+    public readonly Entity Entity;
     private readonly RefRW<LocalTransform> m_transform;
     private readonly RefRO<ParticleProperties> m_particleProperties;
+    private readonly RefRO<AbstractMapData> m_abstractMapData;
 
     /// <summary>
     /// Get the particle longitude/latitude/depth at a specific index.
     /// </summary>
     /// <param name="index">The index in the longitude, latitude, and depth buffers.</param>
     /// <returns>The particles longitude, latitude, depth at a specific index.</returns>
-    private float3 this[int index] =>
+    public float3 this[int index] =>
         float3(m_particleProperties.ValueRO.Value.Value.m_lons[index],
             m_particleProperties.ValueRO.Value.Value.m_lats[index],
             m_particleProperties.ValueRO.Value.Value.m_depths[index]);
 
-    private float3 Position
+    public float3 Position
     {
         get => m_transform.ValueRO.Position;
         set => m_transform.ValueRW.Position = value;
@@ -37,14 +44,5 @@ public readonly partial struct ParticlePositionAspect : IAspect
         float3 scale = float3(m_xyScale, m_xyScale, m_zScale);
 
         Position = (this[a_index] - offset) * scale;
-    }
-
-    /// <summary>
-    /// Convert the longitude/latitude/depth values to Unity world space coordinates.
-    /// </summary>
-    /// <param name="a_index"></param>
-    public void SetWordPos(int a_index)
-    {
-
     }
 }
