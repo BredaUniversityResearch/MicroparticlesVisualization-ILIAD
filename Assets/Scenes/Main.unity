@@ -2628,6 +2628,16 @@ PrefabInstance:
       propertyPath: m_text
       value: "16\xB0C"
       objectReference: {fileID: 0}
+    - target: {fileID: 2971900987748497854, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_homePageButton
+      value: 
+      objectReference: {fileID: 1045941435}
+    - target: {fileID: 2971900987748497854, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_homePageToggle
+      value: 
+      objectReference: {fileID: 1045941435}
     - target: {fileID: 3004722294978302725, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
       propertyPath: m_Color.a
@@ -5778,6 +5788,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1026460700}
   m_CullTransparentMesh: 1
+--- !u!114 &1045941435 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3019815659244024347, guid: 6cac71a4666f19c4d8cd9c038e0e3a3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 574690368029642996}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeaa0bb0be42908448050e0e12b1e3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1046868815 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4499761281038230713, guid: 6e933b3c4f005f647b9b1c0bc4b12edc,
