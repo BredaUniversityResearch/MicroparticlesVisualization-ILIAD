@@ -58,10 +58,15 @@ public partial struct PositionParticleJob : IJobEntity
     public quaternion Rotation;
 
     [BurstCompile]
-    private void Execute(ParticlePositionAspect a_particle)
+    private void Execute(ParticleUpdateAspect a_particle)
     {
-        //		a_particle.SetTimeIndex(m_timeIndex);
-        a_particle.Position = GeoToWorldPosition(a_particle[TimeIndex]);
+        var pos = a_particle[TimeIndex];
+
+        float rg = pow(1f - abs(pos.z) / 100f, 2);
+        float b = 1f - pow(abs(pos.z) / 100f, 2);
+
+        a_particle.Colour = float4(rg, rg, b, 1f);
+        a_particle.Position = GeoToWorldPosition(pos);
     }
 
     [BurstCompile]
@@ -82,7 +87,7 @@ public partial struct PositionParticleJob : IJobEntity
     {
         var worldPosXY = GeoToWorldPosition(double2(latitudeLongitude), CenterMercator, WorldRelativeScale * ScaleFactor);
         //return float3((float)worldPosXY.x, depth * WorldRelativeScale * ScaleFactor, (float)worldPosXY.y);
-        return float3((float)worldPosXY.x, 1000 * WorldRelativeScale * ScaleFactor, (float)worldPosXY.y);
+        return float3((float)worldPosXY.x, depth * WorldRelativeScale * ScaleFactor, (float)worldPosXY.y);
     }
 
     [BurstCompile]

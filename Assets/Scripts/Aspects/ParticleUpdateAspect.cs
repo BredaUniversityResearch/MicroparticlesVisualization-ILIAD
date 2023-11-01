@@ -6,14 +6,11 @@ using Unity.Transforms;
 using UnityEngine.UIElements;
 using static Unity.Mathematics.math;
 
-public readonly partial struct ParticlePositionAspect : IAspect
+public readonly partial struct ParticleUpdateAspect : IAspect
 {
-    private readonly Entity Entity;
-    private const float m_xyScale = 5f;
-    private const float m_zScale = 0.1f;
-
     private readonly RefRW<LocalTransform> m_transform;
     private readonly RefRO<ParticleProperties> m_particleProperties;
+	private readonly RefRW<ParticleColourComponent> m_colour;
 
     /// <summary>
     /// Get the particle longitude/latitude/depth at a specific index.
@@ -31,11 +28,8 @@ public readonly partial struct ParticlePositionAspect : IAspect
         set => m_transform.ValueRW.Position = value;
     }
 
-    public void SetTimeIndex(int a_index)
+    public float4 Colour
     {
-        float3 offset = float3(10.476f, 63.583f, 0.0f);
-        float3 scale = float3(m_xyScale, m_xyScale, m_zScale);
-
-        Position = (this[a_index] - offset) * scale;
+        set => m_colour.ValueRW.Value = value;
     }
 }
