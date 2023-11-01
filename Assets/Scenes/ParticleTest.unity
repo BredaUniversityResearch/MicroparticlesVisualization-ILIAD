@@ -237,8 +237,8 @@ Camera:
   near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 0.15
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -262,13 +262,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 927074764}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.32, y: -0.63, z: -10.14}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -0.43, y: -0.63, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &927074768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,10 +357,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7ae7ad624030924aba241ecc64baf29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_depthCSVFile: {fileID: 4900000, guid: 48c32d86343ac954e870a5c9049eaa2b, type: 3}
-  m_latitudeCSVFile: {fileID: 4900000, guid: b6150ad1636a4a249a9c0df55bb36659, type: 3}
-  m_longitudeCSVFile: {fileID: 4900000, guid: 96a162de8e23eb14dae023d55f36cacc, type: 3}
-  m_timePerTimeIndex: 0.01
+  m_depthCSVFile: {fileID: 4900000, guid: b9545e1087db4e643998231f0d433d0b, type: 3}
+  m_latitudeCSVFile: {fileID: 4900000, guid: 921bfd7cb0a60a048ac46e4d30a95e59, type: 3}
+  m_longitudeCSVFile: {fileID: 4900000, guid: db58e530211a45d45b2e033f75fb45e9, type: 3}
+  m_timePerTimeIndex: 0.1
 --- !u!1 &1302947031
 GameObject:
   m_ObjectHideFlags: 0
