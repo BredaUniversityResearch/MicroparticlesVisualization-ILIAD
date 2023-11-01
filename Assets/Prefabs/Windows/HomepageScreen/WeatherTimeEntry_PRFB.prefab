@@ -356,6 +356,7 @@ GameObject:
   - component: {fileID: 5787243311043836576}
   - component: {fileID: 8196685875085240409}
   - component: {fileID: 5490030774706516538}
+  - component: {fileID: 6236071793327034315}
   m_Layer: 5
   m_Name: WeatherTimeEntry_PRFB
   m_TagString: Untagged
@@ -425,3 +426,18 @@ MonoBehaviour:
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
   colourAsset: {fileID: 11400000, guid: e00a961f21f809e4db778c16499cb2c8, type: 2}
+--- !u!114 &6236071793327034315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4317730561981808713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34a47ccf1fa399840bd071526c2228f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_temperatureText: {fileID: 5188876317850958157}
+  m_timeText: {fileID: 6828552607421307143}
+  m_weatherImage: {fileID: 2680381276283315166}
