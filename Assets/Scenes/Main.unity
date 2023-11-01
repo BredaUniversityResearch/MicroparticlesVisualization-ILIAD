@@ -2505,7 +2505,7 @@ PrefabInstance:
     - target: {fileID: 882934577476250696, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 400
+      value: 480
       objectReference: {fileID: 0}
     - target: {fileID: 882934577476250696, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
@@ -2590,6 +2590,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2034204507661124683, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 96
+      objectReference: {fileID: 0}
+    - target: {fileID: 2034204507661124683, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2611,6 +2616,16 @@ PrefabInstance:
     - target: {fileID: 2597978930318657840, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2597978930318657840, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2597978930318657840, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2597978930318657840, guid: e6101278c2781c449a2a81524fd055bf,
@@ -2655,6 +2670,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3878164179357342623, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 96
+      objectReference: {fileID: 0}
+    - target: {fileID: 3878164179357342623, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2672,6 +2692,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439855969222570702, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 96
       objectReference: {fileID: 0}
     - target: {fileID: 4439855969222570702, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
@@ -2713,6 +2738,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5670141781943862021, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5670141781943862021, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5670141781943862021, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2739,6 +2774,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6353482657648205834, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353482657648205834, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6353482657648205834, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2761,6 +2806,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMin.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7410051393189504268, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 96
       objectReference: {fileID: 0}
     - target: {fileID: 7410051393189504268, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
@@ -4379,8 +4429,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
+    SerializedFormat: 0
+    SerializedBytes: 0b010b00000063006f006c006f0072004e006f0072006d0061006c00000000000b010e00000063006f006c006f00720048006900670068006c006900670068007400010000002d010d00000063006f006c006f007200440069007300610062006c0065006400
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 21b5ecefcd752424faf8cc699f248347, type: 2}
     - {fileID: 11400000, guid: 9670b5200b46ba14b8c1cd9728f7bfd1, type: 2}
@@ -4388,16 +4438,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: colorNormal
-      Entry: 10
-      Data: 0
-    - Name: colorHighlight
-      Entry: 10
-      Data: 1
-    - Name: colorDisabled
-      Entry: 6
-      Data: 
+    SerializationNodes: []
   targetGraphics:
   - {fileID: 704067456}
   useHighlightColor: 1
@@ -7413,8 +7454,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
+    SerializedFormat: 0
+    SerializedBytes: 0b010b00000063006f006c006f0072004e006f0072006d0061006c00000000000b010d00000063006f006c006f007200530065006c0065006300740065006400000000000b010e00000063006f006c006f00720048006900670068006c006900670068007400010000002d011600000063006f006c006f007200530065006c006500630074006500640048006900670068006c0069006700680074002d010d00000063006f006c006f007200440069007300610062006c0065006400
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: b9b650f9dce4aa249850e6cb77e5392f, type: 2}
     - {fileID: 11400000, guid: c1eda72fab78099468c2d644591715de, type: 2}
@@ -7422,22 +7463,7 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: colorNormal
-      Entry: 10
-      Data: 0
-    - Name: colorSelected
-      Entry: 10
-      Data: 0
-    - Name: colorHighlight
-      Entry: 10
-      Data: 1
-    - Name: colorSelectedHighlight
-      Entry: 6
-      Data: 
-    - Name: colorDisabled
-      Entry: 6
-      Data: 
+    SerializationNodes: []
   targetGraphics:
   - {fileID: 1454672643}
   highlightIfOn: 1
