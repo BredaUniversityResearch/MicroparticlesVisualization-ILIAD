@@ -164,9 +164,12 @@ pipeline {
             always {
                     script {
                         if(fileExists(output)) {
-                            echo "Cleaning up workspace..."
+                            echo "Cleaning up output folder..."
                             bat '''RMDIR %output% /S /Q'''
                         }
+                        //echo "Cleaning up workspace..."
+                        //bat '''del /f /q *.*'''
+                        //bat '''for /d %%D in (*) do (rmdir /s /q "%%D")'''
                     }
                     
                     slackSend color: COLOR_MAP[currentBuild.currentResult],

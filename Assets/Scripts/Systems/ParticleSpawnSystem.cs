@@ -1,15 +1,15 @@
 ﻿using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
+//using Unity.Entities.UniversalDelegates;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Unity.VisualScripting;
-using static UnityEngine.InputManagerEntry;
-using UnityEngine.UIElements;
-using UnityEngine.Rendering.VirtualTexturing;
-using UnityEngine;
+//using static UnityEngine.InputManagerEntry;
+//using UnityEngine.UIElements;
+//using UnityEngine.Rendering.VirtualTexturing;
+//using UnityEngine;
 
 [BurstCompile]
 [UpdateInGroup(typeof(InitializationSystemGroup))]

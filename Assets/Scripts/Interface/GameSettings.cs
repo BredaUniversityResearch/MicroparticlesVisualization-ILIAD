@@ -1,0 +1,210 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
+
+public class GameSettings : MonoBehaviour
+{
+	private static GameSettings singleton;
+	public static GameSettings Instance
+	{
+		get
+		{
+			if (singleton == null)
+				singleton = FindObjectOfType<GameSettings>();
+			return singleton;
+		}
+	}
+
+	// Audio
+	//private AudioMixer audioMixer;
+	//private float masterVolume;
+	//private float sfxVolume;
+
+	//Graphics
+	public int DisplayResolution { get; private set; }
+	public bool Fullscreen { get; private set; }
+	public int GraphicsSettings { get; private set; }
+
+	[HideInInspector] public List<Vector2> Resolutions = new List<Vector2>();
+
+	void Awake()
+	{
+		if (singleton != null && singleton != this)
+		{
+			Destroy(this);
+			return;
+		}
+		else
+		{
+			singleton = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		for (int i = 0; i < Screen.resolutions.Length; i++)
+		{
+			if (Resolutions.FindIndex(res => res.x == Screen.resolutions[i].width && res.y == Screen.resolutions[i].height) != -1)
+				continue;
+
+			float width = Screen.resolutions[i].width;
+			float height = Screen.resolutions[i].height;
+
+			if (width >= 800) // dont include tiny resolutions
+			{
+				Resolutions.Add(new Vector2(width, height));
+			}
+		}
+
+		if (Resolutions.Count == 0)
+			Debug.LogError("No suitable resolutions found for the current screen.");
+		LoadAllSettings();
+	}
+
+	private void LoadAllSettings()
+	{
+		//masterVolume = PlayerPrefs.GetFloat("MasterVolume", 0.8f);
+		//sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.8f);
+		GraphicsSettings = PlayerPrefs.GetInt("GraphicsSettings", QualitySettings.GetQualityLevel());
+		Fullscreen = PlayerPrefs.GetInt("Fullscreen", Convert.ToInt32(Screen.fullScreen)) == 1;
+		DisplayResolution = PlayerPrefs.GetInt("DisplayResolution", -1); // Get this from the set resolution from the start
+
+		if (Resolutions.Count > 0)
+		{
+			if (DisplayResolution >= Resolutions.Count || DisplayResolution == -1)
+			{
+				//No valid resolution set, so select current or biggest
+				for (int i = 0; i < Resolutions.Count; i++)
+				{
+					DisplayResolution = i;
+					if (Resolutions[i].x == Screen.currentResolution.width && Resolutions[i].y == Screen.currentResolution.height)
+						break;
+				}
+			}
+		}
+	}
+
+	//public void ApplyCurrentSettings(bool save = true)
+	//{
+	//	SetFullscreen(Fullscreen, false);
+	//	SetResolution(DisplayResolution, false);
+	//	
+	//	//SetMasterVolume(masterVolume, false);
+	//	//SetSFXVolume(sfxVolume, false);
+	//	if (save)
+	//		SavePlayerPrefs();
+	//}
+
+	public void SavePlayerPrefs()
+	{
+		//PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+		//PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+		PlayerPrefs.SetInt("GraphicsSettings", GraphicsSettings);
+		PlayerPrefs.SetInt("DisplayResolution", DisplayResolution);
+		PlayerPrefs.SetInt("Fullscreen", Fullscreen ? 1 : 0);
+	}
+
+	//public void SetAudioMixer(AudioMixer audioMixer)
+	//{
+	//	this.audioMixer = audioMixer;
+	//	ApplyMasterVolume();
+	//	ApplySFXVolume();
+	//}
+
+	//public float GetMasterVolume()
+	//{
+	//	return masterVolume;
+	//}
+
+	//public void SetMasterVolume(float volume, bool save = true)
+	//{
+	//	volume = Mathf.Clamp(volume, 0.001f, 1.0f);
+	//	masterVolume = volume;
+	//	ApplyMasterVolume();
+	//	if (save)
+	//		SavePlayerPrefs();
+	//}
+
+	//public void ApplyMasterVolume()
+	//{
+	//	if (audioMixer != null)
+	//	{
+	//		audioMixer.SetFloat("MasterVolume", SliderToVolume(masterVolume));
+	//	}
+	//}
+
+	//public float GetSFXVolume()
+	//{
+	//	return sfxVolume;
+	//}
+
+	//public void SetSFXVolume(float volume, bool save = true)
+	//{
+	//	volume = Mathf.Clamp(volume, 0.0f, 1.0f);
+	//	sfxVolume = volume;
+	//	ApplySFXVolume();
+	//	if (save)
+	//		SavePlayerPrefs();
+	//}
+
+	//public void ApplySFXVolume()
+	//{
+	//	if (audioMixer != null)
+	//	{
+	//		audioMixer.SetFloat("SFXVolume", SliderToVolume(sfxVolume));
+	//	}
+	//}
+
+	//private float SliderToVolume(float sliderValue)
+	//{
+	//	return Mathf.Log(sliderValue) * 20f;
+	//}
+
+	/// <summary>
+	/// Returns the size of the new resolution
+	/// </summary>
+	public void SetResolution(int level, Canvas canvas, bool save = true)
+	{
+		if (!Fullscreen)
+			return;
+
+		if (Resolutions.Count == 0)
+		{
+			return;
+		}
+
+		if (level < 0 || level > Resolutions.Count)
+		{
+			Debug.Log("Invalid Resolution Setting, defaulting to 0");
+			level = 0;
+		}
+
+		DisplayResolution = level;
+
+		// Don't apply resolution in editor or when running in headless mode.
+		if (!Application.isEditor && Resolutions.Count > DisplayResolution)
+		{
+			int width = (int)Resolutions[DisplayResolution].x;
+			int height = (int)Resolutions[DisplayResolution].y;
+			Screen.SetResolution(width, height, Fullscreen);
+			if (width < 1600)
+                canvas.scaleFactor = 0.5f;
+            else
+                canvas.scaleFactor = 1.0f;
+        }
+		if (save)
+			SavePlayerPrefs();
+	}
+
+	public void SetFullscreen(bool fullscreen, bool save = true)
+	{
+		if (Resolutions.Count == 0)
+		{
+			return; //Don't do this in batch mode.
+		}
+
+		Fullscreen = fullscreen;
+		Screen.fullScreenMode = fullscreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
+		if (save)
+			SavePlayerPrefs();
+	}
+}
