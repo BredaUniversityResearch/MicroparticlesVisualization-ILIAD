@@ -38,13 +38,4 @@ public readonly partial struct ParticlePositionAspect : IAspect
 
         Position = (this[a_index] - offset) * scale;
     }
-
-    /// <summary>
-    /// Convert the longitude/latitude/depth values to Unity world space coordinates.
-    /// </summary>
-    /// <param name="a_index"></param>
-    public void SetWordPos(int a_index, AbstractMapAspect abstractMap)
-    {
-        Position = abstractMap.GeoToWorldPosition(this[a_index]);
-    }
 }
