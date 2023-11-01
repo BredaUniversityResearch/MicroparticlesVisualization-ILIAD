@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 
 [BurstCompile]
 [UpdateInGroup(typeof(InitializationSystemGroup))]
-public partial struct ParticlePositioningSystem : ISystem
+public partial struct ParticleUpdateSystem : ISystem
 {
 	[BurstCompile]
 	public void OnCreate(ref SystemState a_state)
@@ -39,7 +39,7 @@ public partial struct PositionParticleJob : IJobEntity
 	public int m_timeIndex;
 
 	[BurstCompile]
-	private void Execute(ParticlePositionAspect a_particle)
+	private void Execute(ParticleUpdateAspect a_particle)
 	{
 		a_particle.SetTimeIndex(m_timeIndex);
 	}
