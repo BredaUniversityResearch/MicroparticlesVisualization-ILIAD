@@ -21,24 +21,26 @@ public partial struct ParticlePositioningSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState a_state)
     {
-        Entity particleTimingEnt = SystemAPI.GetSingletonEntity<ParticleTimingData>();
-        Entity abstractMapDataEnt = SystemAPI.GetSingletonEntity<AbstractMapData>();
-
-        ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
-        int timeIndex = particleTimingAspect.PassTime(SystemAPI.Time.DeltaTime);
-
-        AbstractMapData abstractMapData = SystemAPI.GetComponent<AbstractMapData>(abstractMapDataEnt);
-
-        new PositionParticleJob
+        if (SystemAPI.HasSingleton<AbstractMapData>())
         {
-            TimeIndex = timeIndex,
-            ScaleFactor = abstractMapData.scaleFactor,
-            CenterMercator = abstractMapData.centerMercator,
-            WorldRelativeScale = abstractMapData.worldRelativeScale,
-            Position = abstractMapData.mapPosition,
-            Scale = abstractMapData.mapScale,
-            Rotation = abstractMapData.mapRotation
-        }.ScheduleParallel();
+            Entity particleTimingEnt = SystemAPI.GetSingletonEntity<ParticleTimingData>();
+            ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
+            int timeIndex = particleTimingAspect.PassTime(SystemAPI.Time.DeltaTime);
+            
+            Entity abstractMapDataEnt = SystemAPI.GetSingletonEntity<AbstractMapData>();
+            AbstractMapData abstractMapData = SystemAPI.GetComponent<AbstractMapData>(abstractMapDataEnt);
+
+            new PositionParticleJob
+            {
+                TimeIndex = timeIndex,
+                ScaleFactor = abstractMapData.scaleFactor,
+                CenterMercator = abstractMapData.centerMercator,
+                WorldRelativeScale = abstractMapData.worldRelativeScale,
+                Position = abstractMapData.mapPosition,
+                Scale = abstractMapData.mapScale,
+                Rotation = abstractMapData.mapRotation
+            }.ScheduleParallel();
+        }
     }
 }
 
