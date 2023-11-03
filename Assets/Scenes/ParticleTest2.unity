@@ -158,6 +158,12 @@ MonoBehaviour:
   _referenceCamera: {fileID: 927074766}
   _mapManager: {fileID: 302431084}
   _useDegreeMethod: 0
+--- !u!4 &302431087 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4867834046800562, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1167503773}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &608172450
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,6 +231,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   map: {fileID: 302431084}
+--- !u!1 &654278354
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 654278356}
+  - component: {fileID: 654278355}
+  m_Layer: 0
+  m_Name: TileProvider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &654278355
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654278354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756a01a914208439d8d2fc8dcd68b229, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cbtpOptions:
+    camera: {fileID: 927074766}
+    visibleBuffer: 0
+    disposeBuffer: 0
+--- !u!4 &654278356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 654278354}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 302431087}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &927074764
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,8 +340,8 @@ Camera:
   near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 60
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -406,9 +460,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7ae7ad624030924aba241ecc64baf29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_depthCSVFile: {fileID: 4900000, guid: 0e9201f39e26ca8419dbcc09df39cc57, type: 3}
-  m_latitudeCSVFile: {fileID: 4900000, guid: 48a183cf13cb60047a23da999ce5fd52, type: 3}
-  m_longitudeCSVFile: {fileID: 4900000, guid: af1579f9c27be3646903f5fef6baa547, type: 3}
+  m_depthCSVFile: {fileID: 4900000, guid: 48c32d86343ac954e870a5c9049eaa2b, type: 3}
+  m_latitudeCSVFile: {fileID: 4900000, guid: b6150ad1636a4a249a9c0df55bb36659, type: 3}
+  m_longitudeCSVFile: {fileID: 4900000, guid: 96a162de8e23eb14dae023d55f36cacc, type: 3}
   m_timePerTimeIndex: 0.001
 --- !u!1001 &1167503773
 PrefabInstance:
@@ -464,8 +518,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114478715909612932, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
         type: 3}
+      propertyPath: _tileProvider
+      value: 
+      objectReference: {fileID: 654278355}
+    - target: {fileID: 114478715909612932, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
+        type: 3}
       propertyPath: _options.locationOptions.zoom
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 114478715909612932, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
+        type: 3}
+      propertyPath: _previewOptions.isPreviewEnabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114478715909612932, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
         type: 3}
@@ -489,12 +553,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114478715909612932, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
         type: 3}
+      propertyPath: _imagery._layerProperty.sourceOptions.layerSource.Name
+      value: Satellite
+      objectReference: {fileID: 0}
+    - target: {fileID: 114478715909612932, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
+        type: 3}
       propertyPath: _options.extentOptions.defaultExtents.cameraBoundsOptions.camera
       value: 
       objectReference: {fileID: 927074766}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4867834046800562, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 654278356}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1257486800756004, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
         type: 3}

@@ -6,12 +6,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using TMPro;
+using Newtonsoft.Json.Linq;
+using Mapbox.Json;
 
 public class WeatherInfo : MonoBehaviour
 {
-    HttpClient httpClient = new HttpClient();
+    [SerializeField]
     string m_lon = "10.374";
+
+    [SerializeField]
     string m_lat = "63.458";
+
     string m_appid = "d25a7e67f8723dff49c13d45fed0dddf";
     string m_apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&cnt=6&appid={API_key}";
     
@@ -22,7 +27,7 @@ public class WeatherInfo : MonoBehaviour
     CustomToggle m_homePageToggle;
 
     [SerializeField]
-    TextMeshProUGUI m_locationText, m_temperatureText, m_weatherText, m_precipitationText, m_windText, m_humidityText;
+    TextMeshProUGUI m_locationText, m_dateText, m_temperatureText, m_weatherText, m_precipitationText, m_windText, m_humidityText;
 
     [SerializeField]
     Image m_weatherImage;
@@ -40,6 +45,13 @@ public class WeatherInfo : MonoBehaviour
                 StartCoroutine(CallWeatherApi());
             }
         });
+    }
+
+    public void WidgetCreation(string a_lon, string a_lat)
+    {
+        m_lon = a_lon;
+        m_lat = a_lat;
+        StartCoroutine(CallWeatherApi());
     }
     
     string ComposeUrl()
@@ -65,18 +77,25 @@ public class WeatherInfo : MonoBehaviour
             // Request was successful
             string jsonResponse = request.downloadHandler.text;
             Debug.Log(jsonResponse);
-            WeatherData weatherData = JsonUtility.FromJson<WeatherData>(jsonResponse);
+
+            Root weatherData = JsonConvert.DeserializeObject<Root>(jsonResponse);
 
             UpdateWidget(weatherData);
         }            
     }
 
-    void UpdateWidget(WeatherData a_weatherData)
+    void UpdateWidget(Root a_weatherData)
     {
         m_locationText.text = a_weatherData.city.name;
+        m_dateText.text = ExtractDatefromDateTimeString(a_weatherData.list[0].dt_txt);
         m_temperatureText.text = a_weatherData.list[0].main.temp.ToString() + "°C";
         m_weatherText.text = a_weatherData.list[0].weather[0].main;
-        m_precipitationText.text = a_weatherData.list[0].rain._1h.ToString() + " mm";
+        if(a_weatherData.list[0].rain != null)
+        {
+            m_precipitationText.text = a_weatherData.list[0].rain["3h"].ToString() + "mm/3hrs";
+
+        }
+
         m_windText.text = a_weatherData.list[0].wind.speed.ToString() + " km/h";
         m_humidityText.text = a_weatherData.list[0].main.humidity.ToString() + "%";
         m_weatherImage.sprite = m_spriteDictionary.GetSprite(a_weatherData.list[0].weather[0].main);
@@ -87,7 +106,7 @@ public class WeatherInfo : MonoBehaviour
         }
     }
 
-    void UpdateSubWidget(WeatherData a_weatherData, int a_iteration, SubWidget a_subWidget)
+    void UpdateSubWidget(Root a_weatherData, int a_iteration, SubWidget a_subWidget)
     {
         a_subWidget.m_temperatureText.text = a_weatherData.list[a_iteration].main.temp.ToString() + "°C";
         a_subWidget.m_timeText.text = ExtractTimeFromDateTimeString(a_weatherData.list[a_iteration].dt_txt);
@@ -101,6 +120,22 @@ public class WeatherInfo : MonoBehaviour
         {
             // Format the DateTime to "HH:mm" using a custom format string
             string formattedTime = dateTime.ToString("HH:mm");
+            return formattedTime;
+        }
+        else
+        {
+            // Handle parsing error, e.g., invalid format
+            return "Invalid Format";
+        }
+    }
+
+    public string ExtractDatefromDateTimeString(string a_dateTimeString)
+    {
+        // Parse the input string as a DateTime
+        if (DateTime.TryParse(a_dateTimeString, out DateTime dateTime))
+        {
+            // Format the DateTime to "HH:mm" using a custom format string
+            string formattedTime = dateTime.ToString("dd MMMM");
             return formattedTime;
         }
         else
