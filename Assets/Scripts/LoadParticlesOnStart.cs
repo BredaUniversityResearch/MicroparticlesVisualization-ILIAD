@@ -133,19 +133,20 @@ public class LoadParticlesOnStart : MonoBehaviour
 		}
 		string[] entries = lines[0].Split(',');
 		int numberParticles = entries.Length;
+		//int numberParticles = 92;
 		result = new float[lines.Length * numberParticles];
 
 		int i = 0;
 		while (true)
 		{
-			if (numberParticles != entries.Length)
-			{
-				Debug.LogError($"Inconsistent amount of particle data on line {i} in file \"{a_csvFile.name}\", parsing failed. The line has {entries.Length} entries per instead of {numberParticles}.");
-				result = null;
-				return false;
-			}
+			//if (numberParticles != entries.Length)
+			//{
+			//	Debug.LogError($"Inconsistent amount of particle data on line {i} in file \"{a_csvFile.name}\", parsing failed. The line has {entries.Length} entries per instead of {numberParticles}.");
+			//	result = null;
+			//	return false;
+			//}
 
-			for (int j = 0; j < entries.Length; j++)
+			for (int j = 0; j < numberParticles; j++)
 			{
 				if (float.TryParse(entries[j], out float value))
 				{
