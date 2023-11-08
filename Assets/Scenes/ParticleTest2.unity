@@ -141,23 +141,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd961b1c9541a4cee99686069ecce852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &302431086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 302431083}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c699b8e1864b4b248acb7a04ede9480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _panSpeed: 1
-  _zoomSpeed: 0.25
-  _referenceCamera: {fileID: 927074766}
-  _mapManager: {fileID: 302431084}
-  _useDegreeMethod: 0
 --- !u!114 &302431088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,8 +153,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83c1388dd7ecb48428d51c1fe1781061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SeaViewCursor: {fileID: 2800000, guid: 8b7be4c6ee4bb3b48895d1e2ec21add9, type: 3}
+  SeaViewCursor: {fileID: 2800000, guid: 4a0540105663b5641867d33b30907d7f, type: 3}
   HotSpot: {x: 12, y: 24}
+--- !u!64 &302431090
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302431083}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!114 &302431091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302431083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25f3ee1e8fd680e449102ecf2f6827b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _panSpeed: 1
+  _zoomSpeed: 0.25
+  _referenceCamera: {fileID: 927074766}
+  _mapManager: {fileID: 302431084}
+  _useDegreeMethod: 1
 --- !u!1 &608172450
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,11 +572,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1257486800756004, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 302431086}
+      addedObject: {fileID: 302431088}
     - targetCorrespondingSourceObject: {fileID: 1257486800756004, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 302431088}
+      addedObject: {fileID: 302431090}
+    - targetCorrespondingSourceObject: {fileID: 1257486800756004, guid: e6b749c6d877f4c19a5a5c3c0783d53b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 302431091}
   m_SourcePrefab: {fileID: 100100000, guid: e6b749c6d877f4c19a5a5c3c0783d53b, type: 3}
 --- !u!1 &1627560457
 GameObject:
