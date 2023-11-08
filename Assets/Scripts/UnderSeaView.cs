@@ -1,3 +1,4 @@
+using System;
 using Mapbox.Unity.Map;
 using Mapbox.Unity.Map.TileProviders;
 using Mapbox.Unity.MeshGeneration.Data;
@@ -5,8 +6,26 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(AbstractMap), typeof(MeshCollider))]
-public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler
 {
+    enum ViewMode
+    {
+        Map,
+        UnderSea
+    }
+
+    private ViewMode viewMode = ViewMode.Map;
+
+    /// <summary>
+    /// The top-down camera looking at the map.
+    /// </summary>
+    public Camera mapCamera;
+
+    /// <summary>
+    /// The under water camera.
+    /// </summary>
+    public Camera underSeaCamera;
+
     /// <summary>
     /// The cursor to use when hovering over the map.
     /// </summary>
@@ -42,7 +61,7 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
 
         var mesh = meshCollider.sharedMesh ?? new Mesh();
-        
+
         mesh.CombineMeshes(combine);
 
         meshCollider.sharedMesh = mesh;
@@ -52,6 +71,10 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         map = GetComponent<AbstractMap>();
         meshCollider = GetComponent<MeshCollider>();
+
+        mapCamera.enabled = true;
+        underSeaCamera.enabled = false;
+        viewMode = ViewMode.Map;
 
         UpdateMeshCollider();
 
@@ -67,7 +90,19 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if (eventData.clickCount == 2)
         {
-            Debug.Log("Under Sea View: Double Click!");
+            switch (viewMode)
+            {
+                case ViewMode.Map:
+                    mapCamera.enabled = false;
+                    underSeaCamera.enabled = true;
+                    viewMode = ViewMode.UnderSea;
+                    break;
+                case ViewMode.UnderSea:
+                    underSeaCamera.enabled = false;
+                    mapCamera.enabled = true;
+                    viewMode = ViewMode.Map;
+                    break;
+            }
         }
     }
 
@@ -79,5 +114,29 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerExit(PointerEventData eventData)
     {
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+    }
+
+    private Vector3 debugCursor;
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(debugCursor, 1);
+    }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        if (viewMode == ViewMode.Map)
+        {
+            Vector3 screenPoint = eventData.position;
+            screenPoint.z = mapCamera.transform.localPosition.y;
+
+            var worldPoint = mapCamera.ScreenToWorldPoint(screenPoint);
+
+            underSeaCamera.transform.localPosition = new Vector3(worldPoint.x, underSeaCamera.transform.localPosition.y, worldPoint.z);
+            underSeaCamera.transform.LookAt(Vector3.zero); // TODO: Compute the position of the particle cluster.
+
+            debugCursor = worldPoint;
+        }
     }
 }

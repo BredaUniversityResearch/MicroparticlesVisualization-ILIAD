@@ -88,7 +88,6 @@ public partial struct PositionParticleJob : IJobEntity
     public float3 GeoToWorldPositionXZ(float2 latitudeLongitude, float depth)
     {
         var worldPosXY = GeoToWorldPosition(double2(latitudeLongitude), CenterMercator, WorldRelativeScale * ScaleFactor);
-        //return float3((float)worldPosXY.x, depth * WorldRelativeScale * ScaleFactor, (float)worldPosXY.y);
         return float3((float)worldPosXY.x, depth * WorldRelativeScale * ScaleFactor, (float)worldPosXY.y);
     }
 
