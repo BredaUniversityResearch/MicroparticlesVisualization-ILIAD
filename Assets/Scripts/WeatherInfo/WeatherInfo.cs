@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net.Http;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,8 +18,10 @@ public class WeatherInfo : MonoBehaviour
     [SerializeField]
     string m_lat = "63.458";
 
-    string m_appid = "d25a7e67f8723dff49c13d45fed0dddf";
-    string m_apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&cnt=6&appid={API_key}";
+    string m_appid_path = "Assets/Secrets/OpenWeatherAPIKey.txt";
+    string m_appid;
+
+    string m_apiUrl;
     
     [SerializeField]
     SpriteDictionary m_spriteDictionary;
@@ -38,6 +41,9 @@ public class WeatherInfo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        m_appid = File.ReadAllText(m_appid_path);
+        m_apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&cnt=6&appid={API_key}";
+
         StartCoroutine(CallWeatherApi());
         m_homePageToggle.onValueChanged.AddListener((isOn) => {
             if (isOn)
