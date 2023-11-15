@@ -169,8 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_particlePrefab: {fileID: 4033240217446707504, guid: 6b2dc8fd9073e6545b23ac96d49a0e52,
     type: 3}
-  m_mapPrefab: {fileID: 7848806425436390281, guid: 3cc15cfa0150dff42849ad673c403052,
-    type: 3}
+  m_particleScale: 2.41
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

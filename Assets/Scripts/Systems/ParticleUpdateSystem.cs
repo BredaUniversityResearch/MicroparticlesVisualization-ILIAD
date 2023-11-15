@@ -36,6 +36,7 @@ public partial struct ParticlePositioningSystem : ISystem
                 ScaleFactor = abstractMapData.scaleFactor,
                 CenterMercator = abstractMapData.centerMercator,
                 WorldRelativeScale = abstractMapData.worldRelativeScale,
+                ParticleScale = abstractMapData.particleScale,
                 Position = abstractMapData.mapPosition,
                 Scale = abstractMapData.mapScale,
                 Rotation = abstractMapData.mapRotation
@@ -55,6 +56,7 @@ public partial struct PositionParticleJob : IJobEntity
     public float ScaleFactor;
     public double2 CenterMercator;
     public float WorldRelativeScale;
+    public float ParticleScale;
     public float3 Position;
     public float3 Scale;
     public quaternion Rotation;
@@ -69,6 +71,7 @@ public partial struct PositionParticleJob : IJobEntity
 
         a_particle.Colour = float4(rg, rg, b, 1f);
         a_particle.Position = GeoToWorldPosition(pos);
+        a_particle.Scale = ParticleScale;
     }
 
     [BurstCompile]

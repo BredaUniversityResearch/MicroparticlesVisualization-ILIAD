@@ -10,4 +10,9 @@ public struct AbstractMapData : IComponentData
     public float3 mapPosition;
     public float3 mapScale;
     public quaternion mapRotation;
+
+    /// <summary>
+    /// Used to scale the individual particles.
+    /// </summary>
+    public float particleScale;
 }

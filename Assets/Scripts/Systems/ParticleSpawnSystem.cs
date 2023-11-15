@@ -109,6 +109,7 @@ public partial struct SpawnParticleJob : IJobParallelFor
 	[ReadOnly] public Entity m_prefab;
 	[ReadOnly] public BlobAssetReference<ParticlePropertiesBlob> m_spawnData;
 	[ReadOnly] public int m_entriesPerParticle;
+
 	public EntityCommandBuffer.ParallelWriter m_ecb;
 
 	[BurstCompile]
@@ -119,10 +120,9 @@ public partial struct SpawnParticleJob : IJobParallelFor
 		{
 			Position = float3.zero,
 			Rotation = quaternion.identity,
-			//Scale = 0.001f
-			Scale = 5f
 		};
-		m_ecb.SetComponent(a_index, newParticle, newTransform);
+
+        m_ecb.SetComponent(a_index, newParticle, newTransform);
 		m_ecb.AddComponent<ParticleColourComponent>(a_index, newParticle, new ParticleColourComponent { Value = new float4(1f, 1f, 1f, 1f)});
 
 		BlobBuilder builder = new BlobBuilder(Allocator.Temp);

@@ -1,30 +1,42 @@
-using System;
 using Mapbox.Unity.Map;
 using Mapbox.Unity.Map.TileProviders;
-using Mapbox.Unity.MeshGeneration.Data;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.EventSystems.PointerEventData;
 
 [RequireComponent(typeof(AbstractMap), typeof(MeshCollider))]
-public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler
+public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IPointerMoveHandler, IDragHandler
 {
     enum ViewMode
     {
-        Map,
-        UnderSea
+        _2D,
+        _3D
     }
 
-    private ViewMode viewMode = ViewMode.Map;
+    /// <summary>
+    /// Current view mode.
+    /// </summary>
+    private ViewMode viewMode = ViewMode._2D;
 
     /// <summary>
     /// The top-down camera looking at the map.
     /// </summary>
-    public Camera mapCamera;
+    public Camera MapCamera;
 
     /// <summary>
     /// The under water camera.
     /// </summary>
-    public Camera underSeaCamera;
+    public Camera UnderSeaCamera;
+
+    /// <summary>
+    /// Pitch speed (degree/pixel).
+    /// </summary>
+    public float PitchSpeed = 1.0f;
+
+    /// <summary>
+    /// Yaw speed (degrees/pixel).
+    /// </summary>
+    public float YawSpeed = 1.0f;
 
     /// <summary>
     /// The cursor to use when hovering over the map.
@@ -45,6 +57,9 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     /// Mesh collider for detecting pointer events.
     /// </summary>
     private MeshCollider meshCollider;
+
+    private float pitch = 0;
+    private float yaw = 0;
 
     /// <summary>
     /// Update the collider that is used for detecting pointer events.
@@ -72,9 +87,12 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         map = GetComponent<AbstractMap>();
         meshCollider = GetComponent<MeshCollider>();
 
-        mapCamera.enabled = true;
-        underSeaCamera.enabled = false;
-        viewMode = ViewMode.Map;
+        MapCamera.enabled = true;
+        UnderSeaCamera.enabled = false;
+        viewMode = ViewMode._2D;
+
+        pitch = UnderSeaCamera.transform.localEulerAngles.y;
+        yaw = UnderSeaCamera.transform.localEulerAngles.x;
 
         UpdateMeshCollider();
 
@@ -92,15 +110,15 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             switch (viewMode)
             {
-                case ViewMode.Map:
-                    mapCamera.enabled = false;
-                    underSeaCamera.enabled = true;
-                    viewMode = ViewMode.UnderSea;
+                case ViewMode._2D:
+                    MapCamera.enabled = false;
+                    UnderSeaCamera.enabled = true;
+                    viewMode = ViewMode._3D;
                     break;
-                case ViewMode.UnderSea:
-                    underSeaCamera.enabled = false;
-                    mapCamera.enabled = true;
-                    viewMode = ViewMode.Map;
+                case ViewMode._3D:
+                    UnderSeaCamera.enabled = false;
+                    MapCamera.enabled = true;
+                    viewMode = ViewMode._2D;
                     break;
             }
         }
@@ -116,6 +134,8 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 
+#if UNITY_EDITOR
+    // For debugging purposes only.
     private Vector3 debugCursor;
 
     void OnDrawGizmos()
@@ -123,20 +143,45 @@ public class UnderSeaView : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(debugCursor, 1);
     }
+#endif
 
     public void OnPointerMove(PointerEventData eventData)
     {
-        if (viewMode == ViewMode.Map)
+        if (viewMode == ViewMode._2D)
         {
             Vector3 screenPoint = eventData.position;
-            screenPoint.z = mapCamera.transform.localPosition.y;
+            screenPoint.z = MapCamera.transform.localPosition.y;
 
-            var worldPoint = mapCamera.ScreenToWorldPoint(screenPoint);
+            var worldPoint = MapCamera.ScreenToWorldPoint(screenPoint);
 
-            underSeaCamera.transform.localPosition = new Vector3(worldPoint.x, underSeaCamera.transform.localPosition.y, worldPoint.z);
-            underSeaCamera.transform.LookAt(Vector3.zero); // TODO: Compute the position of the particle cluster.
+            UnderSeaCamera.transform.localPosition = new Vector3(worldPoint.x, UnderSeaCamera.transform.localPosition.y, worldPoint.z);
 
+#if UNITY_EDITOR
             debugCursor = worldPoint;
+#endif
+        }
+    }
+
+    public void RotateCamera3D(PointerEventData eventData, Camera camera)
+    {
+        if (eventData.dragging && eventData.button == InputButton.Right)
+        {
+
+            pitch -= eventData.delta.y * PitchSpeed;
+            yaw += eventData.delta.x * YawSpeed;
+
+            var rotation = Quaternion.AngleAxis(yaw, Vector3.up) * Quaternion.AngleAxis(pitch, Vector3.right);
+
+            camera.transform.localRotation = rotation;
+        }
+    }
+
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (viewMode == ViewMode._3D)
+        {
+            RotateCamera3D(eventData, UnderSeaCamera);
         }
     }
 }
