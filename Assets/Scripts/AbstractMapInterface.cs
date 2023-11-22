@@ -1,3 +1,4 @@
+using CesiumForUnity;
 using Mapbox.Unity.Map;
 using Unity.Entities;
 using UnityEngine;
@@ -8,7 +9,7 @@ using static Unity.Mathematics.math;
 /// </summary>
 public class AbstractMapInterface : MonoBehaviour
 {
-    public AbstractMap map;
+    public CesiumGeoreference Georeference;
     
     // Start is called before the first frame update
     void Start()
@@ -29,12 +30,7 @@ public class AbstractMapInterface : MonoBehaviour
 
             var abstractMapData = new AbstractMapData();
 
-            abstractMapData.scaleFactor = Mathf.Pow(2, map.InitialZoom - map.AbsoluteZoom);
-            abstractMapData.worldRelativeScale = map.WorldRelativeScale;
-            abstractMapData.centerMercator = double2(map.CenterMercator.x, map.CenterMercator.y);
-            abstractMapData.mapPosition = map.transform.position;
-            abstractMapData.mapScale = map.transform.localScale;
-            abstractMapData.mapRotation = map.transform.rotation;
+            abstractMapData.ECEFMatrix = Georeference.ecefToLocalMatrix;
 
             entityManager.SetComponentData(mapEntity, abstractMapData);
         }
