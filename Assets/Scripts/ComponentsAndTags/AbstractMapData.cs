@@ -10,4 +10,6 @@ public struct AbstractMapData : IComponentData
     public float3 mapPosition;
     public float3 mapScale;
     public quaternion mapRotation;
+
+    public float timelineValue; // The value of the timeline (in the range 0 to 1).
 }

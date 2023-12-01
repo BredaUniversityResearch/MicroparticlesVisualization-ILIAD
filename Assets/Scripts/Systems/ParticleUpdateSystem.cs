@@ -25,9 +25,9 @@ public partial struct ParticlePositioningSystem : ISystem
         Entity abstractMapDataEnt = SystemAPI.GetSingletonEntity<AbstractMapData>();
 
         ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
-        int timeIndex = particleTimingAspect.PassTime(SystemAPI.Time.DeltaTime);
 
         AbstractMapData abstractMapData = SystemAPI.GetComponent<AbstractMapData>(abstractMapDataEnt);
+        int timeIndex = particleTimingAspect.IndexAtTime(abstractMapData.timelineValue * particleTimingAspect.TotalTime);
 
         new PositionParticleJob
         {
