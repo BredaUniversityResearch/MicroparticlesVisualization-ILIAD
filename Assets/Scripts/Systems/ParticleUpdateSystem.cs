@@ -47,6 +47,7 @@ public partial struct PositionParticleJob : IJobEntity
     [BurstCompile]
     private void Execute(ParticleUpdateAspect a_particle)
     {
+        // Get the particle position in longitude/latitude/depth values.
         var pos = a_particle[TimeIndex];
 
         float rg = pow(1f - abs(pos.z) / 100f, 2);
@@ -57,9 +58,9 @@ public partial struct PositionParticleJob : IJobEntity
     }
 
     [BurstCompile]
-    public float3 GeoToLocalPosition(float3 latitudeLongitudeDepth)
+    public float3 GeoToLocalPosition(float3 longitudeLatitudeDepth)
     {
-        var ecef = CesiumWgs84Ellipsoid.LongitudeLatitudeHeightToEarthCenteredEarthFixed(latitudeLongitudeDepth);
+        var ecef = CesiumWgs84Ellipsoid.LongitudeLatitudeHeightToEarthCenteredEarthFixed(longitudeLatitudeDepth);
         var pos = mul(ECEFtoLocal, double4(ecef, 1.0)).xyz;
         return float3(pos);
     }

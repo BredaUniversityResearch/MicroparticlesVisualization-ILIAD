@@ -9,8 +9,8 @@ public struct ParticleProperties : IComponentData
 
 public struct ParticlePropertiesBlob
 {
-	public BlobArray<float> m_lats;
 	public BlobArray<float> m_lons;
+    public BlobArray<float> m_lats;
 	public BlobArray<float> m_depths;
 }
 

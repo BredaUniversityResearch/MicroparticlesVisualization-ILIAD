@@ -18,8 +18,8 @@ public readonly partial struct ParticleUpdateAspect : IAspect
     /// <param name="index">The index in the longitude, latitude, and depth buffers.</param>
     /// <returns>The particles longitude, latitude, depth at a specific index.</returns>
     public float3 this[int index] =>
-        float3(m_particleProperties.ValueRO.Value.Value.m_lats[index],
-            m_particleProperties.ValueRO.Value.Value.m_lons[index],
+        float3(m_particleProperties.ValueRO.Value.Value.m_lons[index],
+            m_particleProperties.ValueRO.Value.Value.m_lats[index],
             m_particleProperties.ValueRO.Value.Value.m_depths[index]);
 
     public float3 Position
