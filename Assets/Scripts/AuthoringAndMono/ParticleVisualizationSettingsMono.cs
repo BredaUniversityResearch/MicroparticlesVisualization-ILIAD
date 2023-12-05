@@ -1,6 +1,6 @@
-using Mapbox.Unity.Map;
+using CesiumForUnity;
 using Unity.Entities;
-using Unity.Mathematics;
+using Unity.Entities.Content;
 using UnityEngine;
 
 public class ParticleVisualizationSettingsMono : MonoBehaviour
