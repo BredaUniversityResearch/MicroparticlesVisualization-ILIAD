@@ -689,6 +689,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Georeference: {fileID: 1178919417}
+  CameraAnchor: {fileID: 353758758}
+  timelineTestValue: 0
+  stepRate: 0.1
+  play: 0
+  particleSize: 7.6
 --- !u!1 &1507313455
 GameObject:
   m_ObjectHideFlags: 0

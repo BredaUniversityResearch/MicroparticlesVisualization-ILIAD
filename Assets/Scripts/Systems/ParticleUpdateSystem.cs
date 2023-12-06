@@ -32,7 +32,10 @@ public partial struct ParticlePositioningSystem : ISystem
             new PositionParticleJob
             {
                 TimeIndex = timeIndex,
-                ECEFtoLocal = abstractMapData.ECEFMatrix
+                ECEFtoLocal = abstractMapData.ECEFMatrix,
+                CameraPosition = abstractMapData.cameraPosition,
+                CameraHeight = abstractMapData.cameraHeight,
+                ParticleSize = abstractMapData.particleSize
             }.ScheduleParallel();
         }
     }
@@ -43,6 +46,9 @@ public partial struct PositionParticleJob : IJobEntity
 {
     public int TimeIndex;
     public double4x4 ECEFtoLocal;
+    public float3 CameraPosition;
+    public float CameraHeight;
+    public float ParticleSize;
 
     [BurstCompile]
     private void Execute(ParticleUpdateAspect a_particle)
@@ -54,7 +60,13 @@ public partial struct PositionParticleJob : IJobEntity
         float b = 1f - pow(abs(pos.z) / 100f, 2);
 
         a_particle.Colour = float4(rg, rg, b, 1f);
-        a_particle.Position = GeoToLocalPosition(pos);
+        pos = GeoToLocalPosition(pos);
+        a_particle.Position = pos;
+
+        // Scale the particle based on distance to the camera.
+        var d = distance(CameraPosition, pos);
+        a_particle.Scale = d * ParticleSize;
+        //a_particle.Scale = CameraHeight * ParticleSize;
     }
 
     [BurstCompile]

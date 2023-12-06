@@ -28,6 +28,12 @@ public readonly partial struct ParticleUpdateAspect : IAspect
         set => m_transform.ValueRW.Position = value;
     }
 
+    public float Scale
+    {
+        get => m_transform.ValueRO.Scale;
+        set => m_transform.ValueRW.Scale = value;
+    }
+
     public float4 Colour
     {
         set => m_colour.ValueRW.Value = value;

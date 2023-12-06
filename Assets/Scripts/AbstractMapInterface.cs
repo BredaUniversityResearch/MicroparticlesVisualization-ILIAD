@@ -1,8 +1,6 @@
 using CesiumForUnity;
-using Mapbox.Unity.Map;
 using Unity.Entities;
 using UnityEngine;
-using static Unity.Mathematics.math;
 
 /// <summary>
 /// This class interfaces with the AbstractMap in the main scene with the AbstractMapData in the Entities world.
@@ -10,6 +8,7 @@ using static Unity.Mathematics.math;
 public class AbstractMapInterface : MonoBehaviour
 {
     public CesiumGeoreference Georeference;
+    public CesiumGlobeAnchor CameraAnchor;
 
     [Range(0, 1)]
     public float timelineTestValue;
@@ -17,6 +16,10 @@ public class AbstractMapInterface : MonoBehaviour
     [Range(0, 1)]
     public float stepRate = 0.1f;
     public bool play;
+
+    // The size that the particle should appear on screen.
+    [Range(0, 1)]
+    public float particleSize;
     
     // Start is called before the first frame update
     void Start()
@@ -40,10 +43,15 @@ public class AbstractMapInterface : MonoBehaviour
         {
             var mapEntity = entityQuery.GetSingletonEntity();
 
-            var abstractMapData = new AbstractMapData();
-
-            abstractMapData.ECEFMatrix = Georeference.ecefToLocalMatrix;
-            abstractMapData.timelineValue = timelineTestValue;
+            var abstractMapData = new AbstractMapData
+            {
+                ECEFMatrix = Georeference.ecefToLocalMatrix,
+                cameraPosition = Camera.main.transform.position,
+                cameraHeight = (float)CameraAnchor.longitudeLatitudeHeight.z,
+                cameraFoV =  Camera.main.fieldOfView * Mathf.Deg2Rad,
+                timelineValue = timelineTestValue,
+                particleSize = particleSize
+            };
 
             entityManager.SetComponentData(mapEntity, abstractMapData);
         }
