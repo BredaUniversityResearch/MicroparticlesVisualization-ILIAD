@@ -3,13 +3,7 @@ using Unity.Mathematics;
 
 public struct AbstractMapData : IComponentData
 {
-    public float scaleFactor; // 2^(map.InitialZoom - map.AbsoluteZoom)
-    public float worldRelativeScale; // map.WorldRelativeScale
-    public double2 centerMercator; // map.CenterMercator
-
-    public float3 mapPosition;
-    public float3 mapScale;
-    public quaternion mapRotation;
+    public double4x4 ECEFMatrix;
 
     public float timelineValue; // The value of the timeline (in the range 0 to 1).
 }
