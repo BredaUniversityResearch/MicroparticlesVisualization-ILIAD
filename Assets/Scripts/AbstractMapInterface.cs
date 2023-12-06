@@ -46,9 +46,7 @@ public class AbstractMapInterface : MonoBehaviour
             var abstractMapData = new AbstractMapData
             {
                 ECEFMatrix = Georeference.ecefToLocalMatrix,
-                cameraPosition = Camera.main.transform.position,
                 cameraHeight = (float)CameraAnchor.longitudeLatitudeHeight.z,
-                cameraFoV =  Camera.main.fieldOfView * Mathf.Deg2Rad,
                 timelineValue = timelineTestValue,
                 particleSize = particleSize
             };
