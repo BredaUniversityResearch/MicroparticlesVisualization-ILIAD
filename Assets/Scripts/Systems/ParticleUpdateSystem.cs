@@ -15,19 +15,19 @@ public partial struct ParticlePositioningSystem : ISystem
 
     [BurstCompile]
     public void OnDestroy(ref SystemState a_state)
-    { }
+    {
+    }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState a_state)
     {
-        if (SystemAPI.HasSingleton<AbstractMapData>())
+        if (SystemAPI.HasSingleton<ParticleTimingData>() && SystemAPI.HasSingleton<AbstractMapData>())
         {
             Entity particleTimingEnt = SystemAPI.GetSingletonEntity<ParticleTimingData>();
-            ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
-            int timeIndex = particleTimingAspect.PassTime(SystemAPI.Time.DeltaTime);
-            
             Entity abstractMapDataEnt = SystemAPI.GetSingletonEntity<AbstractMapData>();
+            ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
             AbstractMapData abstractMapData = SystemAPI.GetComponent<AbstractMapData>(abstractMapDataEnt);
+            int timeIndex = particleTimingAspect.IndexAtTime(abstractMapData.timelineValue * particleTimingAspect.TotalTime);
 
             new PositionParticleJob
             {
