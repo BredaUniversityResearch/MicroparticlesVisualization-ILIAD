@@ -51,8 +51,6 @@ public class LoadParticlesOnStart : MonoBehaviour
             entityManager.AddComponentData(root, new ParticleTimingData
             {
                 m_numberIndices = numDepth,
-                m_timeIndex = 0,
-                m_timePassed = 0f,
                 m_timePerIndex = m_timePerTimeIndex
             });
         }
