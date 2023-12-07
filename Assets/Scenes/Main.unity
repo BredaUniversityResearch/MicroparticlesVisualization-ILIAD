@@ -2011,12 +2011,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 283586431}
   m_CullTransparentMesh: 1
---- !u!1 &299450596 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6840899021995870281, guid: 6e933b3c4f005f647b9b1c0bc4b12edc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1719231628871149379}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &324353664
 GameObject:
   m_ObjectHideFlags: 0
@@ -2294,12 +2288,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 350890606}
   m_CullTransparentMesh: 1
---- !u!1 &405129051 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4050001352408386638, guid: 6e933b3c4f005f647b9b1c0bc4b12edc,
-    type: 3}
-  m_PrefabInstance: {fileID: 1719231628871149379}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &421924622
 GameObject:
   m_ObjectHideFlags: 0
@@ -4765,6 +4753,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1719231628871149379}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &802560824 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8563039808492739390, guid: 6e933b3c4f005f647b9b1c0bc4b12edc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1719231628871149379}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15aa09186a2401d42a1f46b13afa5746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &808047563
 GameObject:
   m_ObjectHideFlags: 0
@@ -10019,12 +10019,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_lip
       value: 
-      objectReference: {fileID: 405129051}
+      objectReference: {fileID: 0}
     - target: {fileID: 1413851179044131461, guid: 6cac71a4666f19c4d8cd9c038e0e3a3e,
         type: 3}
       propertyPath: m_leftBar
       value: 
-      objectReference: {fileID: 299450596}
+      objectReference: {fileID: 0}
     - target: {fileID: 1413851179044131461, guid: 6cac71a4666f19c4d8cd9c038e0e3a3e,
         type: 3}
       propertyPath: m_mapScreen
@@ -10070,6 +10070,11 @@ PrefabInstance:
       propertyPath: m_measurementsScreen
       value: 
       objectReference: {fileID: 196045120}
+    - target: {fileID: 1413851179044131461, guid: 6cac71a4666f19c4d8cd9c038e0e3a3e,
+        type: 3}
+      propertyPath: m_collapseExpandLeftBar
+      value: 
+      objectReference: {fileID: 802560824}
     - target: {fileID: 1562747643911165933, guid: 6cac71a4666f19c4d8cd9c038e0e3a3e,
         type: 3}
       propertyPath: m_AnchorMax.x

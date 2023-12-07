@@ -20,7 +20,7 @@ public class CollapseLeftBar : MonoBehaviour
         m_expandButton.onClick.AddListener(Expand);
     }
 
-    void Collapse()
+    public void Collapse()
     {
         RectTransform leftBarTransform = m_leftBar.GetComponent<RectTransform>();
         RectTransform mainScreenTransform = m_mainScreen.GetComponent<RectTransform>();
@@ -38,7 +38,7 @@ public class CollapseLeftBar : MonoBehaviour
         m_expandButton.gameObject.SetActive(true);
     }
 
-    void Expand()
+    public void Expand()
     {
         RectTransform leftBarTransform = m_leftBar.GetComponent<RectTransform>();
         RectTransform mainScreenTransform = m_mainScreen.GetComponent<RectTransform>();
