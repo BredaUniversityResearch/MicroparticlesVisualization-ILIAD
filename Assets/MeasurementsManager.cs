@@ -103,7 +103,7 @@ public class MeasurementsManager : MonoBehaviour
         {
             // Instantiate a new entry
             tempInstance = Instantiate(m_measurementEntryPRFB, m_measurementTable.transform);
-            tempInstance.GetComponent<TableEntry>().SetContent("Entry " + a_entryCode, a_buoy, a_buoyText, a_rangeStart.ToString(), a_url);
+            tempInstance.GetComponent<TableEntry>().SetContent("Entry " + a_entryCode, a_buoy, a_buoyText, a_rangeStart.ToString("dd/MM/yyyy HH:mm"), a_url);
             m_instancedEntries.Add(tempInstance);
         }
     }
