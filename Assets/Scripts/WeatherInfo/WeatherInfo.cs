@@ -1,14 +1,12 @@
 using System;
 using System.IO;
-using System.Net.Http;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using TMPro;
-using Newtonsoft.Json.Linq;
-using Mapbox.Json;
 
 public class WeatherInfo : MonoBehaviour
 {
