@@ -249,6 +249,16 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0.11764706
       objectReference: {fileID: 0}
+    - target: {fileID: 3686859234733799653, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 96
+      objectReference: {fileID: 0}
+    - target: {fileID: 3686859234733799653, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 96
+      objectReference: {fileID: 0}
     - target: {fileID: 3878164179357342623, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
       propertyPath: m_AnchorMax.y

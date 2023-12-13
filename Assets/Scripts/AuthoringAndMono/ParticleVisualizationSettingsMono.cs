@@ -1,12 +1,10 @@
-using CesiumForUnity;
 using Unity.Entities;
-using Unity.Entities.Content;
 using UnityEngine;
 
 public class ParticleVisualizationSettingsMono : MonoBehaviour
 {
 	public GameObject m_particlePrefab;
-
+    
     private class Baker : Baker<ParticleVisualizationSettingsMono>
     {
         public override void Bake(ParticleVisualizationSettingsMono authoring)

@@ -15,24 +15,26 @@ public partial struct ParticlePositioningSystem : ISystem
 
     [BurstCompile]
     public void OnDestroy(ref SystemState a_state)
-    { }
+    {
+    }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState a_state)
     {
-        if (SystemAPI.HasSingleton<AbstractMapData>())
+        if (SystemAPI.HasSingleton<ParticleTimingData>() && SystemAPI.HasSingleton<AbstractMapData>())
         {
             Entity particleTimingEnt = SystemAPI.GetSingletonEntity<ParticleTimingData>();
-            ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
-            int timeIndex = particleTimingAspect.PassTime(SystemAPI.Time.DeltaTime);
-            
             Entity abstractMapDataEnt = SystemAPI.GetSingletonEntity<AbstractMapData>();
+            ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
             AbstractMapData abstractMapData = SystemAPI.GetComponent<AbstractMapData>(abstractMapDataEnt);
+            int timeIndex = particleTimingAspect.IndexAtTime(abstractMapData.timelineValue * particleTimingAspect.TotalTime);
 
             new PositionParticleJob
             {
                 TimeIndex = timeIndex,
-                ECEFtoLocal = abstractMapData.ECEFMatrix
+                ECEFtoLocal = abstractMapData.ECEFMatrix,
+                CameraHeight = abstractMapData.cameraHeight,
+                ParticleSize = abstractMapData.particleSize
             }.ScheduleParallel();
         }
     }
@@ -43,6 +45,8 @@ public partial struct PositionParticleJob : IJobEntity
 {
     public int TimeIndex;
     public double4x4 ECEFtoLocal;
+    public float CameraHeight;
+    public float ParticleSize;
 
     [BurstCompile]
     private void Execute(ParticleUpdateAspect a_particle)
@@ -54,7 +58,11 @@ public partial struct PositionParticleJob : IJobEntity
         float b = 1f - pow(abs(pos.z) / 100f, 2);
 
         a_particle.Colour = float4(rg, rg, b, 1f);
-        a_particle.Position = GeoToLocalPosition(pos);
+        pos = GeoToLocalPosition(pos);
+        a_particle.Position = pos;
+
+        // Scale the particle based on camera elevation.
+        a_particle.Scale = CameraHeight * ParticleSize;
     }
 
     [BurstCompile]
