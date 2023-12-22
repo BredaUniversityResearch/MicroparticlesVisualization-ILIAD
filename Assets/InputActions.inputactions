@@ -2,9 +2,18 @@
     "name": "InputActions",
     "maps": [
         {
-            "name": "Movement",
+            "name": "CameraController",
             "id": "e2433e69-6056-4d37-9594-77b3032c4eab",
             "actions": [
+                {
+                    "name": "look",
+                    "type": "Value",
+                    "id": "4294a627-5db8-40a3-b444-589b45636b2d",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
                 {
                     "name": "move",
                     "type": "Value",
@@ -13,16 +22,58 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "moveUp",
+                    "type": "Button",
+                    "id": "b33ceb4b-9f5d-4ede-ada8-ad1273e989fe",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
+                {
+                    "name": "",
+                    "id": "f22144e1-fd7e-4642-b1a9-0c961691d93e",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "moveUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "31eaa145-a7c1-45fe-ae36-b1ba489519f4",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bf1ad42d-cea0-4d7e-b4f1-4485d98638e8",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "ScaleVector2(x=15,y=15)",
+                    "groups": "Mouse and Keyboard",
+                    "action": "look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
                 {
                     "name": "",
                     "id": "bbb7ffbb-d2c7-40ea-b04f-42bc841d717d",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -44,7 +95,7 @@
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -55,7 +106,7 @@
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -66,7 +117,7 @@
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -77,7 +128,7 @@
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -88,7 +139,7 @@
                     "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -99,7 +150,7 @@
                     "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -110,7 +161,7 @@
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -121,7 +172,7 @@
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
-                    "groups": "3D",
+                    "groups": "Mouse and Keyboard",
                     "action": "move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -131,9 +182,25 @@
     ],
     "controlSchemes": [
         {
-            "name": "3D",
-            "bindingGroup": "3D",
-            "devices": []
+            "name": "Mouse and Keyboard",
+            "bindingGroup": "Mouse and Keyboard",
+            "devices": [
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": true,
+                    "isOR": false
+                }
+            ]
         }
     ]
 }
