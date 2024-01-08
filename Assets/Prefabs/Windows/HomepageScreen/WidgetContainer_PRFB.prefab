@@ -404,6 +404,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6977082214176381594, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
+    - target: {fileID: 7089408144361094036, guid: e6101278c2781c449a2a81524fd055bf,
+        type: 3}
+      propertyPath: m_Name
+      value: Forecasts
+      objectReference: {fileID: 0}
     - target: {fileID: 7298707929066029914, guid: e6101278c2781c449a2a81524fd055bf,
         type: 3}
       propertyPath: m_text
