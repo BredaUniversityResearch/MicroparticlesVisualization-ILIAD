@@ -9,7 +9,7 @@ public class MeasurementsManager : MonoBehaviour
     GameObject m_measurementEntryPRFB, m_measurementTable;
 
     [SerializeField]
-    CustomInputField m_startDateInput, m_endDateInput;
+    CustomInputField m_startDateInput;
 
     List<GameObject> m_instancedEntries = new List<GameObject>();
     DateTime m_startDate, m_endDate;
@@ -17,8 +17,7 @@ public class MeasurementsManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        m_startDateInput.onEndEdit.AddListener(OnDateEndEdit);
-        m_endDateInput.onEndEdit.AddListener(OnDateEndEdit);
+        m_startDateInput.onEndEdit.AddListener(OnDateEdit);
 
         m_endDate = DateTime.Now.Date;
         m_startDate = DateTime.Now.Date.AddDays(-5);
@@ -113,13 +112,14 @@ public class MeasurementsManager : MonoBehaviour
         return DateTime.TryParseExact(a_dateStr, new[] { "dd/MM/yyyy", "dd-MM-yyyy" }, null, System.Globalization.DateTimeStyles.None, out a_date);
     }
 
-    private void OnDateEndEdit(string a_newDate)
+    private void OnDateEdit(string a_newDate)
     {
         DateTime startDate;
         DateTime endDate;
 
-        if (TryParseDate(m_startDateInput.text, out startDate) && TryParseDate(m_endDateInput.text, out endDate))
+        if (TryParseDate(m_startDateInput.text, out startDate))
         {
+            endDate = startDate.AddDays(5);
             // Both input fields have valid dates, call UpdateTable
             UpdateTable(startDate, endDate);
         }
