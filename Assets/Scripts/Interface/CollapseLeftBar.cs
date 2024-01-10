@@ -20,7 +20,7 @@ public class CollapseLeftBar : MonoBehaviour
         m_expandButton.onClick.AddListener(Expand);
     }
 
-    void Collapse()
+    public void Collapse()
     {
         RectTransform leftBarTransform = m_leftBar.GetComponent<RectTransform>();
         RectTransform mainScreenTransform = m_mainScreen.GetComponent<RectTransform>();
@@ -38,12 +38,12 @@ public class CollapseLeftBar : MonoBehaviour
         m_expandButton.gameObject.SetActive(true);
     }
 
-    void Expand()
+    public void Expand()
     {
         RectTransform leftBarTransform = m_leftBar.GetComponent<RectTransform>();
         RectTransform mainScreenTransform = m_mainScreen.GetComponent<RectTransform>();
 
-        leftBarTransform.sizeDelta = new Vector2(300, 1080);
+        leftBarTransform.sizeDelta = new Vector2(300, 0);
         mainScreenTransform.offsetMin = new Vector3(300, 0, 0);
 
         foreach (GameObject item in m_itemsToDeactivate)
