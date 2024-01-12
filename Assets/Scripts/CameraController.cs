@@ -48,6 +48,11 @@ public class CameraController : MonoBehaviour
         set => dynamicClippingPlanesMinHeight = Mathf.Max(value, 0.0f);
     }
 
+    private InputAction shiftAction;
+    private InputAction ctrlAction;
+    private InputAction altAction;
+    private InputAction lmbAction;
+    private InputAction rmbAction; // Right mouse button.
     private InputAction lookAction;
     private InputAction moveAction;
     private InputAction moveUpAction;
@@ -55,10 +60,11 @@ public class CameraController : MonoBehaviour
     // The georeference object on the parent.
     private CesiumGeoreference georeference;
     private CesiumGlobeAnchor globeAnchor;
+
     private new Camera camera;
     private float initialNearClipPlane;
     private float initialFarClipPlane;
-    
+
     // If the near clip gets too large, Unity will throw errors. Keeping it 
     // at this value works fine even when the far clip plane gets large.
     private float maximumNearClipPlane = 1000.0f;
@@ -68,7 +74,9 @@ public class CameraController : MonoBehaviour
     // than the near clip plane. The near clip plane is set so that this
     // ratio is never exceeded.
     private float maximumNearToFarRatio = 100000.0f;
-    
+
+    private Vector3 previousMousePosition;
+
     void ConfigureInputs()
     {
         if (ActionMap == null)
@@ -82,10 +90,20 @@ public class CameraController : MonoBehaviour
             throw new ArgumentNullException("CameraController");
         }
 
+        shiftAction = map.FindAction("shift");
+        ctrlAction = map.FindAction("ctrl");
+        altAction = map.FindAction("alt");
+        lmbAction = map.FindAction("lmb");
+        rmbAction = map.FindAction("rmb");
         lookAction = map.FindAction("look");
         moveAction = map.FindAction("move");
         moveUpAction = map.FindAction("moveUp");
 
+        shiftAction.Enable();
+        ctrlAction.Enable();
+        altAction.Enable();
+        lmbAction.Enable();
+        rmbAction.Enable();
         lookAction.Enable();
         moveAction.Enable();
         moveUpAction.Enable();
@@ -113,15 +131,45 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    /// <summary>
+    /// Cast a ray from the mouse to the earth and return the point that was hit in Unity world coordinates.
+    /// </summary>
+    /// <param name="p">The point in Unity world coordinates.</param>
+    /// <returns>`true` if the globe was hit, `false` otherwise.</returns>
+    public bool GetMousePointOnGlobe(out Vector3 p)
+    {
+        p = Vector3.zero;
+
+        Vector3 screen = Mouse.current.position.value;
+        screen.z = camera.farClipPlane;
+        Vector3 world = camera.ScreenToWorldPoint(screen);
+
+        if (Physics.Linecast(camera.transform.position, world, out var hitInfo))
+        {
+            p = hitInfo.point;
+            return true;
+        }
         
+        return false;
     }
 
     void Move(Vector3 move)
     {
-        // TODO: Compute movement based on distance to terrain.
-        Vector3 dir = transform.right * move.x + transform.up * move.y;
-
-        transform.position += dir;
+        if (lmbAction.WasPressedThisFrame())
+        {
+            GetMousePointOnGlobe(out previousMousePosition);
+        }
+        else if (lmbAction.IsPressed())
+        {
+            if (GetMousePointOnGlobe(out var currentMousePosition))
+            {
+                camera.transform.Translate(previousMousePosition - currentMousePosition, Space.World);
+                previousMousePosition = currentMousePosition;
+            }
+        }
     }
 
     /// <summary>
@@ -141,27 +189,38 @@ public class CameraController : MonoBehaviour
             rotX += 360.0f;
         }
         rotX = Mathf.Clamp(rotX + dX, 270.0f, 450.0f);
-        
+
         transform.localEulerAngles = new Vector3(rotX, rotY, transform.eulerAngles.z);
     }
 
     // Update is called once per frame
     void Update()
     {
+        bool shift = shiftAction.IsPressed();
+        bool ctrl = ctrlAction.IsPressed();
+        bool alt = altAction.IsPressed();
+        bool lmb = lmbAction.IsPressed();
+        bool rmb = rmbAction.IsPressed();
+
         Vector2 lookDelta = lookAction.ReadValue<Vector2>();
         Vector2 moveDelta = moveAction.ReadValue<Vector2>();
-        float upDelta = moveUpAction.ReadValue<Vector2>().x;
+        float upDelta = moveUpAction.ReadValue<Vector2>().y;
 
-        if (EnableMovement)
+        if (ctrl)
         {
-            Move(new Vector3(moveDelta.x, moveDelta.y, upDelta));
+            if (EnableRotation)
+            {
+                Look(lookDelta.y, lookDelta.x);
+            }
+        }
+        else
+        {
+            if (EnableMovement)
+            {
+                Move(new Vector3(moveDelta.x, upDelta, moveDelta.y));
+            }
         }
 
-        if (EnableRotation)
-        {
-            Look(lookDelta.y, lookDelta.x);
-        }
-        
         if (EnableDynamicClippingPlanes)
         {
             UpdateClippingPlanes();

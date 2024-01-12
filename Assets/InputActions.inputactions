@@ -27,56 +27,68 @@
                     "name": "moveUp",
                     "type": "Value",
                     "id": "b33ceb4b-9f5d-4ede-ada8-ad1273e989fe",
-                    "expectedControlType": "Dpad",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ctrl",
+                    "type": "Button",
+                    "id": "95572b45-e7aa-4322-acd7-cb0ebb87ea7a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "shift",
+                    "type": "Button",
+                    "id": "4388c329-cd7a-41dc-8a31-1fa8101c98c7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "alt",
+                    "type": "Button",
+                    "id": "e4b68713-39e5-468e-8531-5715aa844baa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "lmb",
+                    "type": "Button",
+                    "id": "7dfc2f40-d65e-42e3-b83a-0734c7d2d823",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "rmb",
+                    "type": "Button",
+                    "id": "af906906-2ce4-4783-9750-9be4510e4651",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
                 {
                     "name": "mouse",
                     "id": "8b68a4b8-3e79-4def-a108-341f97b41857",
-                    "path": "TwoModifiers",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "look",
                     "isComposite": true,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "modifier1",
-                    "id": "0ba4acc7-cf2c-456e-98b7-bd74168fb536",
-                    "path": "<Keyboard>/ctrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "modifier2",
-                    "id": "5a512f5f-b774-472b-9855-2852059acb07",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "binding",
-                    "id": "6d14f7d1-6f4a-4d24-86bc-922b832416eb",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 },
                 {
                     "name": "mouse",
@@ -201,34 +213,34 @@
                 },
                 {
                     "name": "mouse",
-                    "id": "48d2ebd7-a73e-49ec-8db8-551dd8aec39e",
+                    "id": "9e10f2de-037f-4a28-bc5c-3d0b669cd3e4",
                     "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "move",
+                    "action": "look",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "modifier",
-                    "id": "2ac9b439-cb75-487d-9a8a-8495427fb610",
+                    "id": "dde4c622-bf73-48a7-bd66-5746c92722b0",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
-                    "action": "move",
+                    "action": "look",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
                 {
                     "name": "binding",
-                    "id": "d91f609d-c8d6-46f3-8879-3278d7f9f40a",
+                    "id": "4376dc5b-3d01-4a09-b784-6089dbd0dfab",
                     "path": "<Mouse>/delta",
                     "interactions": "",
-                    "processors": "InvertVector2",
+                    "processors": "",
                     "groups": "Mouse and Keyboard",
-                    "action": "move",
+                    "action": "look",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -347,9 +359,119 @@
                     "id": "f07e8aa8-07a9-4a06-adba-01223aef54a6",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
+                    "processors": "NormalizeVector2,ScaleVector2(x=100,y=100),InvertVector2(invertX=false)",
+                    "groups": "Mouse and Keyboard",
+                    "action": "moveUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "keyboard",
+                    "id": "9d3b484e-5101-4f38-aa30-9a25576de8a9",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "moveUp",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "866e2f72-0a1b-47db-81b3-07699588837c",
+                    "path": "<Keyboard>/equals",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
                     "action": "moveUp",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "up",
+                    "id": "005cba66-fe2c-4239-862a-cd14f42f73e1",
+                    "path": "<Keyboard>/numpadPlus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "moveUp",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "42d1e36d-b2b0-4c1d-9f38-37d24a285fa4",
+                    "path": "<Keyboard>/minus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "moveUp",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "4682d02e-dc7e-46a5-b54f-6fbf18e2ee24",
+                    "path": "<Keyboard>/numpadMinus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "moveUp",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "eeaf79ed-de1b-42fb-a8cb-a94ffeaf924b",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "ctrl",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35393d04-59ee-4104-aa62-6de5e562f0d4",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "shift",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "298ac82d-133b-41bc-9b0e-ec64602add91",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "alt",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aaff49f3-4a9e-4ac5-98c7-581e218f79a0",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "lmb",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c51bf175-50d3-4c2f-b5ce-b72b47ac0d0b",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "rmb",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
