@@ -15,11 +15,11 @@ public class ToggleEntry : MonoBehaviour
     {
         //TODO
         //m_toggleEntry.onValueChanged.AddListener((b) => m_toggleEntryVisual.SetActive(b));
-        //m_infoButton.onClick.AddListener(VisualiseInfo);
+        m_infoButton.onClick.AddListener(VisualiseInfo);
     }
 
     void VisualiseInfo()
     {
-        //TODO
+        m_infoButtonVisual.SetActive(true);
     }
 }
