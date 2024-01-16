@@ -12,6 +12,6 @@ public class CloseWindow : MonoBehaviour
 
     private void Awake()
     {
-        m_closeWindowButton.onClick.AddListener(() => { m_window.SetActive(false); m_canvasOutliner.SetActive(false); } );
+        m_closeWindowButton.onClick.AddListener(() => { m_canvasOutliner.SetActive(false); } );
     }
 }

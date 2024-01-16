@@ -864,6 +864,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_externalButton: {fileID: 283486379796018329}
+  m_url: https://oceanlabobservatory.no/
 --- !u!1 &5729142960363350573
 GameObject:
   m_ObjectHideFlags: 0

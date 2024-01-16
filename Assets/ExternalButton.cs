@@ -7,6 +7,9 @@ public class ExternalButton : MonoBehaviour
     [SerializeField]
     CustomButton m_externalButton;
 
+    [SerializeField]
+    string m_url;
+
     private void Awake()
     {
         m_externalButton.onClick.AddListener(OpenExternalURL);
@@ -14,6 +17,6 @@ public class ExternalButton : MonoBehaviour
 
     private void OpenExternalURL()
     {
-        Application.OpenURL("https://oceanlabobservatory.no/");
+        Application.OpenURL(m_url);
     }
 }
