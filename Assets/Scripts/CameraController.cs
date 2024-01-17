@@ -5,9 +5,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CesiumOriginShift))]
+[RequireComponent(typeof(CesiumGlobeAnchor))]
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {
+
+    #region Public Properties
+
     /// <summary>
     /// The input action map that defines the actions and bindings.
     /// </summary>
@@ -34,10 +38,6 @@ public class CameraController : MonoBehaviour
     /// </summary>
     public bool EnableDynamicClippingPlanes;
 
-    [SerializeField]
-    [Min(0.0f)]
-    private float dynamicClippingPlanesMinHeight = 10000.0f;
-
     /// <summary>
     /// The height to start dynamically adjusting the camera's clipping planes. 
     /// Below this height, the clipping planes will be set to their initial values.
@@ -48,6 +48,17 @@ public class CameraController : MonoBehaviour
         set => dynamicClippingPlanesMinHeight = Mathf.Max(value, 0.0f);
     }
 
+    /// <summary>
+    /// A curve that is used to determine the movement speed of the camera
+    /// based on the height of the camera. The higher the height of the camera,
+    /// the faster it should move. 
+    /// </summary>
+    public AnimationCurve moveSpeed;
+
+    #endregion
+
+    #region Input Actions
+
     private InputAction shiftAction;
     private InputAction ctrlAction;
     private InputAction altAction;
@@ -55,11 +66,21 @@ public class CameraController : MonoBehaviour
     private InputAction rmbAction; // Right mouse button.
     private InputAction lookAction;
     private InputAction moveAction;
-    private InputAction moveUpAction;
+    private InputAction zoomAction;
+    private InputAction resetAction;
+
+    #endregion
+
+    #region Private Fields
+
+    [SerializeField]
+    [Min(0.0f)]
+    private float dynamicClippingPlanesMinHeight = 10000.0f;
 
     // The georeference object on the parent.
     private CesiumGeoreference georeference;
     private CesiumGlobeAnchor globeAnchor;
+    private double4x4 initialLocalToGlobeFixedMatrix;
 
     private new Camera camera;
     private float initialNearClipPlane;
@@ -76,6 +97,9 @@ public class CameraController : MonoBehaviour
     private float maximumNearToFarRatio = 100000.0f;
 
     private Vector3 previousMousePosition;
+
+    #endregion
+
 
     void ConfigureInputs()
     {
@@ -97,7 +121,8 @@ public class CameraController : MonoBehaviour
         rmbAction = map.FindAction("rmb");
         lookAction = map.FindAction("look");
         moveAction = map.FindAction("move");
-        moveUpAction = map.FindAction("moveUp");
+        zoomAction = map.FindAction("zoom");
+        resetAction = map.FindAction("reset");
 
         shiftAction.Enable();
         ctrlAction.Enable();
@@ -106,7 +131,8 @@ public class CameraController : MonoBehaviour
         rmbAction.Enable();
         lookAction.Enable();
         moveAction.Enable();
-        moveUpAction.Enable();
+        zoomAction.Enable();
+        resetAction.Enable();
     }
 
     void Awake()
@@ -124,6 +150,7 @@ public class CameraController : MonoBehaviour
         camera = GetComponent<Camera>();
         initialNearClipPlane = camera.nearClipPlane;
         initialFarClipPlane = camera.farClipPlane;
+        initialLocalToGlobeFixedMatrix = globeAnchor.localToGlobeFixedMatrix;
 
         ConfigureInputs();
     }
@@ -145,9 +172,9 @@ public class CameraController : MonoBehaviour
 
         Vector3 screen = Mouse.current.position.value;
         screen.z = camera.farClipPlane;
-        Vector3 world = camera.ScreenToWorldPoint(screen);
+        Vector3 end = camera.ScreenToWorldPoint(screen);
 
-        if (Physics.Linecast(camera.transform.position, world, out var hitInfo))
+        if (Physics.Linecast(camera.transform.position, end, out var hitInfo))
         {
             p = hitInfo.point;
             return true;
@@ -204,7 +231,12 @@ public class CameraController : MonoBehaviour
 
         Vector2 lookDelta = lookAction.ReadValue<Vector2>();
         Vector2 moveDelta = moveAction.ReadValue<Vector2>();
-        float upDelta = moveUpAction.ReadValue<Vector2>().y;
+        float zoom = zoomAction.ReadValue<Vector2>().y;
+
+        if (resetAction.WasPressedThisFrame())
+        {
+            globeAnchor.localToGlobeFixedMatrix = initialLocalToGlobeFixedMatrix;
+        }
 
         if (ctrl)
         {
@@ -217,7 +249,7 @@ public class CameraController : MonoBehaviour
         {
             if (EnableMovement)
             {
-                Move(new Vector3(moveDelta.x, upDelta, moveDelta.y));
+                Move(new Vector3(moveDelta.x, zoom, moveDelta.y));
             }
         }
 

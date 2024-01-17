@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "moveUp",
+                    "name": "zoom",
                     "type": "Value",
                     "id": "b33ceb4b-9f5d-4ede-ada8-ad1273e989fe",
                     "expectedControlType": "Vector2",
@@ -72,6 +72,15 @@
                     "name": "rmb",
                     "type": "Button",
                     "id": "af906906-2ce4-4783-9750-9be4510e4651",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "reset",
+                    "type": "Button",
+                    "id": "a05a1506-d200-4d86-8041-5015d88c607b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -125,52 +134,8 @@
                 },
                 {
                     "name": "Up",
-                    "id": "967f805b-7cdf-4d19-a3a9-eb5181790eb4",
-                    "path": "<Keyboard>/upArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Up",
                     "id": "54b237ff-19df-4e16-ba5e-aef4ca459768",
                     "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Down",
-                    "id": "82a24fa0-e227-4897-ac1f-ba6dc300c2c1",
-                    "path": "<Keyboard>/downArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Down",
-                    "id": "cabc38ee-2a65-49ae-aacf-6e63b2b115f8",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Left",
-                    "id": "914f2883-ef85-40cc-90fa-36271328ec6a",
-                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
@@ -190,9 +155,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Right",
-                    "id": "7ec2e992-f724-4e13-ab86-b69dcbf23918",
-                    "path": "<Keyboard>/rightArrow",
+                    "name": "Down",
+                    "id": "cabc38ee-2a65-49ae-aacf-6e63b2b115f8",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
@@ -204,6 +169,50 @@
                     "name": "Right",
                     "id": "d27fc50b-d3a1-462c-8a5e-e2513aa501a7",
                     "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Up",
+                    "id": "967f805b-7cdf-4d19-a3a9-eb5181790eb4",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "82a24fa0-e227-4897-ac1f-ba6dc300c2c1",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Left",
+                    "id": "914f2883-ef85-40cc-90fa-36271328ec6a",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "look",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Right",
+                    "id": "7ec2e992-f724-4e13-ab86-b69dcbf23918",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
@@ -268,52 +277,8 @@
                 },
                 {
                     "name": "up",
-                    "id": "ea64f771-348a-423f-9a5a-4fbb422c95b9",
-                    "path": "<Keyboard>/upArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "up",
                     "id": "15ba7b4d-7b45-4132-8131-66cccfd6318a",
                     "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "9de0e917-a63a-4a04-a95b-4bc2bbd06a7a",
-                    "path": "<Keyboard>/downArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "0d5b1631-b348-4551-b5c7-826bc4433a15",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "4cab215e-ad83-4e14-9f9d-405179c37cfc",
-                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
@@ -333,9 +298,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "right",
-                    "id": "66862279-e87e-47ea-a082-2181e5f2439f",
-                    "path": "<Keyboard>/rightArrow",
+                    "name": "down",
+                    "id": "0d5b1631-b348-4551-b5c7-826bc4433a15",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
@@ -355,13 +320,57 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "up",
+                    "id": "ea64f771-348a-423f-9a5a-4fbb422c95b9",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "9de0e917-a63a-4a04-a95b-4bc2bbd06a7a",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "4cab215e-ad83-4e14-9f9d-405179c37cfc",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "66862279-e87e-47ea-a082-2181e5f2439f",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "",
                     "id": "f07e8aa8-07a9-4a06-adba-01223aef54a6",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
                     "processors": "NormalizeVector2,ScaleVector2(x=100,y=100),InvertVector2(invertX=false)",
                     "groups": "Mouse and Keyboard",
-                    "action": "moveUp",
+                    "action": "zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -372,7 +381,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "moveUp",
+                    "action": "zoom",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -383,18 +392,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
-                    "action": "moveUp",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "up",
-                    "id": "005cba66-fe2c-4239-862a-cd14f42f73e1",
-                    "path": "<Keyboard>/numpadPlus",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "moveUp",
+                    "action": "zoom",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -405,7 +403,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
-                    "action": "moveUp",
+                    "action": "zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "up",
+                    "id": "005cba66-fe2c-4239-862a-cd14f42f73e1",
+                    "path": "<Keyboard>/numpadPlus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "zoom",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -416,7 +425,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
-                    "action": "moveUp",
+                    "action": "zoom",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -472,6 +481,17 @@
                     "processors": "",
                     "groups": "Mouse and Keyboard",
                     "action": "rmb",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8b296746-3458-4d66-965f-d7168671eb90",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "reset",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
