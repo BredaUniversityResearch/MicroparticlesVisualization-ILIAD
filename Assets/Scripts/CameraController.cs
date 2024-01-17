@@ -53,7 +53,14 @@ public class CameraController : MonoBehaviour
     /// based on the height of the camera. The higher the height of the camera,
     /// the faster it should move. 
     /// </summary>
-    public AnimationCurve moveSpeed;
+    public AnimationCurve MoveSpeed;
+
+    /// <summary>
+    /// The amount of damping to apply to the velocity vector each frame.
+    /// 0 is no damping, 1 is full damping.
+    /// </summary>
+    [Range(0, 1)]
+    public float VelocityDamping = 0.99f;
 
     #endregion
 
@@ -97,6 +104,8 @@ public class CameraController : MonoBehaviour
     private float maximumNearToFarRatio = 100000.0f;
 
     private Vector3 previousMousePosition;
+    private Vector3 velocity;
+    private Vector3 acceleration;
 
     #endregion
 
@@ -193,10 +202,23 @@ public class CameraController : MonoBehaviour
         {
             if (GetMousePointOnGlobe(out var currentMousePosition))
             {
-                camera.transform.Translate(previousMousePosition - currentMousePosition, Space.World);
+                Vector3 delta = previousMousePosition - currentMousePosition;
+                delta.y = 0;
+                camera.transform.Translate(delta, Space.World);
+                velocity = delta / Time.deltaTime;
                 previousMousePosition = currentMousePosition;
             }
         }
+        else if (move.sqrMagnitude > 0.0f)
+        {
+            velocity = Vector3.zero;
+
+        }
+        else
+        {
+            camera.transform.Translate(velocity * Time.deltaTime, Space.World);
+        }
+        
     }
 
     /// <summary>
@@ -235,6 +257,7 @@ public class CameraController : MonoBehaviour
 
         if (resetAction.WasPressedThisFrame())
         {
+            velocity = Vector3.zero;
             globeAnchor.localToGlobeFixedMatrix = initialLocalToGlobeFixedMatrix;
         }
 
@@ -257,6 +280,9 @@ public class CameraController : MonoBehaviour
         {
             UpdateClippingPlanes();
         }
+
+        // Apply damping.
+        velocity *= Mathf.Pow(1.0f - VelocityDamping, Time.deltaTime);
     }
 
     private bool RaycastTowardsEarthCenter(out float hitDistance)
