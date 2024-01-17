@@ -536,7 +536,25 @@ MonoBehaviour:
   EnableDynamicClippingPlanes: 1
   MoveSpeed:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 4
+      inSlope: 0.9996
+      outSlope: 0.9996
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 10000
+      value: 10000
+      inSlope: 0.9996
+      outSlope: 0.9996
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -704,6 +722,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1076086521}
   - component: {fileID: 1076086523}
+  - component: {fileID: 1076086524}
   - component: {fileID: 1076086522}
   m_Layer: 0
   m_Name: ParticleCamera
@@ -822,6 +841,20 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1076086524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076086520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87a0637a3e042234591050f30d251e66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceCamera: {fileID: 400180853}
+  targetCamera: {fileID: 1076086523}
 --- !u!1 &1099572211
 GameObject:
   m_ObjectHideFlags: 0

@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "stop",
+                    "type": "Button",
+                    "id": "64e459d4-fe4e-4311-a03c-9d44d76c41a7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -368,7 +377,7 @@
                     "id": "f07e8aa8-07a9-4a06-adba-01223aef54a6",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
-                    "processors": "NormalizeVector2,ScaleVector2(x=100,y=100),InvertVector2(invertX=false)",
+                    "processors": "NormalizeVector2",
                     "groups": "Mouse and Keyboard",
                     "action": "zoom",
                     "isComposite": false,
@@ -492,6 +501,17 @@
                     "processors": "",
                     "groups": "Mouse and Keyboard",
                     "action": "reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e01b551f-2924-4d41-80e2-54fb68a8a49e",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "stop",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

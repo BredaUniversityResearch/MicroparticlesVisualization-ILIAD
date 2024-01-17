@@ -60,7 +60,7 @@ public class CameraController : MonoBehaviour
     /// 0 is no damping, 1 is full damping.
     /// </summary>
     [Range(0, 1)]
-    public float VelocityDamping = 0.99f;
+    public float VelocityDamping = 0.8f;
 
     #endregion
 
@@ -75,6 +75,7 @@ public class CameraController : MonoBehaviour
     private InputAction moveAction;
     private InputAction zoomAction;
     private InputAction resetAction;
+    private InputAction stopAction;
 
     #endregion
 
@@ -132,6 +133,7 @@ public class CameraController : MonoBehaviour
         moveAction = map.FindAction("move");
         zoomAction = map.FindAction("zoom");
         resetAction = map.FindAction("reset");
+        stopAction = map.FindAction("stop");
 
         shiftAction.Enable();
         ctrlAction.Enable();
@@ -142,6 +144,7 @@ public class CameraController : MonoBehaviour
         moveAction.Enable();
         zoomAction.Enable();
         resetAction.Enable();
+        stopAction.Enable();
     }
 
     void Awake()
@@ -185,6 +188,7 @@ public class CameraController : MonoBehaviour
 
         if (Physics.Linecast(camera.transform.position, end, out var hitInfo))
         {
+            // TODO: Check the terrain tileset was hit?
             p = hitInfo.point;
             return true;
         }
@@ -208,17 +212,37 @@ public class CameraController : MonoBehaviour
                 velocity = delta / Time.deltaTime;
                 previousMousePosition = currentMousePosition;
             }
+            else
+            {
+                // Mouse cursor is not intersecting with the globe.
+                velocity = Vector3.zero;
+            }
         }
         else if (move.sqrMagnitude > 0.0f)
         {
             velocity = Vector3.zero;
 
+            Vector3 forwardDirection = Vector3.Cross(camera.transform.right, Vector3.up);
+            Vector3 moveDirection = camera.transform.right * move.x + forwardDirection * move.z;
+            float moveSpeed = MoveSpeed.Evaluate((float)globeAnchor.longitudeLatitudeHeight.z);
+            camera.transform.Translate(moveDirection * moveSpeed, Space.World);
         }
         else
         {
+            // Propagate the current velocity.
             camera.transform.Translate(velocity * Time.deltaTime, Space.World);
         }
         
+    }
+
+    /// <summary>
+    /// Translation about the view's local forward vector.
+    /// </summary>
+    /// <param name="zoom">The zoom amount.</param>
+    void Zoom(float zoom)
+    {
+        float speed = MoveSpeed.Evaluate((float)globeAnchor.longitudeLatitudeHeight.z);
+        camera.transform.Translate(Vector3.forward * zoom * speed, Space.Self);
     }
 
     /// <summary>
@@ -255,11 +279,17 @@ public class CameraController : MonoBehaviour
         Vector2 moveDelta = moveAction.ReadValue<Vector2>();
         float zoom = zoomAction.ReadValue<Vector2>().y;
 
+        if (stopAction.WasPressedThisFrame())
+        {
+            velocity = Vector3.zero;
+        }
+
         if (resetAction.WasPressedThisFrame())
         {
             velocity = Vector3.zero;
             globeAnchor.localToGlobeFixedMatrix = initialLocalToGlobeFixedMatrix;
         }
+        
 
         if (ctrl)
         {
@@ -272,7 +302,8 @@ public class CameraController : MonoBehaviour
         {
             if (EnableMovement)
             {
-                Move(new Vector3(moveDelta.x, zoom, moveDelta.y));
+                Move(new Vector3(moveDelta.x, 0, moveDelta.y));
+                Zoom(zoom);
             }
         }
 
