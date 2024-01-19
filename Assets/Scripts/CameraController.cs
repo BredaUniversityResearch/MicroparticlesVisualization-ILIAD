@@ -222,7 +222,7 @@ public class CameraController : MonoBehaviour
         {
             velocity = Vector3.zero;
 
-            Vector3 forwardDirection = Vector3.Cross(camera.transform.right, Vector3.up);
+            Vector3 forwardDirection = Vector3.Cross(camera.transform.right, Vector3.up).normalized;
             Vector3 moveDirection = camera.transform.right * move.x + forwardDirection * move.z;
             float moveSpeed = MoveSpeed.Evaluate((float)globeAnchor.longitudeLatitudeHeight.z);
             camera.transform.Translate(moveDirection * moveSpeed, Space.World);
@@ -266,6 +266,29 @@ public class CameraController : MonoBehaviour
         transform.localEulerAngles = new Vector3(rotX, rotY, transform.eulerAngles.z);
     }
 
+
+    void Rotate(float deltaPitch, float deltaYaw)
+    {
+        if (lmbAction.WasPerformedThisFrame())
+        {
+            GetMousePointOnGlobe(out previousMousePosition);
+        }
+        else if (lmbAction.IsPressed())
+        {
+            if (GetMousePointOnGlobe(out var currentMousePosition))
+            {
+                // TODO: Calculate the amount of rotation based on the mouse delta.
+
+                previousMousePosition = currentMousePosition;
+            }
+        }
+        else
+        {
+            // Rotate around the center point of the camera.
+            // TODO: Raycast based on the camera's forward vector and rotate about the point on the terrain that the camera is looking at.
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -289,8 +312,14 @@ public class CameraController : MonoBehaviour
             velocity = Vector3.zero;
             globeAnchor.localToGlobeFixedMatrix = initialLocalToGlobeFixedMatrix;
         }
-        
 
+        if (shift)
+        {
+            if (EnableRotation)
+            {
+                Rotate(lookDelta.y, lookDelta.x);
+            }
+        }
         if (ctrl)
         {
             if (EnableRotation)

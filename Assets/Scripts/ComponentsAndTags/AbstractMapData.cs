@@ -7,4 +7,5 @@ public struct AbstractMapData : IComponentData
     public float cameraHeight; // The height of the camera above the map.
     public float timelineValue; // The value of the timeline (in the range 0 to 1).
     public float particleSize; // The size the particle should appear on screen.
+    public float particleMinSize; // The minimum size (scale) of a particle.
 }
