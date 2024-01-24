@@ -24,6 +24,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "fly",
+                    "type": "Value",
+                    "id": "e3a7d229-0a36-4d72-bdfd-074e86f0df82",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "zoom",
                     "type": "Value",
                     "id": "b33ceb4b-9f5d-4ede-ada8-ad1273e989fe",
@@ -230,37 +239,15 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "mouse",
-                    "id": "9e10f2de-037f-4a28-bc5c-3d0b669cd3e4",
-                    "path": "OneModifier",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "look",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "modifier",
-                    "id": "dde4c622-bf73-48a7-bd66-5746c92722b0",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Mouse and Keyboard",
-                    "action": "look",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "binding",
-                    "id": "4376dc5b-3d01-4a09-b784-6089dbd0dfab",
+                    "name": "",
+                    "id": "14a5c0f3-0e8a-493c-88a8-579ae05a32c6",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
                     "action": "look",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
@@ -512,6 +499,17 @@
                     "processors": "",
                     "groups": "Mouse and Keyboard",
                     "action": "stop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "216c8194-8eda-4fe5-9d3c-05313bf97bb7",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "ScaleVector2",
+                    "groups": "Mouse and Keyboard",
+                    "action": "fly",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

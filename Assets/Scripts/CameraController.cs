@@ -73,6 +73,7 @@ public class CameraController : MonoBehaviour
     private InputAction rmbAction; // Right mouse button.
     private InputAction lookAction;
     private InputAction moveAction;
+    private InputAction flyAction;
     private InputAction zoomAction;
     private InputAction resetAction;
     private InputAction stopAction;
@@ -105,7 +106,6 @@ public class CameraController : MonoBehaviour
     private float maximumNearToFarRatio = 100000.0f;
 
     private Vector3? previousMousePosition;
-    private Vector3? rotationOrigin;
     private Vector3 velocity;
     private Vector3 acceleration;
 
@@ -132,6 +132,7 @@ public class CameraController : MonoBehaviour
         rmbAction = map.FindAction("rmb");
         lookAction = map.FindAction("look");
         moveAction = map.FindAction("move");
+        flyAction = map.FindAction("fly");
         zoomAction = map.FindAction("zoom");
         resetAction = map.FindAction("reset");
         stopAction = map.FindAction("stop");
@@ -143,6 +144,7 @@ public class CameraController : MonoBehaviour
         rmbAction.Enable();
         lookAction.Enable();
         moveAction.Enable();
+        flyAction.Enable();
         zoomAction.Enable();
         resetAction.Enable();
         stopAction.Enable();
@@ -197,6 +199,12 @@ public class CameraController : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Get the height of the camera (in meters) above the ellipsoid of the world.
+    /// Note: Clamp to 0 to avoid negative heights.
+    /// </summary>
+    private float Height => Mathf.Max(0.0f, (float)globeAnchor.longitudeLatitudeHeight.z);
+
     void Move(Vector3 move)
     {
         if (lmbAction.WasPressedThisFrame())
@@ -226,7 +234,7 @@ public class CameraController : MonoBehaviour
 
             Vector3 forwardDirection = Vector3.Cross(camera.transform.right, Vector3.up).normalized;
             Vector3 moveDirection = camera.transform.right * move.x + forwardDirection * move.z;
-            float moveSpeed = MoveSpeed.Evaluate((float)globeAnchor.longitudeLatitudeHeight.z);
+            float moveSpeed = MoveSpeed.Evaluate(Height);
             camera.transform.Translate(moveDirection * moveSpeed, Space.World);
         }
         else
@@ -243,7 +251,7 @@ public class CameraController : MonoBehaviour
     /// <param name="zoom">The zoom amount.</param>
     void Zoom(float zoom)
     {
-        float speed = MoveSpeed.Evaluate((float)globeAnchor.longitudeLatitudeHeight.z);
+        float speed = MoveSpeed.Evaluate(Height);
         camera.transform.Translate(Vector3.forward * zoom * speed, Space.Self);
     }
 
@@ -268,23 +276,37 @@ public class CameraController : MonoBehaviour
         transform.localEulerAngles = new Vector3(rotX, rotY, transform.eulerAngles.z);
     }
 
+    /// <summary>
+    /// This method uses a "flight simulator" model for the camera. Movement is in the camera's local coordinate space
+    /// instead of global coordinates (that the Move function uses).
+    /// </summary>
+    /// <param name="move"></param>
+    void Fly(Vector3 move)
+    {
+        float moveSpeed = MoveSpeed.Evaluate(Height);
+        camera.transform.Translate(move * moveSpeed, Space.Self);
+    }
 
+
+    // TODO: This function currently doesn't work. Rotating around a point in Unity coordinates will
+    // not work due to the CesiumGlobeAnchor that adjusts the Georeference and reverts any changes to the 
+    // camera's world position. Probably need to perform the rotation in ECEF coordinates and transform the 
+    // globe anchor directly.
     void Rotate(float deltaPitch, float deltaYaw)
     {
         if (lmbAction.WasPerformedThisFrame())
         {
-            GetMousePointOnGlobe(out rotationOrigin);
-            previousMousePosition = rotationOrigin;
+            GetMousePointOnGlobe(out previousMousePosition);
         }
         else if (lmbAction.IsPressed())
         {
-            GetMousePointOnGlobe(out var currentMousePosition);
-            if (rotationOrigin != null && previousMousePosition != null && currentMousePosition != null)
+            if (previousMousePosition != null)
             {
-                var delta = (previousMousePosition.Value - currentMousePosition.Value) * LookSpeed;
-                camera.transform.RotateAround(rotationOrigin.Value, Vector3.up, delta.y );
-                
-                previousMousePosition = currentMousePosition;
+                float dX = deltaPitch * LookSpeed * Time.smoothDeltaTime;
+                float dY = deltaYaw * LookSpeed * Time.smoothDeltaTime;
+
+                camera.transform.RotateAround(previousMousePosition.Value, Vector3.up, dY );
+                camera.transform.RotateAround(previousMousePosition.Value, Vector3.right, dX);
             }
         }
         else
@@ -305,6 +327,7 @@ public class CameraController : MonoBehaviour
 
         Vector2 lookDelta = lookAction.ReadValue<Vector2>();
         Vector2 moveDelta = moveAction.ReadValue<Vector2>();
+        Vector2 flyDelta = flyAction.ReadValue<Vector2>();
         float zoom = zoomAction.ReadValue<Vector2>().y;
 
         if (stopAction.WasPressedThisFrame())
@@ -318,14 +341,27 @@ public class CameraController : MonoBehaviour
             globeAnchor.localToGlobeFixedMatrix = initialLocalToGlobeFixedMatrix;
         }
 
-        if (shift)
+        if (rmb)
+        {
+            if (EnableMovement)
+            {
+                Fly(new Vector3(moveDelta.x, 0.0f, moveDelta.y));
+            }
+
+            if (EnableRotation)
+            {
+                Look(flyDelta.y, flyDelta.x);
+            }
+        }
+        else if (shift)
         {
             if (EnableRotation)
             {
-                Rotate(lookDelta.y, lookDelta.x);
+                // TODO: Fix this function. See TODO comment on the function.
+                // Rotate(lookDelta.y, lookDelta.x);
             }
         }
-        if (ctrl)
+        else if (lmb && ctrl)
         {
             if (EnableRotation)
             {
@@ -388,4 +424,15 @@ public class CameraController : MonoBehaviour
             camera.farClipPlane = farClipPlane;
         }
     }
+
+#if UNITY_EDITOR
+    void OnDrawGizmos()
+    {
+        if (previousMousePosition != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(previousMousePosition.Value, 100);
+        }
+    }
+#endif
 }
