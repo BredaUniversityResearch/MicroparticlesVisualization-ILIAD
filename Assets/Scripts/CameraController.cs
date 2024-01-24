@@ -77,6 +77,7 @@ public class CameraController : MonoBehaviour
     private InputAction zoomAction;
     private InputAction resetAction;
     private InputAction stopAction;
+    private InputAction verticalAction;
 
     #endregion
 
@@ -136,6 +137,7 @@ public class CameraController : MonoBehaviour
         zoomAction = map.FindAction("zoom");
         resetAction = map.FindAction("reset");
         stopAction = map.FindAction("stop");
+        verticalAction = map.FindAction("vertical");
 
         shiftAction.Enable();
         ctrlAction.Enable();
@@ -148,6 +150,7 @@ public class CameraController : MonoBehaviour
         zoomAction.Enable();
         resetAction.Enable();
         stopAction.Enable();
+        verticalAction.Enable();
     }
 
     void Awake()
@@ -329,6 +332,7 @@ public class CameraController : MonoBehaviour
         Vector2 moveDelta = moveAction.ReadValue<Vector2>();
         Vector2 flyDelta = flyAction.ReadValue<Vector2>();
         float zoom = zoomAction.ReadValue<Vector2>().y;
+        float vertical = verticalAction.ReadValue<float>();
 
         if (stopAction.WasPressedThisFrame())
         {
@@ -345,7 +349,7 @@ public class CameraController : MonoBehaviour
         {
             if (EnableMovement)
             {
-                Fly(new Vector3(moveDelta.x, 0.0f, moveDelta.y));
+                Fly(new Vector3(moveDelta.x, vertical, moveDelta.y));
             }
 
             if (EnableRotation)
@@ -372,7 +376,7 @@ public class CameraController : MonoBehaviour
         {
             if (EnableMovement)
             {
-                Move(new Vector3(moveDelta.x, 0, moveDelta.y));
+                Move(new Vector3(moveDelta.x, vertical, moveDelta.y));
                 Zoom(zoom);
             }
         }

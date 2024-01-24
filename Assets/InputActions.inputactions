@@ -33,6 +33,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "vertical",
+                    "type": "Value",
+                    "id": "cbebed12-15ef-4e3d-b33e-02a31b59dbf6",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "zoom",
                     "type": "Value",
                     "id": "b33ceb4b-9f5d-4ede-ada8-ad1273e989fe",
@@ -512,6 +521,39 @@
                     "action": "fly",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "keyboard",
+                    "id": "7ddfff1e-2b43-437e-b1a7-de528c780f16",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "vertical",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "01b1f2b0-1411-469d-9115-2d934e838bbf",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "vertical",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "b8b452d0-b66d-45b8-97b8-0442ecd276ad",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "vertical",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
