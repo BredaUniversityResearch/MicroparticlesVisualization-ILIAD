@@ -104,7 +104,8 @@ public class CameraController : MonoBehaviour
     // ratio is never exceeded.
     private float maximumNearToFarRatio = 100000.0f;
 
-    private Vector3 previousMousePosition;
+    private Vector3? previousMousePosition;
+    private Vector3? rotationOrigin;
     private Vector3 velocity;
     private Vector3 acceleration;
 
@@ -178,9 +179,9 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="p">The point in Unity world coordinates.</param>
     /// <returns>`true` if the globe was hit, `false` otherwise.</returns>
-    public bool GetMousePointOnGlobe(out Vector3 p)
+    public bool GetMousePointOnGlobe(out Vector3? p)
     {
-        p = Vector3.zero;
+        p = null;
 
         Vector3 screen = Mouse.current.position.value;
         screen.z = camera.farClipPlane;
@@ -204,9 +205,10 @@ public class CameraController : MonoBehaviour
         }
         else if (lmbAction.IsPressed())
         {
-            if (GetMousePointOnGlobe(out var currentMousePosition))
+            GetMousePointOnGlobe(out var currentMousePosition);
+            if (previousMousePosition != null && currentMousePosition != null)
             {
-                Vector3 delta = previousMousePosition - currentMousePosition;
+                Vector3 delta = previousMousePosition.Value - currentMousePosition.Value;
                 delta.y = 0;
                 camera.transform.Translate(delta, Space.World);
                 velocity = delta / Time.deltaTime;
@@ -271,14 +273,17 @@ public class CameraController : MonoBehaviour
     {
         if (lmbAction.WasPerformedThisFrame())
         {
-            GetMousePointOnGlobe(out previousMousePosition);
+            GetMousePointOnGlobe(out rotationOrigin);
+            previousMousePosition = rotationOrigin;
         }
         else if (lmbAction.IsPressed())
         {
-            if (GetMousePointOnGlobe(out var currentMousePosition))
+            GetMousePointOnGlobe(out var currentMousePosition);
+            if (rotationOrigin != null && previousMousePosition != null && currentMousePosition != null)
             {
-                // TODO: Calculate the amount of rotation based on the mouse delta.
-
+                var delta = (previousMousePosition.Value - currentMousePosition.Value) * LookSpeed;
+                camera.transform.RotateAround(rotationOrigin.Value, Vector3.up, delta.y );
+                
                 previousMousePosition = currentMousePosition;
             }
         }
