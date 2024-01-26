@@ -106,9 +106,14 @@ public class CameraController : MonoBehaviour
     // ratio is never exceeded.
     private float maximumNearToFarRatio = 100000.0f;
 
-    private Vector3? previousMousePosition;
+    private Vector3 previousMousePosition;
     private Vector3 velocity;
     private Vector3 acceleration;
+
+    /// <summary>
+    /// Use a character controller to avoid clipping through the terrain.
+    /// </summary>
+    private CharacterController characterController;
 
     #endregion
 
@@ -153,6 +158,30 @@ public class CameraController : MonoBehaviour
         verticalAction.Enable();
     }
 
+    void InitialiseController()
+    {
+        if (GetComponent<CharacterController>() != null)
+        {
+            Debug.LogWarning(
+                "A CharacterController component was manually " +
+                "added to the CesiumCameraController's game object. " +
+                "This may interfere with the CesiumCameraController's movement.");
+
+            characterController= GetComponent<CharacterController>();
+        }
+        else
+        {
+            characterController = gameObject.AddComponent<CharacterController>();
+            characterController.hideFlags = HideFlags.HideInInspector;
+        }
+
+        characterController.radius = 1.0f;
+        characterController.height = 1.0f;
+        characterController.center = Vector3.zero;
+        characterController.detectCollisions = true;
+    }
+
+
     void Awake()
     {
         georeference = GetComponentInParent<CesiumGeoreference>();
@@ -171,6 +200,7 @@ public class CameraController : MonoBehaviour
         initialLocalToGlobeFixedMatrix = globeAnchor.localToGlobeFixedMatrix;
 
         ConfigureInputs();
+        InitialiseController();
     }
 
     // Start is called before the first frame update
@@ -184,22 +214,22 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="p">The point in Unity world coordinates.</param>
     /// <returns>`true` if the globe was hit, `false` otherwise.</returns>
-    public bool GetMousePointOnGlobe(out Vector3? p)
+    public bool GetMousePointOnGlobe(out Vector3 p)
     {
-        p = null;
-
         Vector3 screen = Mouse.current.position.value;
-        screen.z = camera.farClipPlane;
+        screen.z = (float)CesiumWgs84Ellipsoid.GetMaximumRadius(); // camera.farClipPlane;
         Vector3 end = camera.ScreenToWorldPoint(screen);
 
-        if (Physics.Linecast(camera.transform.position, end, out var hitInfo))
+        // TODO: Check the terrain tileset was hit?
+        if(Physics.Linecast(camera.transform.position, end, out var hitInfo))
         {
-            // TODO: Check the terrain tileset was hit?
             p = hitInfo.point;
             return true;
         }
-        
-        return false;
+
+        p = end;
+        return true;
+        //return false;
     }
 
     /// <summary>
@@ -216,12 +246,12 @@ public class CameraController : MonoBehaviour
         }
         else if (lmbAction.IsPressed())
         {
-            GetMousePointOnGlobe(out var currentMousePosition);
-            if (previousMousePosition != null && currentMousePosition != null)
+            if(GetMousePointOnGlobe(out var currentMousePosition))
             {
-                Vector3 delta = previousMousePosition.Value - currentMousePosition.Value;
+                Vector3 delta = previousMousePosition - currentMousePosition;
                 delta.y = 0;
-                camera.transform.Translate(delta, Space.World);
+                //camera.transform.Translate(delta, Space.World);
+                characterController.Move(delta);
                 velocity = delta / Time.deltaTime;
                 previousMousePosition = currentMousePosition;
             }
@@ -238,12 +268,14 @@ public class CameraController : MonoBehaviour
             Vector3 forwardDirection = Vector3.Cross(camera.transform.right, Vector3.up).normalized;
             Vector3 moveDirection = camera.transform.right * move.x + forwardDirection * move.z;
             float moveSpeed = MoveSpeed.Evaluate(Height);
-            camera.transform.Translate(moveDirection * moveSpeed, Space.World);
+            //camera.transform.Translate(moveDirection * moveSpeed, Space.World);
+            characterController.Move(moveDirection * moveSpeed);
         }
         else
         {
             // Propagate the current velocity.
-            camera.transform.Translate(velocity * Time.deltaTime, Space.World);
+            //camera.transform.Translate(velocity * Time.deltaTime, Space.World);
+            characterController.Move(velocity * Time.deltaTime);
         }
         
     }
@@ -255,7 +287,8 @@ public class CameraController : MonoBehaviour
     void Zoom(float zoom)
     {
         float speed = MoveSpeed.Evaluate(Height);
-        camera.transform.Translate(Vector3.forward * zoom * speed, Space.Self);
+        //camera.transform.Translate(Vector3.forward * zoom * speed, Space.Self);
+        characterController.Move(transform.TransformDirection(Vector3.forward * zoom * speed));
     }
 
     /// <summary>
@@ -287,7 +320,9 @@ public class CameraController : MonoBehaviour
     void Fly(Vector3 move)
     {
         float moveSpeed = MoveSpeed.Evaluate(Height);
-        camera.transform.Translate(move * moveSpeed, Space.Self);
+        // camera.transform.Translate(move * moveSpeed, Space.Self);
+        characterController.Move(transform.TransformDirection(move * moveSpeed));
+        velocity = move * moveSpeed;
     }
 
 
@@ -308,8 +343,8 @@ public class CameraController : MonoBehaviour
                 float dX = deltaPitch * LookSpeed * Time.smoothDeltaTime;
                 float dY = deltaYaw * LookSpeed * Time.smoothDeltaTime;
 
-                camera.transform.RotateAround(previousMousePosition.Value, Vector3.up, dY );
-                camera.transform.RotateAround(previousMousePosition.Value, Vector3.right, dX);
+                camera.transform.RotateAround(previousMousePosition, Vector3.up, dY );
+                camera.transform.RotateAround(previousMousePosition, Vector3.right, dX);
             }
         }
         else
@@ -357,14 +392,14 @@ public class CameraController : MonoBehaviour
                 Look(flyDelta.y, flyDelta.x);
             }
         }
-        else if (shift)
-        {
-            if (EnableRotation)
-            {
-                // TODO: Fix this function. See TODO comment on the function.
-                // Rotate(lookDelta.y, lookDelta.x);
-            }
-        }
+        //else if (shift)
+        //{
+        //    if (EnableRotation)
+        //    {
+        //        // TODO: Fix this function. See TODO comment on the function.
+        //        // Rotate(lookDelta.y, lookDelta.x);
+        //    }
+        //}
         else if (lmb && ctrl)
         {
             if (EnableRotation)
@@ -432,11 +467,8 @@ public class CameraController : MonoBehaviour
 #if UNITY_EDITOR
     void OnDrawGizmos()
     {
-        if (previousMousePosition != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(previousMousePosition.Value, 100);
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(previousMousePosition, 100);
     }
 #endif
 }
