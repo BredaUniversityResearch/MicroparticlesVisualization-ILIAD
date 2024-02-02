@@ -74,7 +74,7 @@ public class CameraController : MonoBehaviour
     private InputAction shiftAction;
     private InputAction ctrlAction;
     private InputAction altAction;
-    private InputAction lmbAction;
+    private InputAction lmbAction; // Left mouse button.
     private InputAction rmbAction; // Right mouse button.
     private InputAction lookAction;
     private InputAction moveAction;
@@ -115,6 +115,7 @@ public class CameraController : MonoBehaviour
 
     private Vector3 previousMousePosition;
     private Vector3 velocity;
+    private double previousHeight;
 
     /// <summary>
     /// Use a character controller to avoid clipping through the terrain.
@@ -177,7 +178,7 @@ public class CameraController : MonoBehaviour
                 "added to the CesiumCameraController's game object. " +
                 "This may interfere with the CesiumCameraController's movement.");
 
-            characterController= GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
         }
         else
         {
@@ -224,7 +225,7 @@ public class CameraController : MonoBehaviour
     /// Cast a ray from the mouse to the earth and return the point that was hit in Unity world coordinates.
     /// </summary>
     /// <param name="p">The point in Unity world coordinates.</param>
-    /// <returns>`true` if the globe was hit, `false` otherwise.</returns>
+    /// <returns>`true` if the globe terrain was hit, `false` otherwise.</returns>
     public bool GetMousePointOnGlobe(out Vector3 p)
     {
         Vector3 screen = Mouse.current.position.value;
@@ -232,15 +233,14 @@ public class CameraController : MonoBehaviour
         Vector3 end = camera.ScreenToWorldPoint(screen);
 
         // TODO: Check the terrain tileset was hit?
-        if(Physics.Linecast(camera.transform.position, end, out var hitInfo))
+        if (Physics.Linecast(camera.transform.position, end, out var hitInfo))
         {
             p = hitInfo.point;
             return true;
         }
 
         p = end;
-        return true;
-        //return false;
+        return false;
     }
 
     /// <summary>
@@ -257,20 +257,14 @@ public class CameraController : MonoBehaviour
         }
         else if (lmbAction.IsPressed())
         {
-            if(GetMousePointOnGlobe(out var currentMousePosition))
-            {
-                Vector3 delta = previousMousePosition - currentMousePosition;
-                delta.y = 0;
-                //camera.transform.Translate(delta, Space.World);
-                characterController.Move(delta);
-                velocity = delta / Time.deltaTime;
-                previousMousePosition = currentMousePosition;
-            }
-            else
-            {
-                // Mouse cursor is not intersecting with the globe.
-                velocity = Vector3.zero;
-            }
+            GetMousePointOnGlobe(out var currentMousePosition);
+
+            Vector3 delta = previousMousePosition - currentMousePosition;
+            delta.y = 0;
+            //camera.transform.Translate(delta, Space.World);
+            characterController.Move(delta);
+            velocity = delta / Time.deltaTime;
+            previousMousePosition = currentMousePosition;
         }
         else if (move.sqrMagnitude > 0.0f)
         {
@@ -288,7 +282,7 @@ public class CameraController : MonoBehaviour
             //camera.transform.Translate(velocity * Time.deltaTime, Space.World);
             characterController.Move(velocity * Time.deltaTime);
         }
-        
+
     }
 
     /// <summary>
@@ -352,7 +346,7 @@ public class CameraController : MonoBehaviour
             float dX = deltaPitch * LookSpeed * Time.smoothDeltaTime;
             float dY = deltaYaw * LookSpeed * Time.smoothDeltaTime;
 
-            camera.transform.RotateAround(previousMousePosition, Vector3.up, dY );
+            camera.transform.RotateAround(previousMousePosition, Vector3.up, dY);
             camera.transform.RotateAround(previousMousePosition, Vector3.right, dX);
         }
         else
@@ -366,17 +360,39 @@ public class CameraController : MonoBehaviour
     /// </summary>
     void SwitchView()
     {
+        Vector3 clickedPoint;
+
         switch (currentViewMode)
         {
             case ViewMode.TopDown:
-                Debug.Log("Switch to underwater view.");
-                // TODO: Switch to underwater view mode.
-                currentViewMode = ViewMode.UnderWater;
+                if (GetMousePointOnGlobe(out clickedPoint))
+                {
+                    Debug.Log("Switching view mode to underwater.");
+
+                    // Store the current height of the camera to restore it when going back to top-down view.
+                    previousHeight = globeAnchor.longitudeLatitudeHeight.z;
+
+                    camera.transform.position = clickedPoint + Vector3.up * 10.0f; // 10 units above the clicked point.
+
+                    var eulerAngles = camera.transform.localEulerAngles;
+                    camera.transform.localEulerAngles = new Vector3(0.0f, eulerAngles.y, eulerAngles.z); // Remove X rotation.
+                    currentViewMode = ViewMode.UnderWater;
+                }
                 break;
             case ViewMode.UnderWater:
-                Debug.Log("Switch to top-down view.");
-                // TODO: Switch to top-down view mode.
-                currentViewMode = ViewMode.TopDown;
+                // if (GetMousePointOnGlobe(out clickedPoint))
+                {
+                    Debug.Log("Switching view mode to top-down.");
+                    var llh = globeAnchor.longitudeLatitudeHeight;
+                    llh.z = previousHeight; // Restore previous height.
+                    globeAnchor.longitudeLatitudeHeight = llh;
+
+                    var eulerAngles = camera.transform.localEulerAngles;
+                    eulerAngles.x = 90.0f; // Look down.
+                    camera.transform.localEulerAngles = eulerAngles;
+
+                    currentViewMode = ViewMode.TopDown;
+                }
                 break;
         }
     }
