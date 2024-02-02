@@ -112,6 +112,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "switchView",
+                    "type": "Button",
+                    "id": "1e7ffd73-9d69-4cd1-8f82-4890eb1cfeeb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -554,6 +563,17 @@
                     "action": "vertical",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a812279c-d701-4424-bb4d-519f0435f4cc",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "MultiTap(tapTime=0.1,tapDelay=0.5)",
+                    "processors": "",
+                    "groups": "Mouse and Keyboard",
+                    "action": "switchView",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

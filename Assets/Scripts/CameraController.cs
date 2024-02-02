@@ -9,6 +9,11 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {
+    public enum ViewMode
+    {
+        UnderWater,
+        TopDown
+    }
 
     #region Public Properties
 
@@ -78,6 +83,7 @@ public class CameraController : MonoBehaviour
     private InputAction resetAction;
     private InputAction stopAction;
     private InputAction verticalAction;
+    private InputAction switchViewAction;
 
     #endregion
 
@@ -90,7 +96,8 @@ public class CameraController : MonoBehaviour
     // The georeference object on the parent.
     private CesiumGeoreference georeference;
     private CesiumGlobeAnchor globeAnchor;
-    private double4x4 initialLocalToGlobeFixedMatrix;
+    private double3 initialPosition;
+    private quaternion initialRotation;
 
     private new Camera camera;
     private float initialNearClipPlane;
@@ -108,12 +115,13 @@ public class CameraController : MonoBehaviour
 
     private Vector3 previousMousePosition;
     private Vector3 velocity;
-    private Vector3 acceleration;
 
     /// <summary>
     /// Use a character controller to avoid clipping through the terrain.
     /// </summary>
     private CharacterController characterController;
+
+    private ViewMode currentViewMode = ViewMode.TopDown;
 
     #endregion
 
@@ -143,6 +151,7 @@ public class CameraController : MonoBehaviour
         resetAction = map.FindAction("reset");
         stopAction = map.FindAction("stop");
         verticalAction = map.FindAction("vertical");
+        switchViewAction = map.FindAction("switchView");
 
         shiftAction.Enable();
         ctrlAction.Enable();
@@ -156,6 +165,7 @@ public class CameraController : MonoBehaviour
         resetAction.Enable();
         stopAction.Enable();
         verticalAction.Enable();
+        switchViewAction.Enable();
     }
 
     void InitialiseController()
@@ -197,7 +207,8 @@ public class CameraController : MonoBehaviour
         camera = GetComponent<Camera>();
         initialNearClipPlane = camera.nearClipPlane;
         initialFarClipPlane = camera.farClipPlane;
-        initialLocalToGlobeFixedMatrix = globeAnchor.localToGlobeFixedMatrix;
+        initialPosition = globeAnchor.longitudeLatitudeHeight;
+        initialRotation = globeAnchor.rotationEastUpNorth;
 
         ConfigureInputs();
         InitialiseController();
@@ -217,7 +228,7 @@ public class CameraController : MonoBehaviour
     public bool GetMousePointOnGlobe(out Vector3 p)
     {
         Vector3 screen = Mouse.current.position.value;
-        screen.z = (float)CesiumWgs84Ellipsoid.GetMaximumRadius(); // camera.farClipPlane;
+        screen.z = camera.farClipPlane;
         Vector3 end = camera.ScreenToWorldPoint(screen);
 
         // TODO: Check the terrain tileset was hit?
@@ -338,19 +349,35 @@ public class CameraController : MonoBehaviour
         }
         else if (lmbAction.IsPressed())
         {
-            if (previousMousePosition != null)
-            {
-                float dX = deltaPitch * LookSpeed * Time.smoothDeltaTime;
-                float dY = deltaYaw * LookSpeed * Time.smoothDeltaTime;
+            float dX = deltaPitch * LookSpeed * Time.smoothDeltaTime;
+            float dY = deltaYaw * LookSpeed * Time.smoothDeltaTime;
 
-                camera.transform.RotateAround(previousMousePosition, Vector3.up, dY );
-                camera.transform.RotateAround(previousMousePosition, Vector3.right, dX);
-            }
+            camera.transform.RotateAround(previousMousePosition, Vector3.up, dY );
+            camera.transform.RotateAround(previousMousePosition, Vector3.right, dX);
         }
         else
         {
-            // Rotate around the center point of the camera.
             // TODO: Raycast based on the camera's forward vector and rotate about the point on the terrain that the camera is looking at.
+        }
+    }
+
+    /// <summary>
+    /// Switch the view mode between under water or top-down view modes.
+    /// </summary>
+    void SwitchView()
+    {
+        switch (currentViewMode)
+        {
+            case ViewMode.TopDown:
+                Debug.Log("Switch to underwater view.");
+                // TODO: Switch to underwater view mode.
+                currentViewMode = ViewMode.UnderWater;
+                break;
+            case ViewMode.UnderWater:
+                Debug.Log("Switch to top-down view.");
+                // TODO: Switch to top-down view mode.
+                currentViewMode = ViewMode.TopDown;
+                break;
         }
     }
 
@@ -362,6 +389,7 @@ public class CameraController : MonoBehaviour
         bool alt = altAction.IsPressed();
         bool lmb = lmbAction.IsPressed();
         bool rmb = rmbAction.IsPressed();
+        bool switchView = switchViewAction.triggered;
 
         Vector2 lookDelta = lookAction.ReadValue<Vector2>();
         Vector2 moveDelta = moveAction.ReadValue<Vector2>();
@@ -369,18 +397,16 @@ public class CameraController : MonoBehaviour
         float zoom = zoomAction.ReadValue<Vector2>().y;
         float vertical = verticalAction.ReadValue<float>();
 
-        if (stopAction.WasPressedThisFrame())
+        if (stopAction.WasPressedThisFrame() || resetAction.WasPerformedThisFrame())
         {
             velocity = Vector3.zero;
         }
 
-        if (resetAction.WasPressedThisFrame())
+        if (switchView)
         {
-            velocity = Vector3.zero;
-            globeAnchor.localToGlobeFixedMatrix = initialLocalToGlobeFixedMatrix;
+            SwitchView();
         }
-
-        if (rmb)
+        else if (rmb)
         {
             if (EnableMovement)
             {
@@ -423,6 +449,15 @@ public class CameraController : MonoBehaviour
 
         // Apply damping.
         velocity *= Mathf.Pow(1.0f - VelocityDamping, Time.deltaTime);
+    }
+
+    void LateUpdate()
+    {
+        if (resetAction.WasPressedThisFrame())
+        {
+            globeAnchor.longitudeLatitudeHeight = initialPosition;
+            globeAnchor.rotationEastUpNorth = initialRotation;
+        }
     }
 
     private bool RaycastTowardsEarthCenter(out float hitDistance)
