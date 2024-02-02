@@ -15,14 +15,13 @@ public readonly partial struct ParticleTimingAspect : IAspect
     public float TotalTime => m_particleTiming.ValueRO.m_numberIndices * m_particleTiming.ValueRO.m_timePerIndex;
 
 	/// <summary>
-	/// Get the index at a specific moment in time.
+	/// Get the index at a specific moment in time (as a floating-point value to allow for interpolation between two indices).
 	/// </summary>
 	/// <param name="time">The the time interval to query.</param>
 	/// <returns></returns>
-    public int IndexAtTime(float time)
+    public float IndexAtTime(float time)
     {
         time = time % TotalTime; // Wrap around.
-        int index = (int)(time / m_particleTiming.ValueRO.m_timePerIndex);
-		return index;
+        return time / m_particleTiming.ValueRO.m_timePerIndex;
     }
 }

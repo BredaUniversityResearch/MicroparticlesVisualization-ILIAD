@@ -1,5 +1,6 @@
 ﻿using CesiumForUnity;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
@@ -7,6 +8,8 @@ using static Unity.Mathematics.math;
 [BurstCompile]
 public partial struct ParticlePositioningSystem : ISystem
 {
+    private EntityQuery query;
+
     [BurstCompile]
     public void OnCreate(ref SystemState a_state)
     {
@@ -21,30 +24,27 @@ public partial struct ParticlePositioningSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState a_state)
     {
-        if (SystemAPI.HasSingleton<ParticleTimingData>() && SystemAPI.HasSingleton<AbstractMapData>())
-        {
-            Entity particleTimingEnt = SystemAPI.GetSingletonEntity<ParticleTimingData>();
-            Entity abstractMapDataEnt = SystemAPI.GetSingletonEntity<AbstractMapData>();
-            ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
-            AbstractMapData abstractMapData = SystemAPI.GetComponent<AbstractMapData>(abstractMapDataEnt);
-            int timeIndex = particleTimingAspect.IndexAtTime(abstractMapData.timelineValue * particleTimingAspect.TotalTime);
+        Entity particleTimingEnt = SystemAPI.GetSingletonEntity<ParticleTimingData>();
+        Entity abstractMapDataEnt = SystemAPI.GetSingletonEntity<AbstractMapData>();
+        ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
+        AbstractMapData abstractMapData = SystemAPI.GetComponent<AbstractMapData>(abstractMapDataEnt);
+        float time = particleTimingAspect.IndexAtTime(abstractMapData.timelineValue * particleTimingAspect.TotalTime);
 
-            new PositionParticleJob
-            {
-                TimeIndex = timeIndex,
-                ECEFtoLocal = abstractMapData.ECEFMatrix,
-                CameraHeight = abstractMapData.cameraHeight,
-                ParticleSize = abstractMapData.particleSize,
-                ParticleMinSize = abstractMapData.particleMinSize
-            }.ScheduleParallel();
-        }
+        new PositionParticleJob
+        {
+            Time = time,
+            ECEFtoLocal = abstractMapData.ECEFMatrix,
+            CameraHeight = abstractMapData.cameraHeight,
+            ParticleSize = abstractMapData.particleSize,
+            ParticleMinSize = abstractMapData.particleMinSize
+        }.ScheduleParallel();
     }
 }
 
 [BurstCompile]
 public partial struct PositionParticleJob : IJobEntity
 {
-    public int TimeIndex;
+    public float Time;
     public double4x4 ECEFtoLocal;
     public float CameraHeight;
     public float ParticleSize;
@@ -54,7 +54,7 @@ public partial struct PositionParticleJob : IJobEntity
     private void Execute(ParticleUpdateAspect a_particle)
     {
         // Get the particle position in longitude/latitude/depth values.
-        var pos = a_particle[TimeIndex];
+        var pos = a_particle[Time];
 
         float rg = pow(1f - abs(pos.z) / 100f, 2);
         float b = 1f - pow(abs(pos.z) / 100f, 2);
