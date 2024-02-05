@@ -15,7 +15,7 @@ public class AbstractMapInterface : MonoBehaviour
 
     [Range(0, 1)]
     public float stepRate = 0.1f;
-    public bool play;
+    public bool play = false;
 
     // The size that the particle should appear on screen.
     [Range(0, 1)]

@@ -2493,7 +2493,7 @@ MonoBehaviour:
   CameraAnchor: {fileID: 388031043}
   timelineTestValue: 0
   stepRate: 0.1
-  play: 1
+  play: 0
   particleSize: 0.028
 --- !u!1 &388031039
 GameObject:
@@ -2696,12 +2696,6 @@ MonoBehaviour:
   _dynamicSpeedMinHeight: 20
   _enableDynamicClippingPlanes: 1
   _dynamicClippingPlanesMinHeight: 10000
-  _maxSpeedCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &388031045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12441,6 +12435,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1603169703792229777, guid: bd75795d2e684ef4b8229dfb29c2293f,
         type: 3}
+    - target: {fileID: 3994884892224261562, guid: bd75795d2e684ef4b8229dfb29c2293f,
+        type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 3994884892224261562, guid: bd75795d2e684ef4b8229dfb29c2293f,
+        type: 3}
     - target: {fileID: 4077302517320783718, guid: bd75795d2e684ef4b8229dfb29c2293f,
         type: 3}
       propertyPath: m_Name
@@ -12604,11 +12604,55 @@ PrefabInstance:
       propertyPath: targetGraphics.Array.data[0]
       value: 
       objectReference: {fileID: 122542668}
+    - target: {fileID: 9010582287357637358, guid: bd75795d2e684ef4b8229dfb29c2293f,
+        type: 3}
+      propertyPath: m_ffwToggle
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9010582287357637358, guid: bd75795d2e684ef4b8229dfb29c2293f,
+        type: 3}
+      propertyPath: m_playToggle
+      value: 
+      objectReference: {fileID: 2538969994460588383}
+    - target: {fileID: 9010582287357637358, guid: bd75795d2e684ef4b8229dfb29c2293f,
+        type: 3}
+      propertyPath: m_pauseToggle
+      value: 
+      objectReference: {fileID: 2538969994460588382}
+    - target: {fileID: 9010582287357637358, guid: bd75795d2e684ef4b8229dfb29c2293f,
+        type: 3}
+      propertyPath: m_simulationClass
+      value: 
+      objectReference: {fileID: 363075292}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd75795d2e684ef4b8229dfb29c2293f, type: 3}
+--- !u!114 &2538969994460588382 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2254771355808666283, guid: bd75795d2e684ef4b8229dfb29c2293f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2538969994460588380}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeaa0bb0be42908448050e0e12b1e3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2538969994460588383 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1134358238588595047, guid: bd75795d2e684ef4b8229dfb29c2293f,
+    type: 3}
+  m_PrefabInstance: {fileID: 2538969994460588380}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeaa0bb0be42908448050e0e12b1e3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2668578676506002552
 PrefabInstance:
   m_ObjectHideFlags: 0
