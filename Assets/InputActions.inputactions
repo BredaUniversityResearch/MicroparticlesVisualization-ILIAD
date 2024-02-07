@@ -568,7 +568,7 @@
                     "name": "",
                     "id": "a812279c-d701-4424-bb4d-519f0435f4cc",
                     "path": "<Mouse>/leftButton",
-                    "interactions": "MultiTap(tapDelay=0.5)",
+                    "interactions": "MultiTap",
                     "processors": "",
                     "groups": "Mouse and Keyboard",
                     "action": "switchView",

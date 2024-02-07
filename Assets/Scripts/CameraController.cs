@@ -473,6 +473,7 @@ public class CameraController : MonoBehaviour
         {
             globeAnchor.longitudeLatitudeHeight = initialPosition;
             globeAnchor.rotationEastUpNorth = initialRotation;
+            currentViewMode = ViewMode.TopDown;
         }
     }
 

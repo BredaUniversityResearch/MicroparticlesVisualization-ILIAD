@@ -324,12 +324,6 @@ MonoBehaviour:
   _dynamicSpeedMinHeight: 20
   _enableDynamicClippingPlanes: 1
   _dynamicClippingPlanesMinHeight: 10000
-  _maxSpeedCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &353758760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -634,7 +628,7 @@ MonoBehaviour:
   _enforceCulledScreenSpaceError: 1
   _culledScreenSpaceError: 64
   _opaqueMaterial: {fileID: 0}
-  _generateSmoothNormals: 0
+  _generateSmoothNormals: 1
   _pointCloudShading:
     _attenuation: 0
     _geometricErrorScale: 1
@@ -1090,12 +1084,12 @@ PrefabInstance:
     - target: {fileID: 5481954909903251515, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -2.943922e-17
+      value: -0.0000064138485
       objectReference: {fileID: 0}
     - target: {fileID: 5481954909903251515, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 4.9065384e-18
+      value: -0.000003203898
       objectReference: {fileID: 0}
     - target: {fileID: 5481954909903251515, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
@@ -1176,6 +1170,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CameraController
+      objectReference: {fileID: 0}
+    - target: {fileID: 7274049322266127091, guid: 99a53068a6bc397498efc5429bca42fe,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
