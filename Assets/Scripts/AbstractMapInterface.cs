@@ -20,6 +20,10 @@ public class AbstractMapInterface : MonoBehaviour
     // The size that the particle should appear on screen.
     [Range(0, 1)]
     public float particleSize;
+
+    // The minimum size a particle can be scaled.
+    [Range(0.01f, 1000f)]
+    public float particlMinSize;
     
     // Start is called before the first frame update
     void Start()
@@ -48,7 +52,8 @@ public class AbstractMapInterface : MonoBehaviour
                 ECEFMatrix = Georeference.ecefToLocalMatrix,
                 cameraHeight = (float)CameraAnchor.longitudeLatitudeHeight.z,
                 timelineValue = timelineTestValue,
-                particleSize = particleSize
+                particleSize = particleSize,
+                particleMinSize = particlMinSize
             };
 
             entityManager.SetComponentData(mapEntity, abstractMapData);
