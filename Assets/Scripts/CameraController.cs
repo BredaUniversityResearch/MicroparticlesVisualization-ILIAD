@@ -2,6 +2,7 @@ using System;
 using CesiumForUnity;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CesiumOriginShift))]
@@ -400,6 +401,9 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Ignore any input if the cursor is over a UI element.
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+
         bool shift = shiftAction.IsPressed();
         bool ctrl = ctrlAction.IsPressed();
         bool alt = altAction.IsPressed();
