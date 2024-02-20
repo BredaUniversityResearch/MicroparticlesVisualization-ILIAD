@@ -21,24 +21,12 @@ pipeline {
         WINDOWS_DEV_BUILD_NAME = "Windows-Dev-${currentBuild.number}"
         MACOS_BUILD_NAME = "MacOS-${currentBuild.number}"
         MACOS_DEV_BUILD_NAME = "MacOS-Dev-${currentBuild.number}"
-        ANDROID_BUILD_NAME = "Android-${currentBuild.number}"
-        ANDROID_DEV_BUILD_NAME = "Android-Dev-${currentBuild.number}"
-        IOS_BUILD_NAME = "IOS-${currentBuild.number}"
-        IOS_DEV_BUILD_NAME = "IOS-Dev-${currentBuild.number}"
-        WEBGL_BUILD_NAME = "WebGL-${currentBuild.number}"
-        WEBGL_DEV_BUILD_NAME = "WebGL-Dev-${currentBuild.number}"
         
         String output = "Output"
         String outputMacOSDevFolder = "CurrentMacDevBuild"
         String outputWindowsDevFolder = "CurrentWinDevBuild"
-        String outputAndroidDevFolder = "CurrentAndroidDevBuild"
-        String outputWebGLDevFolder = "CurrentWebGLDevBuild"
-        String outputIosDevFolder = "CurrentIosDevBuild"
         String outputMacOSFolder = "CurrentMacBuild"
         String outputWindowsFolder = "CurrentWinBuild"
-        String outputAndroidFolder = "CurrentAndroidBuild"
-        String outputWebGLFolder = "CurrentWebGLBuild"
-        String outputIosFolder = "CurrentIosBuild"
         
         NEXUS_CREDENTIALS = credentials('NEXUS_CREDENTIALS')
     }
@@ -77,9 +65,6 @@ pipeline {
                     echo "Launching MacOS Development Build..."
                     bat '''"%UNITY_EXECUTABLE%" -projectPath "%CD%" -quit -batchmode -nographics -customBuildPath "%CD%\\%output%\\%outputMacOSDevFolder%\\%PROJECT_NAME%.exe" -customBuildName "%PROJECT_NAME%" -executeMethod BuildUtility.MacOSDevBuilder'''
                     
-                    echo "Launching WebGL Development Build..."
-                    bat '''"%UNITY_EXECUTABLE%" -projectPath "%CD%" -quit -batchmode -nographics -customBuildPath "%CD%\\%output%\\%outputWebGLDevFolder%\\%PROJECT_NAME%.exe" -customBuildName "%PROJECT_NAME%" -executeMethod BuildUtility.WebGLDevBuilder'''
-                    
                 }
             }
         }
@@ -109,15 +94,6 @@ pipeline {
 
                     echo "Uploading dev build artifact to Nexus..."
                     bat '''"%CURL_EXECUTABLE%" -X POST "http://localhost:8081/service/rest/v1/components?repository=%PROJECT_NAME%-Dev" -H "accept: application/json" -H "Authorization: Basic %NEXUS_CREDENTIALS%" -F "raw.directory=MacOS" -F "raw.asset1=@%output%\\%MACOS_DEV_BUILD_NAME%.zip;type=application/x-zip-compressed" -F "raw.asset1.filename=%MACOS_DEV_BUILD_NAME%.zip"'''
-                                        
-                    echo "Launching WebGL Development Build..."
-                    bat '''"%UNITY_EXECUTABLE%" -projectPath "%CD%" -quit -batchmode -nographics -customBuildPath "%CD%\\%output%\\%outputWebGLDevFolder%\\%PROJECT_NAME%.exe" -customBuildName "%PROJECT_NAME%" -executeMethod BuildUtility.WebGLDevBuilder'''
-
-                    echo "Zipping build..."
-                    bat '''7z a -tzip -r "%output%\\%WEBGL_DEV_BUILD_NAME%" "%CD%\\%output%\\%outputWebGLDevFolder%\\*"'''
-
-                    echo "Uploading dev build artifact to Nexus..."
-                    bat '''"%CURL_EXECUTABLE%" -X POST "http://localhost:8081/service/rest/v1/components?repository=%PROJECT_NAME%-Dev" -H "accept: application/json" -H "Authorization: Basic %NEXUS_CREDENTIALS%" -F "raw.directory=WebGL" -F "raw.asset1=@%output%\\%WEBGL_DEV_BUILD_NAME%.zip;type=application/x-zip-compressed" -F "raw.asset1.filename=%WEBGL_DEV_BUILD_NAME%.zip"'''
                 }
             }
         }
@@ -147,15 +123,6 @@ pipeline {
                     
                     echo "Uploading release build artifact to Nexus..."                        
                     bat '''"%CURL_EXECUTABLE%" -X POST "http://localhost:8081/service/rest/v1/components?repository=%PROJECT_NAME%-Main" -H "accept: application/json" -H "Authorization: Basic %NEXUS_CREDENTIALS%" -F "raw.directory=MacOS" -F "raw.asset1=@%output%\\%MACOS_BUILD_NAME%.zip;type=application/x-zip-compressed" -F "raw.asset1.filename=%MACOS_BUILD_NAME%.zip"'''
-                                        
-                    echo "Launching WebGL Release Build..."
-                    bat '''"%UNITY_EXECUTABLE%" -projectPath "%CD%" -quit -batchmode -nographics -customBuildPath "%CD%\\%output%\\%outputWebGLFolder%\\%PROJECT_NAME%.exe" -customBuildName "%PROJECT_NAME%" -executeMethod BuildUtility.WebGLBuilder'''
-                    
-                    echo "Zipping build..."
-                    bat '''7z a -tzip -r "%output%\\%WEBGL_BUILD_NAME%" "%CD%\\%output%\\%outputWebGLFolder%\\*"'''
-                        
-                    echo "Uploading release build artifact to Nexus..."                        
-                    bat '''"%CURL_EXECUTABLE%" -X POST "http://localhost:8081/service/rest/v1/components?repository=%PROJECT_NAME%-Main" -H "accept: application/json" -H "Authorization: Basic %NEXUS_CREDENTIALS%" -F "raw.directory=WebGL" -F "raw.asset1=@%output%\\%WEBGL_BUILD_NAME%.zip;type=application/x-zip-compressed" -F "raw.asset1.filename=%WEBGL_BUILD_NAME%.zip"'''
                 }
             }
         }
