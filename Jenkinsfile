@@ -19,6 +19,7 @@ pipeline {
         // Unity Build params & paths
         WINDOWS_BUILD_NAME = "Windows-${currentBuild.number}"
         WINDOWS_DEV_BUILD_NAME = "Windows-Dev-${currentBuild.number}"
+        WINDOWS_PR_BUILD_NAME = "Windows-${env.BRANCH_NAME}-${currentBuild.number}"
         MACOS_BUILD_NAME = "MacOS-${currentBuild.number}"
         MACOS_DEV_BUILD_NAME = "MacOS-Dev-${currentBuild.number}"
         
@@ -61,6 +62,12 @@ pipeline {
                     
                     echo "Launching Windows Development Build..."
                     bat '''"%UNITY_EXECUTABLE%" -projectPath "%CD%" -quit -batchmode -nographics -customBuildPath "%CD%\\%output%\\%outputWindowsDevFolder%\\%PROJECT_NAME%.exe" -customBuildName "%PROJECT_NAME%" -executeMethod BuildUtility.WindowsDevBuilder'''
+                    
+                    echo "Zipping build..."
+                    bat '''7z a -tzip -r "%output%\\%WINDOWS_PR_BUILD_NAME%" "%CD%\\%output%\\%outputWindowsDevFolder%\\*"'''
+
+                    echo "Uploading dev build artifact to Nexus..."
+                    bat '''"%CURL_EXECUTABLE%" -X POST "http://localhost:8081/service/rest/v1/components?repository=%PROJECT_NAME%-PR" -H "accept: application/json" -H "Authorization: Basic %NEXUS_CREDENTIALS%" -F "raw.directory=Windows" -F "raw.asset1=@%output%\\%WINDOWS_PR_BUILD_NAME%.zip;type=application/x-zip-compressed" -F "raw.asset1.filename=%WINDOWS_PR_BUILD_NAME%.zip"'''
                     
                     echo "Launching MacOS Development Build..."
                     bat '''"%UNITY_EXECUTABLE%" -projectPath "%CD%" -quit -batchmode -nographics -customBuildPath "%CD%\\%output%\\%outputMacOSDevFolder%\\%PROJECT_NAME%.exe" -customBuildName "%PROJECT_NAME%" -executeMethod BuildUtility.MacOSDevBuilder'''
