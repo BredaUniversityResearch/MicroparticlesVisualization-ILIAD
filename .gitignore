@@ -74,3 +74,4 @@ crashlytics-build.properties
 # Secrets folder
 /[Aa]ssets/[Ss]ecrets.*
 /[Aa]ssets/[Ss]ecrets/*
+/Assets/SceneDependencyCache
