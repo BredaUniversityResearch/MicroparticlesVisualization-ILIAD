@@ -30,6 +30,7 @@ pipeline {
         String outputWindowsFolder = "CurrentWinBuild"
         
         NEXUS_CREDENTIALS = credentials('NEXUS_CREDENTIALS')
+        OPENWEATHER_API_KEY = credentials('OPENWEATHER_API_KEY')
     }
     
     options {
@@ -50,6 +51,18 @@ pipeline {
                         echo "Fetching tags"
                         bat '''git fetch --all --tags'''
                 }
+        }
+        
+        stage('Pre Build Instructions') {
+            steps {
+                script {
+                    
+                    echo "Injecting OpenWeatherApiKey in the build"
+                    bat '''if not exist ".\\Assets\\Secrets\\" mkdir ".\\Assets\\Secrets\\"'''
+                    bat '''echo %OPENWEATHER_API_KEY% > ".\\Assets\\Secrets\\OpenWeatherAPIKey"'''
+                    
+                }
+            }
         }
         
         stage('Build Pull Request') {
