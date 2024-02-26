@@ -13313,6 +13313,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: WidgetContainer_PRFB
       objectReference: {fileID: 0}
+    - target: {fileID: 4175130953457763119, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175130953457763119, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175130953457763119, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175130953457763119, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175130953457763119, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175130953457763119, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5313591064412888188, guid: b56abb35f11d08944b4a3976fa7caa56,
         type: 3}
       propertyPath: serializationData.Prefab
@@ -13371,6 +13401,36 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7074595981900536989, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7671081899511590309, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7671081899511590309, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7671081899511590309, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7671081899511590309, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7671081899511590309, guid: b56abb35f11d08944b4a3976fa7caa56,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7671081899511590309, guid: b56abb35f11d08944b4a3976fa7caa56,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
