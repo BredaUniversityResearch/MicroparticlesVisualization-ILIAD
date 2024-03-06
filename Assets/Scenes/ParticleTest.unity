@@ -634,8 +634,7 @@ MonoBehaviour:
   _enableFogCulling: 1
   _enforceCulledScreenSpaceError: 1
   _culledScreenSpaceError: 64
-  _opaqueMaterial: {fileID: -876546973899608171, guid: 5d02473814afee940831fda66bbaef7a,
-    type: 3}
+  _opaqueMaterial: {fileID: 0}
   _generateSmoothNormals: 1
   _pointCloudShading:
     _attenuation: 0

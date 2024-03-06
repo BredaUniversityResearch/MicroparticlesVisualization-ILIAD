@@ -38,26 +38,50 @@ public class AddHeightTiles : MonoBehaviour
         foreach (var meshFilter in go.GetComponentsInChildren<MeshFilter>())
         {
             var mesh = meshFilter.sharedMesh;
-            using var meshDataArray = Mesh.AcquireReadOnlyMeshData(mesh);
+            var meshDataArray = Mesh.AcquireReadOnlyMeshData(mesh);
             var meshData = meshDataArray[0];
 
             // Allocate storage for vertex and height data.
-            using var verts = new NativeArray<Vector3>(meshData.vertexCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
+            var verts = new NativeArray<Vector3>(meshData.vertexCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
             // The resulting longitude, latitude, and height values.
-            using var lonLatHeight = new NativeArray<Vector3>(meshData.vertexCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
+            var lonLatHeight = new NativeArray<Vector3>(meshData.vertexCount, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
 
             // Get vertex positions. 
             meshData.GetVertices(verts);
 
-            new ComputeHeight
+            for (int i = 0; i < verts.Length; i++)
             {
-                Vertices = verts,
-                LonLatHeight = lonLatHeight,
-                LocalToECEF = Georeference.localToEcefMatrix
-            }.Schedule(meshData.vertexCount, 64).Complete();
+                var v3 = verts[i];
+                var d3 = double3(v3);
+                // Convert vertex to ECEF.
+//                d3 = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(d3);
+                // Convert to Longitude, Latitude, and Height.
+                d3 = CesiumWgs84Ellipsoid.EarthCenteredEarthFixedToLongitudeLatitudeHeight(d3);
+                // Store Lon, Lat, Height values.
+                lonLatHeight[i] = new Vector3((float)d3.x, (float)d3.y, (float)d3.z);
+            }
+
+            //new ComputeHeight
+            //{
+            //    Vertices = verts,
+            //    LonLatHeight = lonLatHeight,
+            //    LocalToECEF = Georeference.localToEcefMatrix
+            //}.Schedule(meshData.vertexCount, 64).Complete();
+
+            // Calling Mesh.AcquireReadOnlyMeshData does not cause any memory
+            // allocations or data copies by default, as long as you dispose
+            // of the MeshDataArray before modifying the Mesh.
+            // However, if you call Mesh.AcquireReadOnlyMeshData and then modify
+            // the Mesh while the MeshDataArray exists, Unity must copy the
+            // MeshDataArray into a new memory allocation.
+            // Source: https://docs.unity3d.com/ScriptReference/Mesh.MeshData.html
+            meshDataArray.Dispose();
 
             // Assign the LonLatHeight data to the mesh's UV3 texture coords.
             mesh.SetUVs(3, lonLatHeight);
+
+            lonLatHeight.Dispose();
+            verts.Dispose();
         }
     }
 
