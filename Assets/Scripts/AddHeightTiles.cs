@@ -37,6 +37,7 @@ public class AddHeightTiles : MonoBehaviour
     {
         foreach (var meshFilter in go.GetComponentsInChildren<MeshFilter>())
         {
+            var localToWorldMatrix = meshFilter.transform.localToWorldMatrix;
             var mesh = meshFilter.sharedMesh;
             var meshDataArray = Mesh.AcquireReadOnlyMeshData(mesh);
             var meshData = meshDataArray[0];
@@ -51,7 +52,8 @@ public class AddHeightTiles : MonoBehaviour
 
             for (int i = 0; i < verts.Length; i++)
             {
-                var d3 = double3(verts[i]);
+                var v3 = localToWorldMatrix.MultiplyPoint3x4(verts[i]);
+                var d3 = double3(v3);
                 // Convert vertex to ECEF.
                 d3 = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(d3);
                 // Convert to Longitude, Latitude, and Height.
