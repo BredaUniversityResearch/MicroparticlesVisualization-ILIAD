@@ -16,17 +16,18 @@ public class LoadParticlesOnStart : MonoBehaviour
     {
         if (m_initialized)
             return;
-        m_initialized = true;
+
+        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
+
+        if (!query.HasSingleton<ParticleVisualizationSettingsData>())
+            return;
 
         int numDepth, numLatitude, numLongitude;
         float[] depth, lat, lon;
         if (TryParseCSVVert(m_depthCSVFile, out numDepth, out depth) && TryParseCSVVert(m_latitudeCSVFile, out numLatitude, out lat) && TryParseCSVVert(m_longitudeCSVFile, out numLongitude, out lon))
         {
             Debug.Assert(numDepth == numLatitude && numLatitude == numLongitude);
-
-            EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
-            Entity root = query.GetSingletonEntity();
 
             BlobBuilder builder = new BlobBuilder(Allocator.Temp);
             ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
@@ -41,6 +42,8 @@ public class LoadParticlesOnStart : MonoBehaviour
                 lonArrayBuilder[j] = lon[j];
             }
 
+            Entity root = query.GetSingletonEntity();
+
             BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
             entityManager.AddComponentData(root, new ParticleSpawnData
             {
@@ -54,6 +57,7 @@ public class LoadParticlesOnStart : MonoBehaviour
                 m_timePerIndex = m_timePerTimeIndex
             });
         }
+        m_initialized = true;
     }
 
     private bool TryParseCSV(TextAsset a_csvFile, ref int a_entriesPerParticle, out float[] result)
@@ -152,7 +156,7 @@ public class LoadParticlesOnStart : MonoBehaviour
             {
                 break;
             }
-        
+
             entries = lines[i].Split(',');
         }
 
