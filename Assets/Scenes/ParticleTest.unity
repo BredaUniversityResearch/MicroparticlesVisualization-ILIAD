@@ -711,7 +711,7 @@ MonoBehaviour:
     _maximumAttenuation: 0
     _baseResolution: 0
   _suspendUpdate: 0
-  _showTilesInHierarchy: 0
+  _showTilesInHierarchy: 1
   _updateInEditor: 1
   _logSelectionStats: 0
   _createPhysicsMeshes: 1

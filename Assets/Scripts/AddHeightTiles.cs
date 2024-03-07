@@ -51,10 +51,9 @@ public class AddHeightTiles : MonoBehaviour
 
             for (int i = 0; i < verts.Length; i++)
             {
-                var v3 = verts[i];
-                var d3 = double3(v3);
+                var d3 = double3(verts[i]);
                 // Convert vertex to ECEF.
-//                d3 = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(d3);
+                d3 = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(d3);
                 // Convert to Longitude, Latitude, and Height.
                 d3 = CesiumWgs84Ellipsoid.EarthCenteredEarthFixedToLongitudeLatitudeHeight(d3);
                 // Store Lon, Lat, Height values.
