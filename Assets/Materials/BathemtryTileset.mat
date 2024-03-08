@@ -174,6 +174,8 @@ Material:
     - _ZWrite: 1
     - _ZWriteControl: 0
     - _baseColorTextureCoordinateIndex: 0
+    - _countourSpacing: 100
+    - _countourWidth: 1
     - _emissiveTextureCoordinateIndex: 0
     - _maximumHeight: 2000
     - _metallicRoughnessTextureCoordinateIndex: 0
@@ -191,6 +193,7 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _baseColorFactor: {r: 1, g: 1, b: 1, a: 1}
+    - _contourColor: {r: 0, g: 0, b: 0, a: 0.4980392}
     - _emissiveFactor: {r: 0, g: 0, b: 0, a: 0}
     - _metallicRoughnessFactor: {r: 0, g: 1, b: 0, a: 0}
     - _overlay0TranslationAndScale: {r: 0, g: 0, b: 1, a: 1}
