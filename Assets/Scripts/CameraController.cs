@@ -1,9 +1,12 @@
 using System;
 using CesiumForUnity;
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using double3 = Unity.Mathematics.double3;
+using quaternion = Unity.Mathematics.quaternion;
 
 [RequireComponent(typeof(CesiumOriginShift))]
 [RequireComponent(typeof(CesiumGlobeAnchor))]
@@ -115,7 +118,9 @@ public class CameraController : MonoBehaviour
     private float maximumNearToFarRatio = 100000.0f;
 
     private Vector3 previousMousePosition;
+    private double3 previousMousePositionECEF;
     private Vector3 velocity;
+    private quaternion spin; // How fast the globe is spinning.
     private double previousHeight;
 
     /// <summary>
@@ -176,8 +181,8 @@ public class CameraController : MonoBehaviour
         {
             Debug.LogWarning(
                 "A CharacterController component was manually " +
-                "added to the CesiumCameraController's game object. " +
-                "This may interfere with the CesiumCameraController's movement.");
+                "added to the CameraController's game object. " +
+                "This may interfere with the CameraController's movement.");
 
             characterController = GetComponent<CharacterController>();
         }
@@ -255,16 +260,27 @@ public class CameraController : MonoBehaviour
         if (lmbAction.WasPressedThisFrame())
         {
             GetMousePointOnGlobe(out previousMousePosition);
+            previousMousePositionECEF =
+                georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(previousMousePosition));
         }
         else if (lmbAction.IsPressed())
         {
             GetMousePointOnGlobe(out var currentMousePosition);
+            var currentMousePositionECEF =
+                georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(currentMousePosition));
 
-            Vector3 delta = previousMousePosition - currentMousePosition;
-            delta.y = 0;
+            // Compute the rotation from the previous mouse position to the current mouse position in ECEF coordinates.
+            var rot = QuaternionD.FromVectors(normalize(previousMousePositionECEF), normalize(currentMousePositionECEF));
+            
+            var currentECEF = double3(georeference.ecefX, georeference.ecefY, georeference.ecefZ);
+            // Rotate the ECEF position.
+            var newECEF = QuaternionD.rotate(rot, currentECEF);
+            
+            var delta = georeference.TransformEarthCenteredEarthFixedDirectionToUnity(currentECEF - newECEF);
+
             //camera.transform.Translate(delta, Space.World);
-            characterController.Move(delta);
-            velocity = delta / Time.deltaTime;
+            characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
+            // velocity = delta / Time.deltaTime;
             previousMousePosition = currentMousePosition;
         }
         else if (move.sqrMagnitude > 0.0f)
