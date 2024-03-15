@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using double3 = Unity.Mathematics.double3;
 using quaternion = Unity.Mathematics.quaternion;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 [RequireComponent(typeof(CesiumOriginShift))]
 [RequireComponent(typeof(CesiumGlobeAnchor))]
@@ -271,7 +272,7 @@ public class CameraController : MonoBehaviour
 
             // Compute the rotation from the previous mouse position to the current mouse position in ECEF coordinates.
             var rot = QuaternionD.FromVectors(normalize(previousMousePositionECEF), normalize(currentMousePositionECEF));
-            spin = rot / Time.deltaTime;
+            spin = rot;// Time.deltaTime;
             
             var currentECEF = double3(georeference.ecefX, georeference.ecefY, georeference.ecefZ);
             // Rotate the ECEF position.
@@ -287,6 +288,7 @@ public class CameraController : MonoBehaviour
         else if (move.sqrMagnitude > 0.0f)
         {
             velocity = Vector3.zero;
+            spin = QuaternionD.identity;
 
             Vector3 forwardDirection = Vector3.Cross(camera.transform.right, Vector3.up).normalized;
             Vector3 moveDirection = camera.transform.right * move.x + forwardDirection * move.z;
@@ -296,9 +298,16 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            // Propagate the current velocity.
+            // Propagate the current spin.
             //camera.transform.Translate(velocity * Time.deltaTime, Space.World);
-            characterController.Move(velocity * Time.deltaTime);
+            var currentECEF = double3(georeference.ecefX, georeference.ecefY, georeference.ecefZ);
+            // Rotate the ECEF position.
+            var newECEF = QuaternionD.rotate(spin, currentECEF);
+
+            var delta = georeference.TransformEarthCenteredEarthFixedDirectionToUnity(currentECEF - newECEF);
+
+            //camera.transform.Translate(delta, Space.World);
+            characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
         }
 
     }
@@ -437,6 +446,7 @@ public class CameraController : MonoBehaviour
         if (stopAction.WasPressedThisFrame() || resetAction.WasPerformedThisFrame())
         {
             velocity = Vector3.zero;
+            spin = QuaternionD.identity;
         }
 
         if (switchView)
@@ -486,6 +496,7 @@ public class CameraController : MonoBehaviour
 
         // Apply damping.
         velocity *= Mathf.Pow(1.0f - VelocityDamping, Time.deltaTime);
+        spin = QuaternionD.slerp(QuaternionD.identity, spin, Math.Pow(1.0f - VelocityDamping, Time.deltaTime));
     }
 
     void LateUpdate()

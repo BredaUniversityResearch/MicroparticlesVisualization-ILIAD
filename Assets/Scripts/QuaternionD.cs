@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
@@ -58,7 +59,7 @@ public struct QuaternionD
     /// <param name="b">The second vector (normalized).</param>
     public static QuaternionD FromVectors(double3 a, double3 b)
     {
-        var cosTheta = dot(a, b);
+        var cosTheta = math.dot(a, b);
         double3 rotationAxis;
 
         if (cosTheta > 1.0 - EPSILON_DBL)
@@ -98,6 +99,108 @@ public struct QuaternionD
     }
 
     /// <summary>
+    /// Quaternion negation.
+    /// </summary>
+    /// <param name="a">The quaternion to negate.</param>
+    /// <returns>The negated quaternion.</returns>
+    public static QuaternionD operator -(QuaternionD a)
+    {
+        return new QuaternionD(-a.v, a.w);
+    }
+
+    /// <summary>
+    /// Quaternion addition.
+    /// </summary>
+    /// <param name="a">The first quaternion.</param>
+    /// <param name="b">The second quaternion.</param>
+    /// <returns>The result of adding a and b.</returns>
+    public static QuaternionD operator +(QuaternionD a, QuaternionD b)
+    {
+        return new QuaternionD(a.v + b.v, a.w + b.w);
+    }
+
+    /// <summary>
+    /// Quaternion subtraction.
+    /// </summary>
+    /// <param name="a">The first quaternion.</param>
+    /// <param name="b">The second quaternion.</param>
+    /// <returns>The result of subtracting b from a.</returns>
+    public static QuaternionD operator -(QuaternionD a, QuaternionD b)
+    {
+        return new QuaternionD(a.v - b.v, a.w - b.w);
+    }
+
+    /// <summary>
+    /// Quaternion multiplication.
+    /// </summary>
+    /// <param name="a">The first quaternion.</param>
+    /// <param name="b">The second quaternion.</param>
+    /// <returns>The result of a * b.</returns>
+    public static QuaternionD operator *(QuaternionD a, QuaternionD b)
+    {
+        return new QuaternionD(
+            a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+            a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+            a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
+            a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z
+        );
+    }
+
+    /// <summary>
+    /// Quaternion dot product. This is equivalent to vector dot product.
+    /// </summary>
+    /// <param name="a">The first quaternion.</param>
+    /// <param name="b">The second quaternion.</param>
+    /// <returns>The dot product between a and b.</returns>
+    public static double dot(QuaternionD a, QuaternionD b)
+    {
+        return a.w * b.w + a.x * b.x + a.y * b.y + a.z * b.z;
+    }
+
+    /// <summary>
+    /// Linear interpolation of two quaternions.
+    /// </summary>
+    /// <param name="a">The first quaternion.</param>
+    /// <param name="b">The second quaternion.</param>
+    /// <param name="t">The interpolation parameter.</param>
+    /// <returns></returns>
+    public static QuaternionD lerp(QuaternionD a, QuaternionD b, double t)
+    {
+        return a * (1.0 - t) + b * t;
+    }
+
+    /// <summary>
+    /// Spherical linear interpolation.
+    /// </summary>
+    /// <param name="a">The starting quaternion.</param>
+    /// <param name="b">The ending quaternion.</param>
+    /// <param name="t">The interpolation parameter.</param>
+    /// <returns>The interpolated quaternion.</returns>
+    public static QuaternionD slerp(QuaternionD a, QuaternionD b, double t)
+    {
+        double c = dot(a, b); // Cosine angle between a and b.
+
+        // If the cosine angle is close to 1, then the angle between a and b
+        // is very close to 0. To avoid a division by 0 (when sin(a) = 0) then just
+        // use linear interpolation.
+        if (c > 1.0 - EPSILON_DBL)
+        {
+            return lerp(a, b, t);
+        }
+
+        // If the cosine angle between a and b is < 0, then negate a so that
+        // the interpolation takes the shortest path from a to b.
+        if (c < 0.0)
+        {
+            a = -a;
+            c = -c;
+        }
+
+        double angle = acos(c); // The angle between a and b (in radians).
+        return (a * sin((1.0 - t) * angle) + b * sin(t * angle)) / sin(angle);
+    }
+
+    /// <summary>
     /// Multiply a vector by a quaternion.
     /// </summary>
     /// <param name="q">The rotation quaternion.</param>
@@ -122,7 +225,7 @@ public struct QuaternionD
 
     public static QuaternionD operator *(QuaternionD q, float s)
     {
-        return q * (double) s;
+        return q * (double)s;
     }
 
     /// <summary>
@@ -138,7 +241,7 @@ public struct QuaternionD
 
     public static QuaternionD operator /(QuaternionD q, float s)
     {
-        return q / (double) s;
+        return q / (double)s;
     }
 
     /// <summary>
