@@ -120,7 +120,7 @@ public class CameraController : MonoBehaviour
     private Vector3 previousMousePosition;
     private double3 previousMousePositionECEF;
     private Vector3 velocity;
-    private quaternion spin; // How fast the globe is spinning.
+    private QuaternionD spin; // How fast the globe is spinning.
     private double previousHeight;
 
     /// <summary>
@@ -271,6 +271,7 @@ public class CameraController : MonoBehaviour
 
             // Compute the rotation from the previous mouse position to the current mouse position in ECEF coordinates.
             var rot = QuaternionD.FromVectors(normalize(previousMousePositionECEF), normalize(currentMousePositionECEF));
+            spin = rot / Time.deltaTime;
             
             var currentECEF = double3(georeference.ecefX, georeference.ecefY, georeference.ecefZ);
             // Rotate the ECEF position.

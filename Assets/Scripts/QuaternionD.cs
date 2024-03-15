@@ -97,10 +97,48 @@ public struct QuaternionD
         return new QuaternionD(v);
     }
 
+    /// <summary>
+    /// Multiply a vector by a quaternion.
+    /// </summary>
+    /// <param name="q">The rotation quaternion.</param>
+    /// <param name="v">The vector to rotate.</param>
+    /// <returns>The rotated vector.</returns>
     public static double3 operator *(QuaternionD q, double3 v)
     {
         double3 t = 2.0 * cross(q.v, v);
         return v + q.w * t + cross(q.v, t);
+    }
+
+    /// <summary>
+    /// Multiply a quaternion by a scalar.
+    /// </summary>
+    /// <param name="q">The quaternion.</param>
+    /// <param name="s">The scalar.</param>
+    /// <returns>The scaled quaternion.</returns>
+    public static QuaternionD operator *(QuaternionD q, double s)
+    {
+        return new QuaternionD(q.v * s, q.w * s);
+    }
+
+    public static QuaternionD operator *(QuaternionD q, float s)
+    {
+        return q * (double) s;
+    }
+
+    /// <summary>
+    /// Divide a quaternion by a scalar.
+    /// </summary>
+    /// <param name="q">The quaternion.</param>
+    /// <param name="s">The scalar.</param>
+    /// <returns>The scaled quaternion.</returns>
+    public static QuaternionD operator /(QuaternionD q, double s)
+    {
+        return new QuaternionD(q.v / s, q.w / s);
+    }
+
+    public static QuaternionD operator /(QuaternionD q, float s)
+    {
+        return q / (double) s;
     }
 
     /// <summary>
@@ -124,6 +162,17 @@ public struct QuaternionD
     public QuaternionD(double x, double y, double z, double w)
     {
         this.v = double3(x, y, z);
+        this.w = w;
+    }
+
+    /// <summary>
+    /// Construct a quaternion from the vector part and scalar part.
+    /// </summary>
+    /// <param name="v">The vector part.</param>
+    /// <param name="w">The scalar part.</param>
+    public QuaternionD(double3 v, double w)
+    {
+        this.v = v;
         this.w = w;
     }
 
