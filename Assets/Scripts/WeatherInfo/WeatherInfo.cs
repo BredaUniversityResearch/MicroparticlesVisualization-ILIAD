@@ -61,7 +61,7 @@ public class WeatherInfo : MonoBehaviour
     string ComposeUrl()
     {
         string finalApiUrl = m_apiUrl.Replace("{lat}", m_lat).Replace("{lon}", m_lon).Replace("{API_key}", m_appid);
-        Debug.Log("The completed url is: " + finalApiUrl);
+        //Debug.Log("The completed url is: " + finalApiUrl);
         return finalApiUrl;
     }
 
@@ -80,7 +80,7 @@ public class WeatherInfo : MonoBehaviour
         {
             // Request was successful
             string jsonResponse = request.downloadHandler.text;
-            Debug.Log(jsonResponse);
+            //Debug.Log(jsonResponse);
 
             Root weatherData = JsonConvert.DeserializeObject<Root>(jsonResponse);
 
