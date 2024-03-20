@@ -673,7 +673,7 @@ MonoBehaviour:
   _subTileCacheBytes: 16777216
   _ionAssetID: 2
   _ionAccessToken: 
-  _ionServer: {fileID: 11400000, guid: 7a12d7af4ad24524a850b4699359ab23, type: 2}
+  _ionServer: {fileID: 11400000, guid: 068acf60d6800b04a87588c8490caadf, type: 2}
 --- !u!114 &1171373344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,7 +691,7 @@ MonoBehaviour:
   _url: 
   _ionAssetID: 2426648
   _ionAccessToken: 
-  _ionServer: {fileID: 11400000, guid: 7a12d7af4ad24524a850b4699359ab23, type: 2}
+  _ionServer: {fileID: 11400000, guid: 068acf60d6800b04a87588c8490caadf, type: 2}
   _maximumScreenSpaceError: 16
   _preloadAncestors: 1
   _preloadSiblings: 1
@@ -1198,6 +1198,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
+      propertyPath: _detectTransformChanges
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
+        type: 3}
       propertyPath: _localToGlobeFixedMatrix.c0.x
       value: -0.18087824235380845
       objectReference: {fileID: 0}
@@ -1255,6 +1260,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c3.z
       value: 5683080.975410736
+      objectReference: {fileID: 0}
+    - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
+        type: 3}
+      propertyPath: _adjustOrientationForGlobeWhenMoving
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7274049322266127091, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}

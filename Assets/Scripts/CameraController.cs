@@ -273,8 +273,8 @@ public class CameraController : MonoBehaviour
             // Compute the rotation from the previous mouse position to the current mouse position in ECEF coordinates.
             var rot = QuaternionD.FromVectors(normalize(previousMousePositionECEF), normalize(currentMousePositionECEF));
             spin = rot;// Time.deltaTime;
-            
-            var currentECEF = double3(georeference.ecefX, georeference.ecefY, georeference.ecefZ);
+
+            var currentECEF = globeAnchor.positionGlobeFixed;
             // Rotate the ECEF position.
             var newECEF = QuaternionD.rotate(rot, currentECEF);
             
@@ -300,7 +300,7 @@ public class CameraController : MonoBehaviour
         {
             // Propagate the current spin.
             //camera.transform.Translate(velocity * Time.deltaTime, Space.World);
-            var currentECEF = double3(georeference.ecefX, georeference.ecefY, georeference.ecefZ);
+            var currentECEF = globeAnchor.positionGlobeFixed;
             // Rotate the ECEF position.
             var newECEF = QuaternionD.rotate(spin, currentECEF);
 

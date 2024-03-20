@@ -6,6 +6,7 @@ using static Unity.Mathematics.math;
 /// Unity doesn't have a quaternion that can operate on double-precision values.
 /// This struct implements a double-precision quaternion.
 /// </summary>
+[Serializable]
 public struct QuaternionD
 {
     /// <summary>
