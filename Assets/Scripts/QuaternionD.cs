@@ -94,11 +94,6 @@ public struct QuaternionD
         return new QuaternionD(double4(rotationAxis * invs, s * 0.5));
     }
 
-    public static explicit operator QuaternionD(double4 v)
-    {
-        return new QuaternionD(v);
-    }
-
     /// <summary>
     /// Quaternion negation.
     /// </summary>
@@ -168,6 +163,16 @@ public struct QuaternionD
     public static QuaternionD lerp(QuaternionD a, QuaternionD b, double t)
     {
         return a * (1.0 - t) + b * t;
+    }
+
+    public static QuaternionD conjugate(QuaternionD q)
+    {
+        return new QuaternionD(-q.v, q.w);
+    }
+
+    public static QuaternionD inverse(QuaternionD q)
+    {
+        return conjugate(q) / dot(q, q);
     }
 
     /// <summary>

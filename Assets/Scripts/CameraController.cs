@@ -2,6 +2,7 @@ using System;
 using CesiumForUnity;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using static QuaternionD;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -122,7 +123,9 @@ public class CameraController : MonoBehaviour
     private double3 previousMousePositionECEF;
     private Vector3 velocity;
     private QuaternionD spin; // How fast the globe is spinning.
-    private double previousHeight;
+    private double previousHeight; // If set, will try to restore the height of the globeAnchor to maintain height above the globe.
+    private bool restoreHeight; // Try to maintain height above the ground when panning.
+    private bool wasMouseOnGlobe = false; // True if the globe was clicked.
 
     /// <summary>
     /// Use a character controller to avoid clipping through the terrain.
@@ -260,34 +263,41 @@ public class CameraController : MonoBehaviour
     {
         if (lmbAction.WasPressedThisFrame())
         {
-            GetMousePointOnGlobe(out previousMousePosition);
+            wasMouseOnGlobe = GetMousePointOnGlobe(out previousMousePosition);
             previousMousePositionECEF =
                 georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(previousMousePosition));
         }
         else if (lmbAction.IsPressed())
         {
-            GetMousePointOnGlobe(out var currentMousePosition);
+            bool mouseOnGlobe = GetMousePointOnGlobe(out var currentMousePosition);
             var currentMousePositionECEF =
                 georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(currentMousePosition));
 
-            // Compute the rotation from the previous mouse position to the current mouse position in ECEF coordinates.
-            var rot = QuaternionD.FromVectors(normalize(previousMousePositionECEF), normalize(currentMousePositionECEF));
-            spin = rot;// Time.deltaTime;
+            if (wasMouseOnGlobe != mouseOnGlobe)
+            {
+                previousMousePosition = currentMousePosition;
+                previousMousePositionECEF = currentMousePositionECEF;
+                wasMouseOnGlobe = mouseOnGlobe;
+            }
+            else
+            {
+                // Compute the rotation from the previous mouse position to the current mouse position in ECEF coordinates.
+                var rot = QuaternionD.FromVectors(normalize(previousMousePositionECEF), normalize(currentMousePositionECEF));
+                spin = rot;
 
-            var currentECEF = globeAnchor.positionGlobeFixed;
-            // Rotate the ECEF position.
-            var newECEF = QuaternionD.rotate(rot, currentECEF);
-            
-            var delta = georeference.TransformEarthCenteredEarthFixedDirectionToUnity(currentECEF - newECEF);
+                var currentECEF = globeAnchor.positionGlobeFixed;
+                // Rotate the ECEF position.
+                var newECEF = QuaternionD.rotate(rot, currentECEF);
 
-            //camera.transform.Translate(delta, Space.World);
-            characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
-            // velocity = delta / Time.deltaTime;
-            previousMousePosition = currentMousePosition;
+                var delta = georeference.TransformEarthCenteredEarthFixedDirectionToUnity(currentECEF - newECEF);
+
+                characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
+                previousHeight = globeAnchor.longitudeLatitudeHeight.z;
+                restoreHeight = true; // Restore the height in the LateUpdate function.
+            }
         }
         else if (move.sqrMagnitude > 0.0f)
         {
-            velocity = Vector3.zero;
             spin = QuaternionD.identity;
 
             Vector3 forwardDirection = Vector3.Cross(camera.transform.right, Vector3.up).normalized;
@@ -299,15 +309,15 @@ public class CameraController : MonoBehaviour
         else
         {
             // Propagate the current spin.
-            //camera.transform.Translate(velocity * Time.deltaTime, Space.World);
             var currentECEF = globeAnchor.positionGlobeFixed;
             // Rotate the ECEF position.
             var newECEF = QuaternionD.rotate(spin, currentECEF);
 
             var delta = georeference.TransformEarthCenteredEarthFixedDirectionToUnity(currentECEF - newECEF);
 
-            //camera.transform.Translate(delta, Space.World);
             characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
+            previousHeight = globeAnchor.longitudeLatitudeHeight.z;
+            restoreHeight = lengthsq(delta) > 0.0; // Restore height in LateUpdate if delta is not 0.
         }
 
     }
@@ -318,9 +328,21 @@ public class CameraController : MonoBehaviour
     /// <param name="zoom">The zoom amount.</param>
     void Zoom(float zoom)
     {
-        float speed = MoveSpeed.Evaluate(Height);
-        //camera.transform.Translate(Vector3.forward * zoom * speed, Space.Self);
-        characterController.Move(transform.TransformDirection(Vector3.forward * zoom * speed));
+        if (zoom != 0.0f)
+        {
+            float speed = MoveSpeed.Evaluate(Height);
+            if (GetMousePointOnGlobe(out var pointOnGlobe))
+            {
+                Vector3 forward = (pointOnGlobe - transform.position).normalized;
+                characterController.Move(forward * zoom * speed);
+            }
+            else
+            {
+                characterController.Move(transform.TransformDirection(Vector3.forward * zoom * speed));
+            }
+            // Don't restore the height when zooming.
+            restoreHeight = false;
+        }
     }
 
     /// <summary>
@@ -410,6 +432,7 @@ public class CameraController : MonoBehaviour
                 // if (GetMousePointOnGlobe(out clickedPoint))
                 {
                     Debug.Log("Switching view mode to top-down.");
+
                     var llh = globeAnchor.longitudeLatitudeHeight;
                     llh.z = previousHeight; // Restore previous height.
                     globeAnchor.longitudeLatitudeHeight = llh;
@@ -506,6 +529,14 @@ public class CameraController : MonoBehaviour
             globeAnchor.longitudeLatitudeHeight = initialPosition;
             globeAnchor.rotationEastUpNorth = initialRotation;
             currentViewMode = ViewMode.TopDown;
+        }
+
+        if (restoreHeight)
+        {
+            var llh = globeAnchor.longitudeLatitudeHeight;
+            llh.z = previousHeight;
+            globeAnchor.longitudeLatitudeHeight = llh;
+            restoreHeight = false;
         }
     }
 
