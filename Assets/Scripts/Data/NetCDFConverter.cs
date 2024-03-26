@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using Microsoft.Research.Science.Data
+using Microsoft.Research.Science.Data;
 
 public class NetCDFConverter : MonoBehaviour
 {
