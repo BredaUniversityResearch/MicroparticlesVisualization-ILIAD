@@ -17,46 +17,8 @@ public class LoadParticlesOnStart : MonoBehaviour
         if (m_initialized)
             return;
 
-        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
-
-        if (!query.HasSingleton<ParticleVisualizationSettingsData>())
-            return;
-
-        int numDepth, numLatitude, numLongitude;
-        float[] depth, lat, lon;
-        if (TryParseCSVVert(m_depthCSVFile, out numDepth, out depth) && TryParseCSVVert(m_latitudeCSVFile, out numLatitude, out lat) && TryParseCSVVert(m_longitudeCSVFile, out numLongitude, out lon))
-        {
-            Debug.Assert(numDepth == numLatitude && numLatitude == numLongitude);
-
-            BlobBuilder builder = new BlobBuilder(Allocator.Temp);
-            ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
-            BlobBuilderArray<float> depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, depth.Length);
-            BlobBuilderArray<float> latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, lat.Length);
-            BlobBuilderArray<float> lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, lon.Length);
-
-            for (var j = 0; j < depth.Length; j++)
-            {
-                depthArrayBuilder[j] = depth[j];
-                latArrayBuilder[j] = lat[j];
-                lonArrayBuilder[j] = lon[j];
-            }
-
-            Entity root = query.GetSingletonEntity();
-
-            BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
-            entityManager.AddComponentData(root, new ParticleSpawnData
-            {
-                Value = blobAsset,
-                m_entriesPerParticle = numDepth
-            });
-            builder.Dispose();
-            entityManager.AddComponentData(root, new ParticleTimingData
-            {
-                m_numberIndices = numDepth,
-                m_timePerIndex = m_timePerTimeIndex
-            });
-        }
+        DataLoader.Instance.LoadNCDFFile(Application.dataPath + "/Data/sintefset.nc", null);
+        return;
         m_initialized = true;
     }
 
