@@ -2,13 +2,11 @@ using System;
 using CesiumForUnity;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
-using static QuaternionD;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using double3 = Unity.Mathematics.double3;
 using quaternion = Unity.Mathematics.quaternion;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 [RequireComponent(typeof(CesiumOriginShift))]
 [RequireComponent(typeof(CesiumGlobeAnchor))]
@@ -229,6 +227,32 @@ public class CameraController : MonoBehaviour
     void Start()
     {
 
+    }
+
+    /// <summary>
+    /// This function returns the projected mouse position onto a unit sphere placed directly in front of the screen.
+    /// See: https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Arcball
+    /// </summary>
+    /// <returns>The current mouse position projected onto a unit sphere in front of the camera.</returns>
+    public Vector3 ProjectMouseOnUnitSphere()
+    {
+        Vector2 screen = Mouse.current.position.value;
+        // Compute the minimum dimension (to keep it a sphere)
+        float minDimension = MathF.Min(Screen.width, Screen.height);
+        // Compute the normalized coordinates in the range [-1 .. 1]
+        Vector2 ndc = new Vector2(screen.x / minDimension * 2.0f - 1.0f, screen.y / minDimension * 2.0f - 1.0f);
+        // Compute the distance from the center of the screen (in normalized coordinates)
+        float l = Mathf.Sqrt(ndc.x * ndc.x + ndc.y * ndc.y);
+        // Check to see if the point is on the unit sphere.
+        if (l > 1.0f)
+        {
+            // The point in normalized device coordinates is off the unit sphere.
+            // In this case, normalize the point back to the range [-1 .. 1]
+            ndc = ndc / l;
+            l = 1.0f; // Set l to 1 so that z becomes 0.
+        }
+
+        return new Vector3(ndc.x, ndc.y, 1.0f - l);
     }
 
     /// <summary>

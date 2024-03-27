@@ -18,7 +18,6 @@ public class LoadParticlesOnStart : MonoBehaviour
             return;
 
         DataLoader.Instance.LoadNCDFFile(Application.dataPath + "/Data/sintefset.nc", null);
-        return;
         m_initialized = true;
     }
 
