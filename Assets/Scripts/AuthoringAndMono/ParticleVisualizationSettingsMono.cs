@@ -14,6 +14,8 @@ public class ParticleVisualizationSettingsMono : MonoBehaviour
             {
                 m_particlePrefab = GetEntity(authoring.m_particlePrefab, TransformUsageFlags.None),
             });
+            AddComponent(settingsEntity, new DestroyParticlesTag());
+            SetComponentEnabled<DestroyParticlesTag>(settingsEntity, false);
         }
     }
 }
