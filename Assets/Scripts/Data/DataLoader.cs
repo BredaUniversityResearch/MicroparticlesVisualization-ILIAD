@@ -61,7 +61,10 @@ public class DataLoader : MonoBehaviour
     {
         yield return a_request.SendWebRequest();
 
-        if (a_request.result != UnityWebRequest.Result.Success)
+		FlushParticles();
+		yield return null; //Wait a frame for the flush
+
+		if (a_request.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError("Fetching JSON file failed, message: " + a_request.error);
             a_completedCallback.Invoke(false);
@@ -86,8 +89,9 @@ public class DataLoader : MonoBehaviour
 
             if (data != null)
             {
-                SetParticleSpawnData(data);
-                a_completedCallback?.Invoke(true);
+				SetParticleSpawnData(data);
+				yield return null; //Wait a frame for the spawn
+				a_completedCallback?.Invoke(true);
             }
             else
                 a_completedCallback?.Invoke(false);
@@ -95,14 +99,27 @@ public class DataLoader : MonoBehaviour
 
     }
 
-    public void LoadNCDFFile(string a_filePath, Action<bool> a_completedCallback)
+	public void LoadNCDFFile(string a_filePath, Action<bool> a_completedCallback)
+	{
+		Debug.Log("Loading NCDF from URL: " + a_filePath);
+		StartCoroutine(LoadNCDF(a_filePath, a_completedCallback, ++m_nextRequestIndex));
+	}
+
+	IEnumerator LoadNCDF(string a_filePath, Action<bool> a_completedCallback, int a_requestIndex)
     {
         bool success = false;
-        m_nextRequestIndex++;
-        try
+		FlushParticles();
+		yield return null; //Wait a frame for the flush
+		if (a_requestIndex != m_nextRequestIndex)
+		{
+			Debug.LogWarning($"Result of old request with ID {a_requestIndex} received. Results are ignored.");
+            yield break;
+		}
+
+		try
         {
             DataSet ds = DataSet.Open(a_filePath);
-            SetParticleSpawnData(ds);
+			SetParticleSpawnData(ds);
             success = true;
         }
         catch (Exception ex)
@@ -118,10 +135,11 @@ public class DataLoader : MonoBehaviour
     public void LoadNCDFURL(string a_url, Action<bool> a_completedCallback)
     {
         m_nextRequestIndex++;
-        //TODO
-    }
+		//TODO
+		a_completedCallback?.Invoke(false);
+	}
 
-    public void SetParticleSpawnData(GeoVizData a_data)
+    void SetParticleSpawnData(GeoVizData a_data)
     {
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
@@ -144,23 +162,56 @@ public class DataLoader : MonoBehaviour
         }
 
         BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
-        entityManager.AddComponentData(root, new ParticleSpawnData
-        {
-            Value = blobAsset,
-            m_entriesPerParticle = a_data.entries_per_particle
-        });
-        builder.Dispose();
-        entityManager.AddComponentData(root, new ParticleTimingData
-        {
-            m_numberIndices = a_data.entries_per_particle,
-            m_timePerIndex = 0.5f //TODO: set this
-        });
-    }
+		if (entityManager.HasComponent<ParticleSpawnData>(root))
+		{
+			entityManager.SetComponentData(root, new ParticleSpawnData
+			{
+				Value = blobAsset,
+				m_entriesPerParticle = a_data.entries_per_particle
+			});
+			entityManager.SetComponentEnabled<ParticleSpawnData>(root, true);
+		}
+		else
+		{
+			entityManager.AddComponentData(root, new ParticleSpawnData
+			{
+				Value = blobAsset,
+				m_entriesPerParticle = a_data.entries_per_particle
+			});
+		}
+		builder.Dispose();
 
-    public void SetParticleSpawnData(DataSet a_data)
+		if (entityManager.HasComponent<ParticleTimingData>(root))
+		{
+			entityManager.SetComponentData(root, new ParticleTimingData
+			{
+				m_numberIndices = a_data.entries_per_particle,
+				m_timePerIndex = 0.5f //TODO: set this
+			});
+		}
+		else
+		{
+			entityManager.AddComponentData(root, new ParticleTimingData
+			{
+				m_numberIndices = a_data.entries_per_particle,
+				m_timePerIndex = 0.5f //TODO: set this
+			});
+		}
+	}
+
+    void SetParticleSpawnData(DataSet a_data)
     {
-        // Get the variables 'lon', 'lat', 'z', 'particle_size_distribution', 'particle_classification'
-        Array lon = a_data["lon"].GetData();
+        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
+        if (!query.HasSingleton<ParticleVisualizationSettingsData>())
+		{
+			Debug.LogError("No 'ParticleVisualizationSettingsData' component found. Setting particle spawn data failed.");
+			return;
+		}
+		Entity root = query.GetSingletonEntity();
+
+		// Get the variables 'lon', 'lat', 'z', 'particle_size_distribution', 'particle_classification'
+		Array lon = a_data["lon"].GetData();
         Array lat = a_data["lat"].GetData();
         Array z = a_data["z"].GetData();
         //Array particleSizeDistribution = ds["particle_size_distribution"].GetData();
@@ -171,14 +222,9 @@ public class DataLoader : MonoBehaviour
         if (lon.GetLength(1) != entriesPerParticle || entriesPerParticle != z.GetLength(1))
         {
             Debug.LogError("Loaded data has inconsistent length, loading has been aborted.");
-            return;
-        }
+			return;
+		}
 
-        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
-        if (!query.HasSingleton<ParticleVisualizationSettingsData>())
-            return;
-        Entity root = query.GetSingletonEntity();
 
         int dataAmount = lon.GetLength(0) * lon.GetLength(1);
         BlobBuilder builder = new BlobBuilder(Allocator.Temp);
@@ -200,17 +246,60 @@ public class DataLoader : MonoBehaviour
         }
 
         BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
-        entityManager.AddComponentData(root, new ParticleSpawnData
+		
+		if(entityManager.HasComponent<ParticleSpawnData>(root))
         {
-            Value = blobAsset,
-            m_entriesPerParticle = entriesPerParticle
-        });
+			entityManager.SetComponentData(root, new ParticleSpawnData
+			{
+				Value = blobAsset,
+				m_entriesPerParticle = entriesPerParticle
+			});
+            entityManager.SetComponentEnabled<ParticleSpawnData>(root, true);
+		}
+        else
+        {
+		    entityManager.AddComponentData(root, new ParticleSpawnData
+            {
+                Value = blobAsset,
+                m_entriesPerParticle = entriesPerParticle
+            });
+        }
         builder.Dispose();
-        entityManager.AddComponentData(root, new ParticleTimingData
-        {
-            m_numberIndices = entriesPerParticle,
-            m_timePerIndex = 0.5f //TODO: set this
-        });
+
+		if (entityManager.HasComponent<ParticleTimingData>(root))
+		{
+			entityManager.SetComponentData(root, new ParticleTimingData
+			{
+				m_numberIndices = entriesPerParticle,
+				m_timePerIndex = 0.5f //TODO: set this
+			});
+		}
+		else
+		{
+			entityManager.AddComponentData(root, new ParticleTimingData
+			{
+				m_numberIndices = entriesPerParticle,
+				m_timePerIndex = 0.5f //TODO: set this
+			});
+		}
     }
+
+    void FlushParticles()
+    {
+		EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+		EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
+        if (!query.HasSingleton<ParticleVisualizationSettingsData>())
+        {
+            Debug.LogError("No 'DestroyParticlesTag' component found. Flushing particles failed.");
+            return;
+        }
+		Entity root = query.GetSingletonEntity();
+		if (entityManager.HasComponent<DestroyParticlesTag>(root))
+        {
+            entityManager.SetComponentEnabled<DestroyParticlesTag>(root, true);
+        }
+        else
+			entityManager.AddComponentData(root, new DestroyParticlesTag());
+	}
 }
 

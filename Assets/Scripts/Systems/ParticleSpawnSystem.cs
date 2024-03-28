@@ -30,28 +30,27 @@ public partial class ParticleSpawnSystem : SystemBase
 	[BurstCompile]
 	protected override void OnUpdate()
 	{
-		Enabled = false;
-
 		Entity settingsEntity = SystemAPI.GetSingletonEntity<ParticleVisualizationSettingsData>();
-		RefRW<ParticleSpawnData> spawnData = SystemAPI.GetComponentRW<ParticleSpawnData>(settingsEntity);
-		RefRO<ParticleVisualizationSettingsData> visualizationData = SystemAPI.GetComponentRO<ParticleVisualizationSettingsData>(settingsEntity);
-
-		var ecbSystem = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
-		//var ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
-
-		var job = new SpawnParticleJob
+		if (EntityManager.IsComponentEnabled<ParticleSpawnData>(settingsEntity))
 		{
-			m_entriesPerParticle = spawnData.ValueRO.m_entriesPerParticle,
-			m_prefab = visualizationData.ValueRO.m_particlePrefab,
-			m_spawnData = spawnData.ValueRO.Value,
-			m_ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter()
-		};
-		//job.Run(spawnData.ValueRO.Value.Value.m_depths.Length / spawnData.ValueRO.m_entriesPerParticle);
-		JobHandle jobHandle = job.Schedule(spawnData.ValueRO.Value.Value.m_depths.Length / spawnData.ValueRO.m_entriesPerParticle, 64);
-		//jobHandle.Complete();
+			RefRW<ParticleSpawnData> spawnData = SystemAPI.GetComponentRW<ParticleSpawnData>(settingsEntity);
+			RefRO<ParticleVisualizationSettingsData> visualizationData = SystemAPI.GetComponentRO<ParticleVisualizationSettingsData>(settingsEntity);
+			EntityManager.SetComponentEnabled<ParticleSpawnData>(settingsEntity, false);
 
-		EntityManager.SetComponentEnabled<ParticleSpawnData>(settingsEntity, false);
-		ecbSystem.AddJobHandleForProducer(jobHandle);
+			var ecbSystem = World.GetOrCreateSystemManaged<EndSimulationEntityCommandBufferSystem>();
+
+			var job = new SpawnParticleJob
+			{
+				m_entriesPerParticle = spawnData.ValueRO.m_entriesPerParticle,
+				m_prefab = visualizationData.ValueRO.m_particlePrefab,
+				m_spawnData = spawnData.ValueRO.Value,
+				m_ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter()
+			};
+			JobHandle jobHandle = job.Schedule(spawnData.ValueRO.Value.Value.m_depths.Length / spawnData.ValueRO.m_entriesPerParticle, 64);
+
+			EntityManager.SetComponentEnabled<ParticleSpawnData>(settingsEntity, false);
+			ecbSystem.AddJobHandleForProducer(jobHandle);
+		}
 	}
 
 	//public void OnUpdate(ref SystemState a_state)

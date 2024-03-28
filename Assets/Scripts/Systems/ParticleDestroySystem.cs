@@ -1,4 +1,5 @@
-﻿using Unity.Burst;
+﻿using System.Diagnostics;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -12,7 +13,7 @@ public partial class ParticleDestroySystem : SystemBase
 	[BurstCompile]
 	protected override void OnCreate()
 	{
-		RequireForUpdate<ParticleSpawnData>();
+		RequireForUpdate<DestroyParticlesTag>();
 		RequireForUpdate<ParticleVisualizationSettingsData>();
 	}
 
