@@ -256,9 +256,40 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
-    /// Cast a ray from the mouse to the earth and return the point that was hit in Unity world coordinates.
+    /// Ray-ellipsoid intersection.
+    /// Source: https://iquilezles.org/articles/intersectors/
+    /// Source: https://www.shadertoy.com/view/7d3BRl
     /// </summary>
-    /// <param name="p">The point in Unity world coordinates.</param>
+    /// <param name="o">Ray origin.</param>
+    /// <param name="d">Ray direction.</param>
+    /// <param name="e">Ellipsoid radii.</param>
+    /// <param name="p">Intersection point (if an intersection occured).</param>
+    /// <returns></returns>
+    public bool IntersectEllipsoid(double3 o, double3 d, double3 e, out double3 p)
+    {
+        double3 e2 = e * e;
+        double a = dot(d, d/e2);
+        double b = dot(o, d/e2);
+        double c = dot(o, o/e2);
+        double h = b * b - a * (c - 1.0);
+
+        if (h < 0.0f)
+        {
+            // No intersection occured.
+            p = double3(-1);
+            return false;
+        }
+
+        double t = (-b - sqrt(h)) / a;
+        p = o + t * d;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Cast a ray from the mouse to the earth and return the point that was hit in Unity's world coordinates.
+    /// </summary>
+    /// <param name="p">The point in Unity's world coordinates.</param>
     /// <returns>`true` if the globe terrain was hit, `false` otherwise.</returns>
     public bool GetMousePointOnGlobe(out Vector3 p)
     {
@@ -278,6 +309,18 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
+    /// Cast a ray from the mouse to the earth and return the point that was hit in Earth-Centered, Earth-Fixed coordinates.
+    /// </summary>
+    /// <param name="p">The point in ECEF coordinates.</param>
+    /// <returns>`true` if the globe terrain was hit, `false` otherwise.</returns>
+    public bool GetMousePointOnGlobeECEF(out double3 p)
+    {
+        bool hit = GetMousePointOnGlobe(out var u);
+        p = georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(u));
+        return hit;
+    }
+
+    /// <summary>
     /// Get the height of the camera (in meters) above the ellipsoid of the world.
     /// Note: Clamp to 0 to avoid negative heights.
     /// </summary>
@@ -287,19 +330,13 @@ public class CameraController : MonoBehaviour
     {
         if (lmbAction.WasPressedThisFrame())
         {
-            wasMouseOnGlobe = GetMousePointOnGlobe(out previousMousePosition);
-            previousMousePositionECEF =
-                georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(previousMousePosition));
+            wasMouseOnGlobe = GetMousePointOnGlobeECEF(out previousMousePositionECEF);
         }
         else if (lmbAction.IsPressed())
         {
-            bool mouseOnGlobe = GetMousePointOnGlobe(out var currentMousePosition);
-            var currentMousePositionECEF =
-                georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(currentMousePosition));
-
+            bool mouseOnGlobe = GetMousePointOnGlobeECEF(out var currentMousePositionECEF);
             if (wasMouseOnGlobe != mouseOnGlobe)
             {
-                previousMousePosition = currentMousePosition;
                 previousMousePositionECEF = currentMousePositionECEF;
                 wasMouseOnGlobe = mouseOnGlobe;
             }
@@ -412,7 +449,7 @@ public class CameraController : MonoBehaviour
     {
         if (lmbAction.WasPerformedThisFrame())
         {
-            GetMousePointOnGlobe(out previousMousePosition);
+            wasMouseOnGlobe = GetMousePointOnGlobe(out previousMousePosition);
         }
         else if (lmbAction.IsPressed())
         {
