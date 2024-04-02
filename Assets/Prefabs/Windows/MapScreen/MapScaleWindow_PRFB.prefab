@@ -957,8 +957,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_streetMap: {fileID: 5868597275559257181}
   m_satelliteMap: {fileID: 672578284834508337}
+  m_bathymetryMap: {fileID: 7286871820904215388}
   m_3dMap: {fileID: 6406681032811654886}
+  m_bathymetryMaterial: {fileID: 2100000, guid: 6ae816aabbd76de469d71704df304f09,
+    type: 2}
   m_cesiumIonRasterOverlay: {fileID: 0}
+  m_cesium3DTileset: {fileID: 0}
 --- !u!1 &6113475448869305002
 GameObject:
   m_ObjectHideFlags: 0
