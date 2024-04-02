@@ -12,6 +12,7 @@ public class LoadingOverlay : MonoBehaviour
         gameObject.SetActive(false);
         DataLoader.Instance.m_onLoadStartEvent += OnDataLoadStart;
         DataLoader.Instance.m_onLoadEndEvent += OnDataLoadEnd;
+        gameObject.SetActive(DataLoader.Instance.IsLoading);
     }
 
     void OnDataLoadStart()

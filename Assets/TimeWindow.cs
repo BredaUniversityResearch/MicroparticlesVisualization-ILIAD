@@ -36,6 +36,7 @@ public class TimeWindow : MonoBehaviour
         m_ffwButton.onClick.AddListener(() => { IncreaseFFWSpeed(); });
         DataLoader.Instance.m_onLoadStartEvent += OnDataLoadStart;
         DataLoader.Instance.m_onLoadEndEvent += OnDataLoadEnd;
+        m_loadingCover.SetActive(DataLoader.Instance.IsLoading);
     }
 
     void OnDataLoadStart()
