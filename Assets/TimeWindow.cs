@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class TimeWindow : MonoBehaviour
 {
@@ -17,20 +18,40 @@ public class TimeWindow : MonoBehaviour
     AbstractMapInterface m_simulationClass;
 
     [SerializeField]
-    RectTransform m_timelineImageTransform;
+    Image m_timelineFillImage;
 
     [SerializeField]
     TextMeshProUGUI m_textSpeed;
 
-    private float m_timelineDefault = 440.0f;
+    [SerializeField] GameObject m_loadingCover;
+    [SerializeField] GameObject m_noDataCover;
+
     private int m_ffwSpeedIndex = 0;
-    private float[] m_ffwSpeeds = { 1.5f, 2.0f, 3.0f };
+    private float[] m_ffwSpeeds = { 2f, 4f, 8f };
 
     private void Awake()
     {
         m_playToggle.onValueChanged.AddListener(isOn => { if (isOn) PlaySimulation(); });
         m_pauseToggle.onValueChanged.AddListener(isOn => { if (isOn) PauseSimulation(); });
         m_ffwButton.onClick.AddListener(() => { IncreaseFFWSpeed(); });
+        DataLoader.Instance.m_onLoadStartEvent += OnDataLoadStart;
+        DataLoader.Instance.m_onLoadEndEvent += OnDataLoadEnd;
+        m_loadingCover.SetActive(DataLoader.Instance.IsLoading);
+    }
+
+    void OnDataLoadStart()
+    {
+        m_pauseToggle.isOn = true;
+        m_loadingCover.SetActive(true);
+        m_noDataCover.SetActive(false);
+        m_simulationClass.timelineTestValue = 0f;
+    }
+
+    void OnDataLoadEnd(bool a_success)
+    {
+        m_loadingCover.SetActive(false);
+        if(!a_success)
+            m_noDataCover.SetActive(true);
     }
 
     private void PlaySimulation()
@@ -57,7 +78,7 @@ public class TimeWindow : MonoBehaviour
 
         // Set simulation speed to currentSpeed
         m_simulationClass.stepRate = currentSpeed / 10.0f;
-        m_textSpeed.text = currentSpeed.ToString("0.0") + "x";
+        m_textSpeed.text = currentSpeed.ToString("0") + "x";
     }
 
 
@@ -65,8 +86,7 @@ public class TimeWindow : MonoBehaviour
     {
         if (m_simulationClass.play)
         {
-            float barWidth = m_timelineDefault * m_simulationClass.timelineTestValue;
-            m_timelineImageTransform.sizeDelta = new ( barWidth, m_timelineImageTransform.sizeDelta.y);
+            m_timelineFillImage.fillAmount = m_simulationClass.timelineTestValue;
         }
     }
 
