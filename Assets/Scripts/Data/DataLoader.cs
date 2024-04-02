@@ -14,6 +14,9 @@ public class DataLoader : MonoBehaviour
 
     private int m_nextRequestIndex = -1;
 
+    public event Action m_onLoadStartEvent;
+    public event Action<bool> m_onLoadEndEvent;
+
     public static DataLoader Instance
     {
         get
@@ -48,12 +51,14 @@ public class DataLoader : MonoBehaviour
     {
         string path = "file:///" + a_filePath;
         Debug.Log("Loading JSON from path: " + path);
+        m_onLoadStartEvent?.Invoke();
         StartCoroutine(LoadJSON(UnityWebRequest.Get(path), a_completedCallback, ++m_nextRequestIndex));
     }
 
     public void LoadJsonURL(string a_url, Action<bool> a_completedCallback)
     {
-        Debug.Log("Loading JSON from URL: " + a_url);
+        Debug.Log("Loading JSON from URL: " + a_url); 
+        m_onLoadStartEvent?.Invoke();
         StartCoroutine(LoadJSON(UnityWebRequest.Get(a_url), a_completedCallback, ++m_nextRequestIndex));
     }
 
@@ -67,7 +72,8 @@ public class DataLoader : MonoBehaviour
 		if (a_request.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError("Fetching JSON file failed, message: " + a_request.error);
-            a_completedCallback.Invoke(false);
+            a_completedCallback?.Invoke(false);
+            m_onLoadEndEvent?.Invoke(false);
         }
         else if (a_requestIndex != m_nextRequestIndex)
         {
@@ -89,12 +95,16 @@ public class DataLoader : MonoBehaviour
 
             if (data != null)
             {
-				SetParticleSpawnData(data);
-				yield return null; //Wait a frame for the spawn
-				a_completedCallback?.Invoke(true);
+                SetParticleSpawnData(data);
+                yield return null; //Wait a frame for the spawn
+                a_completedCallback?.Invoke(true);
+                m_onLoadEndEvent?.Invoke(true);
             }
             else
+            {
                 a_completedCallback?.Invoke(false);
+                m_onLoadEndEvent?.Invoke(false);
+            }
         }
 
     }
@@ -102,13 +112,15 @@ public class DataLoader : MonoBehaviour
 	public void LoadNCDFFile(string a_filePath, Action<bool> a_completedCallback)
 	{
 		Debug.Log("Loading NCDF from URL: " + a_filePath);
-		StartCoroutine(LoadNCDF(a_filePath, a_completedCallback, ++m_nextRequestIndex));
+        m_onLoadStartEvent?.Invoke();
+        StartCoroutine(LoadNCDF(a_filePath, a_completedCallback, ++m_nextRequestIndex));
 	}
 
 	IEnumerator LoadNCDF(string a_filePath, Action<bool> a_completedCallback, int a_requestIndex)
     {
         bool success = false;
 		FlushParticles();
+
 		yield return null; //Wait a frame for the flush
 		if (a_requestIndex != m_nextRequestIndex)
 		{
@@ -129,15 +141,18 @@ public class DataLoader : MonoBehaviour
         finally
 		{
             a_completedCallback?.Invoke(success);
-		}
+            m_onLoadEndEvent?.Invoke(success);
+        }
     }
 
     public void LoadNCDFURL(string a_url, Action<bool> a_completedCallback)
     {
         m_nextRequestIndex++;
-		//TODO
-		a_completedCallback?.Invoke(false);
-	}
+        //TODO
+        m_onLoadStartEvent?.Invoke();
+        a_completedCallback?.Invoke(false);
+        m_onLoadEndEvent?.Invoke(false);
+    }
 
     void SetParticleSpawnData(GeoVizData a_data)
     {
