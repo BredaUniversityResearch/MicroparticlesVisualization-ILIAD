@@ -8,7 +8,7 @@ public class LeftTopBarManager : MonoBehaviour
     CustomToggle m_homepageToggle, m_measurementsToggle, m_mapToggle, m_alertsToggle, m_settingsToggle;
 
     [SerializeField]
-    GameObject m_homepageScreen, m_measurementsScreen, m_mapScreen, m_alertsScreen, m_settingsScreen, m_rightTopBar, m_homepageItemToHide, m_lip;
+    GameObject m_homepageScreen, m_measurementsScreen, m_mapScreen, m_alertsScreen, m_settingsScreen, m_rightTopBar, m_homepageItemToHide, m_lip, m_watermark;
 
     [SerializeField]
     CollapseLeftBar m_leftBar;
@@ -25,12 +25,14 @@ public class LeftTopBarManager : MonoBehaviour
     private void HomePageBar()
     {
         m_homepageItemToHide.SetActive(false);
+        m_watermark.SetActive(true);
 
         m_leftBar.Expand();
     }
 
     private void MapPageBar()
     {
+        m_watermark.SetActive(false);
         m_homepageItemToHide.SetActive(true);
 
         m_leftBar.Expand();
