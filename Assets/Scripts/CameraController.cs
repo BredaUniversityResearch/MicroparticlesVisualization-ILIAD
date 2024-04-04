@@ -291,7 +291,7 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="p">The point in Unity's world coordinates.</param>
     /// <returns>`true` if the globe terrain was hit, `false` otherwise.</returns>
-    public bool GetMousePointOnGlobe(out Vector3 p)
+    private bool GetMousePointOnGlobe(out Vector3 p)
     {
         Vector3 screen = Mouse.current.position.value;
         screen.z = camera.farClipPlane;
@@ -313,10 +313,19 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="p">The point in ECEF coordinates.</param>
     /// <returns>`true` if the globe terrain was hit, `false` otherwise.</returns>
-    public bool GetMousePointOnGlobeECEF(out double3 p)
+    private bool GetMousePointOnGlobeECEF(out double3 p)
     {
         bool hit = GetMousePointOnGlobe(out var u);
         p = georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(u));
+        if (!hit)
+        {
+            // If the globe was not hit, project the center point of the globe onto the ray from the camera to the point p in ECEF coordinates.
+            var c = globeAnchor.positionGlobeFixed; // Camera position in ECEF coordinates.
+            var n = normalize(p - c); // The (normalized) vector from the camera to p in ECEF coordinates.
+            var v = dot(c, n) * n; // Project earth's origin (0,0,0) onto n.
+            // TODO: Check this... It's not yet correct.
+            p = normalize(c + v) * CesiumWgs84Ellipsoid.GetMinimumRadius();
+        }
         return hit;
     }
 

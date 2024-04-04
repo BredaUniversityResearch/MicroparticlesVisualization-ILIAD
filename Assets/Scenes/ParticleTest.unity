@@ -618,7 +618,6 @@ MonoBehaviour:
   m_depthCSVFile: {fileID: 4900000, guid: 48c32d86343ac954e870a5c9049eaa2b, type: 3}
   m_latitudeCSVFile: {fileID: 4900000, guid: b6150ad1636a4a249a9c0df55bb36659, type: 3}
   m_longitudeCSVFile: {fileID: 4900000, guid: 96a162de8e23eb14dae023d55f36cacc, type: 3}
-  m_timePerTimeIndex: 0.001
 --- !u!1 &1171373341
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,7 +672,7 @@ MonoBehaviour:
   _subTileCacheBytes: 16777216
   _ionAssetID: 2
   _ionAccessToken: 
-  _ionServer: {fileID: 11400000, guid: 068acf60d6800b04a87588c8490caadf, type: 2}
+  _ionServer: {fileID: 11400000, guid: ac65516039573ea469de8849ec4728a9, type: 2}
 --- !u!114 &1171373344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,7 +690,7 @@ MonoBehaviour:
   _url: 
   _ionAssetID: 2426648
   _ionAccessToken: 
-  _ionServer: {fileID: 11400000, guid: 068acf60d6800b04a87588c8490caadf, type: 2}
+  _ionServer: {fileID: 11400000, guid: ac65516039573ea469de8849ec4728a9, type: 2}
   _maximumScreenSpaceError: 16
   _preloadAncestors: 1
   _preloadSiblings: 1
@@ -1174,7 +1173,7 @@ PrefabInstance:
     - target: {fileID: 5481954909903251515, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000033858314
+      value: 0.0000033858316
       objectReference: {fileID: 0}
     - target: {fileID: 5481954909903251515, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
@@ -1204,47 +1203,47 @@ PrefabInstance:
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c0.x
-      value: -0.18087824235380845
+      value: -0.1808782423549768
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c0.y
-      value: 0.9835054963876254
+      value: 0.9835054963874107
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c0.z
-      value: -0.0000042810375010142985
+      value: -0.000004281036633697865
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c1.x
-      value: -0.8798416432853254
+      value: -0.8798416035435255
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c1.y
-      value: -0.16181129386999007
+      value: -0.161811286560967
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c1.z
-      value: 0.446875247909153
+      value: 0.44687521830537696
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c2.x
-      value: -0.4395035697982504
+      value: -0.43950354068255754
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c2.y
-      value: -0.08083377602703383
+      value: -0.08083377067353201
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c2.z
-      value: -0.8945972345500376
+      value: -0.8945971941417157
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
@@ -1254,12 +1253,12 @@ PrefabInstance:
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c3.y
-      value: 516972.4563944072
+      value: 517117.95739696757
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: _localToGlobeFixedMatrix.c3.z
-      value: 5683080.975410736
+      value: 5684691.248149815
       objectReference: {fileID: 0}
     - target: {fileID: 6311198464718309859, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
