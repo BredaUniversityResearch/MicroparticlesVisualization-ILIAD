@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -479,6 +479,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2118551904062251695, guid: b9c8a0357b5bb214bb7478c690dea72d,
+        type: 3}
+      propertyPath: m_cesium3DTileset
+      value: 
+      objectReference: {fileID: 401153122}
     - target: {fileID: 2118551904062251695, guid: b9c8a0357b5bb214bb7478c690dea72d,
         type: 3}
       propertyPath: m_cesiumIonRasterOverlay
