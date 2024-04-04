@@ -8,17 +8,28 @@ public class LoadParticlesOnStart : MonoBehaviour
     public TextAsset m_depthCSVFile;
     public TextAsset m_latitudeCSVFile;
     public TextAsset m_longitudeCSVFile;
-    public float m_timePerTimeIndex;
 
     bool m_initialized;
 
+    //float m_timePassed = 10f;
+
     public void Update()
     {
-        if (m_initialized)
-            return;
+        //m_timePassed += Time.deltaTime;
+        //if(m_timePassed > 5f)
+        //{
+        //    m_timePassed = 0f;
+        //    DataLoader.Instance.LoadNCDFFile(Application.dataPath + "/Data/sintefset.nc", OnLoadComplete);
+        //}
+		if (m_initialized)
+			return;
+		m_initialized = true;
+		DataLoader.Instance.LoadNCDFFile(Application.dataPath + "/Data/sintefset.nc", OnLoadComplete);
+    }
 
-        DataLoader.Instance.LoadNCDFFile(Application.dataPath + "/Data/sintefset.nc", null);
-        m_initialized = true;
+    void OnLoadComplete(bool a_success)
+    {
+        Debug.Log("Loading result: " + a_success.ToString());
     }
 
     private bool TryParseCSV(TextAsset a_csvFile, ref int a_entriesPerParticle, out float[] result)
