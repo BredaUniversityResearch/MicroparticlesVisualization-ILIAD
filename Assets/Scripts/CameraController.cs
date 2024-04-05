@@ -321,10 +321,10 @@ public class CameraController : MonoBehaviour
         {
             // If the globe was not hit, project the center point of the globe onto the ray from the camera to the point p in ECEF coordinates.
             var c = globeAnchor.positionGlobeFixed; // Camera position in ECEF coordinates.
-            var n = normalize(p - c); // The (normalized) vector from the camera to p in ECEF coordinates.
-            var v = dot(c, n) * n; // Project earth's origin (0,0,0) onto n.
-            // TODO: Check this... It's not yet correct.
-            p = normalize(c + v) * CesiumWgs84Ellipsoid.GetMinimumRadius();
+            var a = -c;  // This is actually (e - c), but since e is (0, 0, 0), it's just -c.
+            var b = normalize(p - c); // The (normalized) vector from the camera to p in ECEF coordinates.
+            var v = dot(a, b) * b; // Project earth's origin (0,0,0) onto n.
+            p = normalize(a - v) * CesiumWgs84Ellipsoid.GetMinimumRadius(); // Project to the closest point on the globe.
         }
         return hit;
     }
@@ -653,7 +653,12 @@ public class CameraController : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(previousMousePosition, 100);
+//        Gizmos.DrawSphere(previousMousePosition, 100);
+        if (georeference != null)
+        {
+            var p = georeference.TransformEarthCenteredEarthFixedPositionToUnity(previousMousePositionECEF);
+            Gizmos.DrawSphere(new Vector3((float)p.x, (float)p.y, (float)p.z), 100000);
+        }
     }
 #endif
 }
