@@ -3844,6 +3844,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 578627234}
   m_CullTransparentMesh: 1
+--- !u!114 &586194337 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 573882765333904677, guid: 7bb64486c6eee774b97801ffa4203d66,
+    type: 3}
+  m_PrefabInstance: {fileID: 6135810749414921670}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca76be1e29062546bf98f89550ce635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &587637456
 GameObject:
   m_ObjectHideFlags: 0
@@ -15094,6 +15106,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 420013233577690928, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
+    - target: {fileID: 459963565102413124, guid: 7bb64486c6eee774b97801ffa4203d66,
+        type: 3}
+      propertyPath: m_setupAPI
+      value: 
+      objectReference: {fileID: 596960643}
+    - target: {fileID: 459963565102413124, guid: 7bb64486c6eee774b97801ffa4203d66,
+        type: 3}
+      propertyPath: m_canvasOutliner
+      value: 
+      objectReference: {fileID: 808047563}
+    - target: {fileID: 459963565102413124, guid: 7bb64486c6eee774b97801ffa4203d66,
+        type: 3}
+      propertyPath: m_setupAPIWindow
+      value: 
+      objectReference: {fileID: 1926302006}
     - target: {fileID: 530259113497190031, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -15521,12 +15548,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_setupAPI
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 596960643}
     - target: {fileID: 3151961888347796056, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
       propertyPath: m_requestButton
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 586194337}
     - target: {fileID: 3151961888347796056, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
       propertyPath: m_canvasOutliner
@@ -15557,6 +15584,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -211
       objectReference: {fileID: 0}
+    - target: {fileID: 3270974442871476750, guid: 7bb64486c6eee774b97801ffa4203d66,
+        type: 3}
+      propertyPath: m_setupAPI
+      value: 
+      objectReference: {fileID: 596960643}
+    - target: {fileID: 3270974442871476750, guid: 7bb64486c6eee774b97801ffa4203d66,
+        type: 3}
+      propertyPath: m_canvasOutliner
+      value: 
+      objectReference: {fileID: 808047563}
+    - target: {fileID: 3270974442871476750, guid: 7bb64486c6eee774b97801ffa4203d66,
+        type: 3}
+      propertyPath: m_setupAPIWindow
+      value: 
+      objectReference: {fileID: 1926302006}
     - target: {fileID: 3339312970072707105, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
       propertyPath: serializationData.Prefab
@@ -15681,7 +15723,7 @@ PrefabInstance:
     - target: {fileID: 4364076201966654054, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4461315795448284893, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
@@ -15966,6 +16008,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6819141117882360408, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
+    - target: {fileID: 6891530231681604448, guid: 7bb64486c6eee774b97801ffa4203d66,
+        type: 3}
+      propertyPath: m_IsOn
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6971651015153167442, guid: 7bb64486c6eee774b97801ffa4203d66,
         type: 3}
       propertyPath: m_AnchorMax.y
