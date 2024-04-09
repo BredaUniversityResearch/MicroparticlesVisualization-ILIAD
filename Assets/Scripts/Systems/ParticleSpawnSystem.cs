@@ -123,6 +123,8 @@ public partial struct SpawnParticleJob : IJobParallelFor
 		};
 		m_ecb.SetComponent(a_index, newParticle, newTransform);
 		m_ecb.AddComponent<ParticleColourComponent>(a_index, newParticle, new ParticleColourComponent { Value = new float4(1f, 1f, 1f, 1f)});
+		m_ecb.AddComponent<ColourComponent>(a_index, newParticle, new ColourComponent { Value = 1f});
+		m_ecb.AddComponent<DarknessComponent>(a_index, newParticle, new DarknessComponent { Value = 1f});
 
 		BlobBuilder builder = new BlobBuilder(Allocator.Temp);
 		ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();

@@ -318,6 +318,33 @@ public class DataLoader : MonoBehaviour
 		}
     }
 
+    public void UpdateParticleVisualizationSettingsData(int a_colourIndex, int a_darknessIndex)
+    {
+        // Get the active world and the EntityManager
+        var world = World.DefaultGameObjectInjectionWorld;
+        var entityManager = world.EntityManager;
+
+        // Create a query to get the Entity with the ParticleVisualizationSettingsData component
+        EntityQuery query = entityManager.CreateEntityQuery(typeof(ParticleVisualizationSettingsData));
+        if (!query.HasSingleton<ParticleVisualizationSettingsData>())
+        {
+            Debug.LogError("No 'ParticleVisualizationSettingsData' component found. Setting particle visualization settings data failed.");
+            return;
+        }
+        Entity settingsEntity = query.GetSingletonEntity();
+
+        if (entityManager.Exists(settingsEntity))
+        {
+            var settingsData = entityManager.GetComponentData<ParticleVisualizationSettingsData>(settingsEntity);
+
+            settingsData.m_colourIndex = a_colourIndex;
+            settingsData.m_darknessIndex = a_darknessIndex;
+
+            entityManager.SetComponentData(settingsEntity, settingsData);
+        }
+    }
+
+
     void FlushParticles()
     {
 		EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;

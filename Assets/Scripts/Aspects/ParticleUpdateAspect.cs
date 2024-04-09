@@ -11,6 +11,8 @@ public readonly partial struct ParticleUpdateAspect : IAspect
     private readonly RefRW<LocalTransform> m_transform;
     private readonly RefRO<ParticleProperties> m_particleProperties;
 	private readonly RefRW<ParticleColourComponent> m_colour;
+	private readonly RefRW<ColourComponent> m_colourGradient;
+	private readonly RefRW<DarknessComponent> m_darkness;
 
     /// <summary>
     /// Get the number of particles in the particles array.
@@ -63,5 +65,15 @@ public readonly partial struct ParticleUpdateAspect : IAspect
     public float4 Colour
     {
         set => m_colour.ValueRW.Value = value;
+    }
+
+    public float ColourGradient
+    {
+        set => m_colourGradient.ValueRW.Value = value;
+    }
+
+    public float Darkness
+    {
+        set => m_darkness.ValueRW.Value = value;
     }
 }
