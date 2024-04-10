@@ -13,12 +13,6 @@ using quaternion = Unity.Mathematics.quaternion;
 [RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {
-    public enum ViewMode
-    {
-        UnderWater,
-        TopDown
-    }
-
     #region Public Properties
 
     /// <summary>
@@ -129,8 +123,6 @@ public class CameraController : MonoBehaviour
     /// Use a character controller to avoid clipping through the terrain.
     /// </summary>
     private CharacterController characterController;
-
-    private ViewMode currentViewMode = ViewMode.TopDown;
 
     #endregion
 
@@ -485,39 +477,12 @@ public class CameraController : MonoBehaviour
     {
         Vector3 clickedPoint;
 
-        switch (currentViewMode)
+        if (GetMousePointOnGlobe(out clickedPoint))
         {
-            case ViewMode.TopDown:
-                if (GetMousePointOnGlobe(out clickedPoint))
-                {
-                    Debug.Log("Switching view mode to underwater.");
+            camera.transform.position = clickedPoint + Vector3.up * 10.0f; // 10 units above the clicked point.
 
-                    // Store the current height of the camera to restore it when going back to top-down view.
-                    previousHeight = globeAnchor.longitudeLatitudeHeight.z;
-
-                    camera.transform.position = clickedPoint + Vector3.up * 10.0f; // 10 units above the clicked point.
-
-                    var eulerAngles = camera.transform.localEulerAngles;
-                    camera.transform.localEulerAngles = new Vector3(0.0f, eulerAngles.y, eulerAngles.z); // Remove X rotation.
-                    currentViewMode = ViewMode.UnderWater;
-                }
-                break;
-            case ViewMode.UnderWater:
-                // if (GetMousePointOnGlobe(out clickedPoint))
-                {
-                    Debug.Log("Switching view mode to top-down.");
-
-                    var llh = globeAnchor.longitudeLatitudeHeight;
-                    llh.z = previousHeight; // Restore previous height.
-                    globeAnchor.longitudeLatitudeHeight = llh;
-
-                    var eulerAngles = camera.transform.localEulerAngles;
-                    eulerAngles.x = 90.0f; // Look down.
-                    camera.transform.localEulerAngles = eulerAngles;
-
-                    currentViewMode = ViewMode.TopDown;
-                }
-                break;
+            var eulerAngles = camera.transform.localEulerAngles;
+            camera.transform.localEulerAngles = new Vector3(0.0f, eulerAngles.y, eulerAngles.z); // Remove X rotation.
         }
     }
 
@@ -602,7 +567,6 @@ public class CameraController : MonoBehaviour
         {
             globeAnchor.longitudeLatitudeHeight = initialPosition;
             globeAnchor.rotationEastUpNorth = initialRotation;
-            currentViewMode = ViewMode.TopDown;
         }
 
         if (restoreHeight)
