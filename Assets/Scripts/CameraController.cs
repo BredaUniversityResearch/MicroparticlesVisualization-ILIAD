@@ -317,10 +317,10 @@ public class CameraController : MonoBehaviour
     {
         bool hit = GetMousePointOnGlobe(out var u);
         p = georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(u));
-        if (!hit)
+        var c = globeAnchor.positionGlobeFixed; // Camera position in ECEF coordinates.
+        if (!hit || abs(dot(-c, p)) < 0.1)
         {
             // If the globe was not hit, project the center point of the globe onto the ray from the camera to the point p in ECEF coordinates.
-            var c = globeAnchor.positionGlobeFixed; // Camera position in ECEF coordinates.
             var a = -c;  // This is actually (e - c), but since e is (0, 0, 0), it's just -c.
             var b = normalize(p - c); // The (normalized) vector from the camera to p in ECEF coordinates.
             var v = dot(a, b) * b; // Project earth's origin (0,0,0) onto b.
