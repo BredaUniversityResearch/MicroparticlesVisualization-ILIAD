@@ -800,7 +800,21 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Standalone: ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1
+    Android: CT_FB;CT_PROC;CT_FB_DEMO
+    EmbeddedLinux: CT_FB;CT_PROC;CT_FB_DEMO
+    GameCoreXboxOne: CT_FB;CT_PROC;CT_FB_DEMO
+    Nintendo Switch: CT_FB;CT_PROC;CT_FB_DEMO
+    PS4: CT_FB;CT_PROC;CT_FB_DEMO
+    PS5: CT_FB;CT_PROC;CT_FB_DEMO
+    QNX: CT_FB;CT_PROC;CT_FB_DEMO
+    Stadia: CT_FB;CT_PROC;CT_FB_DEMO
+    Standalone: ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;CT_FB;CT_PROC;CT_FB_DEMO
+    VisionOS: CT_FB;CT_PROC;CT_FB_DEMO
+    WebGL: CT_FB;CT_PROC;CT_FB_DEMO
+    Windows Store Apps: CT_FB;CT_PROC;CT_FB_DEMO
+    XboxOne: CT_FB;CT_PROC;CT_FB_DEMO
+    iPhone: CT_FB;CT_PROC;CT_FB_DEMO
+    tvOS: CT_FB;CT_PROC;CT_FB_DEMO
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

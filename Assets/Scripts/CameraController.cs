@@ -1,9 +1,12 @@
 using System;
 using CesiumForUnity;
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using double3 = Unity.Mathematics.double3;
+using quaternion = Unity.Mathematics.quaternion;
 
 [RequireComponent(typeof(CesiumOriginShift))]
 [RequireComponent(typeof(CesiumGlobeAnchor))]
@@ -115,8 +118,12 @@ public class CameraController : MonoBehaviour
     private float maximumNearToFarRatio = 100000.0f;
 
     private Vector3 previousMousePosition;
+    private double3 previousMousePositionECEF;
     private Vector3 velocity;
-    private double previousHeight;
+    private QuaternionD spin; // How fast the globe is spinning.
+    private double previousHeight; // If set, will try to restore the height of the globeAnchor to maintain height above the globe.
+    private bool restoreHeight; // Try to maintain height above the ground when panning.
+    private bool wasMouseOnGlobe = false; // True if the globe was clicked.
 
     /// <summary>
     /// Use a character controller to avoid clipping through the terrain.
@@ -176,8 +183,8 @@ public class CameraController : MonoBehaviour
         {
             Debug.LogWarning(
                 "A CharacterController component was manually " +
-                "added to the CesiumCameraController's game object. " +
-                "This may interfere with the CesiumCameraController's movement.");
+                "added to the CameraController's game object. " +
+                "This may interfere with the CameraController's movement.");
 
             characterController = GetComponent<CharacterController>();
         }
@@ -223,11 +230,68 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
-    /// Cast a ray from the mouse to the earth and return the point that was hit in Unity world coordinates.
+    /// This function returns the projected mouse position onto a unit sphere placed directly in front of the screen.
+    /// See: https://en.wikibooks.org/wiki/OpenGL_Programming/Modern_OpenGL_Tutorial_Arcball
     /// </summary>
-    /// <param name="p">The point in Unity world coordinates.</param>
+    /// <returns>The current mouse position projected onto a unit sphere in front of the camera.</returns>
+    public Vector3 ProjectMouseOnUnitSphere()
+    {
+        Vector2 screen = Mouse.current.position.value;
+        // Compute the minimum dimension (to keep it a sphere)
+        float minDimension = MathF.Min(Screen.width, Screen.height);
+        // Compute the normalized coordinates in the range [-1 .. 1]
+        Vector2 ndc = new Vector2(screen.x / minDimension * 2.0f - 1.0f, screen.y / minDimension * 2.0f - 1.0f);
+        // Compute the distance from the center of the screen (in normalized coordinates)
+        float l = Mathf.Sqrt(ndc.x * ndc.x + ndc.y * ndc.y);
+        // Check to see if the point is on the unit sphere.
+        if (l > 1.0f)
+        {
+            // The point in normalized device coordinates is off the unit sphere.
+            // In this case, normalize the point back to the range [-1 .. 1]
+            ndc = ndc / l;
+            l = 1.0f; // Set l to 1 so that z becomes 0.
+        }
+
+        return new Vector3(ndc.x, ndc.y, 1.0f - l);
+    }
+
+    /// <summary>
+    /// Ray-ellipsoid intersection.
+    /// Source: https://iquilezles.org/articles/intersectors/
+    /// Source: https://www.shadertoy.com/view/7d3BRl
+    /// </summary>
+    /// <param name="o">Ray origin.</param>
+    /// <param name="d">Ray direction.</param>
+    /// <param name="e">Ellipsoid radii.</param>
+    /// <param name="p">Intersection point (if an intersection occured).</param>
+    /// <returns></returns>
+    public bool IntersectEllipsoid(double3 o, double3 d, double3 e, out double3 p)
+    {
+        double3 e2 = e * e;
+        double a = dot(d, d/e2);
+        double b = dot(o, d/e2);
+        double c = dot(o, o/e2);
+        double h = b * b - a * (c - 1.0);
+
+        if (h < 0.0f)
+        {
+            // No intersection occured.
+            p = double3(-1);
+            return false;
+        }
+
+        double t = (-b - sqrt(h)) / a;
+        p = o + t * d;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Cast a ray from the mouse to the earth and return the point that was hit in Unity's world coordinates.
+    /// </summary>
+    /// <param name="p">The point in Unity's world coordinates.</param>
     /// <returns>`true` if the globe terrain was hit, `false` otherwise.</returns>
-    public bool GetMousePointOnGlobe(out Vector3 p)
+    private bool GetMousePointOnGlobe(out Vector3 p)
     {
         Vector3 screen = Mouse.current.position.value;
         screen.z = camera.farClipPlane;
@@ -245,6 +309,31 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
+    /// Cast a ray from the mouse to the earth and return the point that was hit in Earth-Centered, Earth-Fixed coordinates.
+    /// </summary>
+    /// <param name="p">The point in ECEF coordinates.</param>
+    /// <returns>`true` if the globe terrain was hit, `false` otherwise.</returns>
+    private bool GetMousePointOnGlobeECEF(out double3 p)
+    {
+        bool hit = GetMousePointOnGlobe(out var u);
+        p = georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(u));
+        var c = globeAnchor.positionGlobeFixed; // Camera position in ECEF coordinates.
+        if (!hit || abs(dot(-c, p)) < 0.1)
+        {
+            // If the globe was not hit, project the center point of the globe onto the ray from the camera to the point p in ECEF coordinates.
+            var a = -c;  // This is actually (e - c), but since e is (0, 0, 0), it's just -c.
+            var b = normalize(p - c); // The (normalized) vector from the camera to p in ECEF coordinates.
+            var v = dot(a, b) * b; // Project earth's origin (0,0,0) onto b.
+            p = normalize(v - a) * CesiumWgs84Ellipsoid.GetMinimumRadius(); // Project to the closest point on the globe.
+
+            //var n = normalize(v - a);
+            //a = normalize(a);
+            //p = cross(normalize(cross(a, n)), a) * CesiumWgs84Ellipsoid.GetMinimumRadius();
+        }
+        return hit;
+    }
+
+    /// <summary>
     /// Get the height of the camera (in meters) above the ellipsoid of the world.
     /// Note: Clamp to 0 to avoid negative heights.
     /// </summary>
@@ -254,22 +343,36 @@ public class CameraController : MonoBehaviour
     {
         if (lmbAction.WasPressedThisFrame())
         {
-            GetMousePointOnGlobe(out previousMousePosition);
+            wasMouseOnGlobe = GetMousePointOnGlobeECEF(out previousMousePositionECEF);
         }
         else if (lmbAction.IsPressed())
         {
-            GetMousePointOnGlobe(out var currentMousePosition);
+            bool mouseOnGlobe = GetMousePointOnGlobeECEF(out var currentMousePositionECEF);
+            if (wasMouseOnGlobe != mouseOnGlobe)
+            {
+                previousMousePositionECEF = currentMousePositionECEF;
+                wasMouseOnGlobe = mouseOnGlobe;
+            }
+            else
+            {
+                // Compute the rotation from the previous mouse position to the current mouse position in ECEF coordinates.
+                var rot = QuaternionD.FromVectors(normalize(previousMousePositionECEF), normalize(currentMousePositionECEF));
+                spin = rot;
 
-            Vector3 delta = previousMousePosition - currentMousePosition;
-            delta.y = 0;
-            //camera.transform.Translate(delta, Space.World);
-            characterController.Move(delta);
-            velocity = delta / Time.deltaTime;
-            previousMousePosition = currentMousePosition;
+                var currentECEF = globeAnchor.positionGlobeFixed;
+                // Rotate the ECEF position.
+                var newECEF = QuaternionD.rotate(rot, currentECEF);
+
+                var delta = georeference.TransformEarthCenteredEarthFixedDirectionToUnity(currentECEF - newECEF);
+
+                characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
+                previousHeight = globeAnchor.longitudeLatitudeHeight.z;
+                restoreHeight = true; // Restore the height in the LateUpdate function.
+            }
         }
         else if (move.sqrMagnitude > 0.0f)
         {
-            velocity = Vector3.zero;
+            spin = QuaternionD.identity;
 
             Vector3 forwardDirection = Vector3.Cross(camera.transform.right, Vector3.up).normalized;
             Vector3 moveDirection = camera.transform.right * move.x + forwardDirection * move.z;
@@ -279,9 +382,16 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            // Propagate the current velocity.
-            //camera.transform.Translate(velocity * Time.deltaTime, Space.World);
-            characterController.Move(velocity * Time.deltaTime);
+            // Propagate the current spin.
+            var currentECEF = globeAnchor.positionGlobeFixed;
+            // Rotate the ECEF position.
+            var newECEF = QuaternionD.rotate(spin, currentECEF);
+
+            var delta = georeference.TransformEarthCenteredEarthFixedDirectionToUnity(currentECEF - newECEF);
+
+            characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
+            previousHeight = globeAnchor.longitudeLatitudeHeight.z;
+            restoreHeight = lengthsq(delta) > 0.0; // Restore height in LateUpdate if delta is not 0.
         }
 
     }
@@ -292,9 +402,21 @@ public class CameraController : MonoBehaviour
     /// <param name="zoom">The zoom amount.</param>
     void Zoom(float zoom)
     {
-        float speed = MoveSpeed.Evaluate(Height);
-        //camera.transform.Translate(Vector3.forward * zoom * speed, Space.Self);
-        characterController.Move(transform.TransformDirection(Vector3.forward * zoom * speed));
+        if (zoom != 0.0f)
+        {
+            float speed = MoveSpeed.Evaluate(Height);
+            if (GetMousePointOnGlobe(out var pointOnGlobe))
+            {
+                Vector3 forward = (pointOnGlobe - transform.position).normalized;
+                characterController.Move(forward * zoom * speed);
+            }
+            else
+            {
+                characterController.Move(transform.TransformDirection(Vector3.forward * zoom * speed));
+            }
+            // Don't restore the height when zooming.
+            restoreHeight = false;
+        }
     }
 
     /// <summary>
@@ -340,7 +462,7 @@ public class CameraController : MonoBehaviour
     {
         if (lmbAction.WasPerformedThisFrame())
         {
-            GetMousePointOnGlobe(out previousMousePosition);
+            wasMouseOnGlobe = GetMousePointOnGlobe(out previousMousePosition);
         }
         else if (lmbAction.IsPressed())
         {
@@ -384,6 +506,7 @@ public class CameraController : MonoBehaviour
                 // if (GetMousePointOnGlobe(out clickedPoint))
                 {
                     Debug.Log("Switching view mode to top-down.");
+
                     var llh = globeAnchor.longitudeLatitudeHeight;
                     llh.z = previousHeight; // Restore previous height.
                     globeAnchor.longitudeLatitudeHeight = llh;
@@ -420,6 +543,7 @@ public class CameraController : MonoBehaviour
         if (stopAction.WasPressedThisFrame() || resetAction.WasPerformedThisFrame())
         {
             velocity = Vector3.zero;
+            spin = QuaternionD.identity;
         }
 
         if (switchView)
@@ -469,6 +593,7 @@ public class CameraController : MonoBehaviour
 
         // Apply damping.
         velocity *= Mathf.Pow(1.0f - VelocityDamping, Time.deltaTime);
+        spin = QuaternionD.slerp(QuaternionD.identity, spin, Math.Pow(1.0f - VelocityDamping, Time.deltaTime));
     }
 
     void LateUpdate()
@@ -478,6 +603,14 @@ public class CameraController : MonoBehaviour
             globeAnchor.longitudeLatitudeHeight = initialPosition;
             globeAnchor.rotationEastUpNorth = initialRotation;
             currentViewMode = ViewMode.TopDown;
+        }
+
+        if (restoreHeight)
+        {
+            var llh = globeAnchor.longitudeLatitudeHeight;
+            llh.z = previousHeight;
+            globeAnchor.longitudeLatitudeHeight = llh;
+            restoreHeight = false;
         }
     }
 
@@ -524,7 +657,18 @@ public class CameraController : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(previousMousePosition, 100);
+//        Gizmos.DrawSphere(previousMousePosition, 100);
+        if (georeference != null)
+        {
+            var p = georeference.TransformEarthCenteredEarthFixedPositionToUnity(previousMousePositionECEF);
+            var o = georeference.TransformEarthCenteredEarthFixedPositionToUnity(double3.zero);
+
+            var P = new Vector3((float) p.x, (float) p.y, (float) p.z);
+            var O = new Vector3((float) o.x, (float) o.y, (float) o.z);
+
+            Gizmos.DrawSphere(P, Height * 0.05f);
+            Gizmos.DrawLine(O, P);
+        }
     }
 #endif
 }
