@@ -1,6 +1,7 @@
 [submodule "Assets/Plugins/GeoViz_Private_Plugins"]
 	path = Assets/Plugins/GeoViz_Private_Plugins
 	url = https://github.com/BredaUniversityResearch/GeoViz_Private_Plugins
+	ignore = dirty
 [submodule "Packages/com.cesium.unity"]
 	path = Packages/com.cesium.unity
 	url = https://github.com/BredaUniversityResearch/cesium-unity.git
