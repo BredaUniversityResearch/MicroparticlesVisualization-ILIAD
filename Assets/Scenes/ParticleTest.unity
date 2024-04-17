@@ -779,11 +779,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3862365760384967552, guid: 99a53068a6bc397498efc5429bca42fe,
-        type: 3}
-      propertyPath: m_RenderPostProcessing
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4762079264319664727, guid: 99a53068a6bc397498efc5429bca42fe,
         type: 3}
       propertyPath: m_Enabled
