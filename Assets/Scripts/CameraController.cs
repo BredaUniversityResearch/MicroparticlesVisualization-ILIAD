@@ -381,9 +381,10 @@ public class CameraController : MonoBehaviour
 
             var delta = georeference.TransformEarthCenteredEarthFixedDirectionToUnity(currentECEF - newECEF);
 
-            characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
             previousHeight = globeAnchor.longitudeLatitudeHeight.z;
             restoreHeight = lengthsq(delta) > 0.0; // Restore height in LateUpdate if delta is not 0.
+
+            characterController.Move(new Vector3((float)delta.x, (float)delta.y, (float)delta.z));
         }
 
     }
