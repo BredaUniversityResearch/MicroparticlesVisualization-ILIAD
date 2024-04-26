@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 102601583}
   - component: {fileID: 102601585}
   - component: {fileID: 102601584}
+  - component: {fileID: 102601586}
   m_Layer: 5
   m_Name: Scale Text
   m_TagString: Untagged
@@ -257,6 +258,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 102601582}
   m_CullTransparentMesh: 1
+--- !u!114 &102601586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102601582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75f8a7c1e66ac7848b493c95a72c431d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Georeference: {fileID: 1178919417}
+  CameraGlobeAnchor: {fileID: 400180855}
+  Camera: {fileID: 1476445389}
+  ScreenSpaceWidth: 215
+  Label: {fileID: 102601584}
 --- !u!4 &400180850 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5481954909903251515, guid: 99a53068a6bc397498efc5429bca42fe,
@@ -888,7 +906,7 @@ Canvas:
   m_GameObject: {fileID: 1644056970}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0

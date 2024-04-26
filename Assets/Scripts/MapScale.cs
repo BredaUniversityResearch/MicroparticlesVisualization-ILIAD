@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using CesiumForUnity;
 using TMPro;
 using UnityEngine;
@@ -30,7 +32,7 @@ public class MapScale : MonoBehaviour
     /// Unity scene camera. Used to convert screen-space values to view space.
     /// </summary>
     public Camera Camera;
-    
+
     /// <summary>
     /// The width of the UI element in screen-space.
     /// </summary>
@@ -50,30 +52,54 @@ public class MapScale : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        if(Georeference == null || CameraGlobeAnchor == null || Label == null) return;
+        if (Georeference == null || CameraGlobeAnchor == null || Label == null) return;
 
-        // Convert the screen-space width to Unity world coordinates.
-        var p0 = new Vector3((Camera.pixelWidth - ScreenSpaceWidth) / 2.0f, Camera.pixelHeight / 2.0f, Camera.nearClipPlane);
-        var p1 = new Vector3((Camera.pixelWidth + ScreenSpaceWidth) / 2.0f, Camera.pixelHeight / 2.0f, Camera.nearClipPlane);
-        var p2 = new Vector3(Camera.pixelWidth / 2.0f, Camera.pixelHeight / 2.0f, Camera.nearClipPlane);
+        var d = GetDistanceAtSurface();
+
+        Label.text = Distance(d);
+    }
+
+    /// <summary>
+    /// Convert a value in meters to a human-readable value.
+    /// </summary>
+    /// <param name="meters">The value in meters to convert.</param>
+    /// <returns>The human-readable value.</returns>
+    private string Distance(double meters, string format = "F1") =>
+        Math.Abs(meters) switch
+        {
+            < 1000.0 => meters.ToString(format) + " m",
+            (>= 1000.0) and (< 1000000.0) => (meters / 1000.0).ToString(format) + " km",
+            (>= 1000000.0) and (< 1000000000.0) => (meters / 1000000.0).ToString(format) + " Mm",
+            (>= 1000000000.0) => (meters / 1000000000.0).ToString(format) + " Gm",
+            _ => "NaN"
+        };
+
+    private double GetDistanceAtSurface()
+    {
+        // Compute screen-space positions
+        var p0 = new Vector3(Camera.pixelWidth / 2.0f, Camera.pixelHeight / 2.0f, 1.0f); // Center point on screen, 1 unit in front of the camera.
+        var p1 = new Vector3((Camera.pixelWidth + ScreenSpaceWidth) / 2.0f, Camera.pixelHeight / 2.0f, 1.0f); // 1/2 from width of UI element.
+        // Convert to world space.
         p0 = Camera.ScreenToWorldPoint(p0);
         p1 = Camera.ScreenToWorldPoint(p1);
-        p2 = Camera.ScreenToWorldPoint(p2);
 
         // Convert to ECEF (in meters)
-        var d0 = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(p0));
-        var d1 = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(p1));
-        var d2 = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(p2));
-
+        var a = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(p0));
+        var b = Georeference.TransformUnityPositionToEarthCenteredEarthFixed(double3(p1));
         // Get the camera's position in ECEF coordinates.
         var c = CameraGlobeAnchor.positionGlobeFixed;
+
+        // Compute distance from a -> and a -> c.
+        var ab = distance(a, b);
+        var ac = distance(a, c);
+
         // Get the camera's height above the globe in meters.
         var h = CameraGlobeAnchor.longitudeLatitudeHeight.z;
 
-        // TODO: Apply the law of similar triangles to compute the distance in meters.
-
+        // Distance in meters at the surface of the WGS84 ellipsoid.
+        // Multiply by 2 because the original values only measure 1/2 of the triangle.
+        return h * ab / ac * 2.0;
     }
 }
