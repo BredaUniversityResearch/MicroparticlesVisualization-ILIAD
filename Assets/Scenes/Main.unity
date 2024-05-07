@@ -12718,7 +12718,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_openSetupButton
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9071582030697808205}
     - target: {fileID: 1769824874210536923, guid: 93842e90bb32b7c4ea625f6695190227,
         type: 3}
       propertyPath: m_invalidURLWindow
@@ -14198,6 +14198,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LeftBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 3371564876725926580, guid: 555e2cb65d9cd034da9bed65aea97909,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3487489133934423887, guid: 555e2cb65d9cd034da9bed65aea97909,
         type: 3}
