@@ -1285,6 +1285,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1314747529}
+    - targetCorrespondingSourceObject: {fileID: 6113528039134702648, guid: b9c8a0357b5bb214bb7478c690dea72d,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1716451181}
   m_SourcePrefab: {fileID: 100100000, guid: b9c8a0357b5bb214bb7478c690dea72d, type: 3}
 --- !u!1 &69302494
 GameObject:
@@ -3102,7 +3106,7 @@ MonoBehaviour:
   _subTileCacheBytes: 16777216
   _ionAssetID: 2
   _ionAccessToken: 
-  _ionServer: {fileID: 11400000, guid: 47d4972d03ceb2f47bc81d2d9375c28c, type: 2}
+  _ionServer: {fileID: 11400000, guid: 86dd27a1658eb7f419493cfe1307798b, type: 2}
 --- !u!114 &401153122
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3120,7 +3124,7 @@ MonoBehaviour:
   _url: 
   _ionAssetID: 2426648
   _ionAccessToken: 
-  _ionServer: {fileID: 11400000, guid: 47d4972d03ceb2f47bc81d2d9375c28c, type: 2}
+  _ionServer: {fileID: 11400000, guid: 86dd27a1658eb7f419493cfe1307798b, type: 2}
   _maximumScreenSpaceError: 16
   _preloadAncestors: 1
   _preloadSiblings: 1
@@ -8689,6 +8693,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f14e1eb550b9a4fb6c0a2f0456845b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!20 &1265917917 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2798327621806253197, guid: 99a53068a6bc397498efc5429bca42fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 131441445}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1314747526 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6113105102450602856, guid: b9c8a0357b5bb214bb7478c690dea72d,
@@ -10975,6 +10985,42 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1716451177 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6113528039134702648, guid: b9c8a0357b5bb214bb7478c690dea72d,
+    type: 3}
+  m_PrefabInstance: {fileID: 48974965}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1716451179 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6111681519801108841, guid: b9c8a0357b5bb214bb7478c690dea72d,
+    type: 3}
+  m_PrefabInstance: {fileID: 48974965}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716451177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1716451181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716451177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75f8a7c1e66ac7848b493c95a72c431d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Georeference: {fileID: 363075290}
+  CameraGlobeAnchor: {fileID: 1265917914}
+  Camera: {fileID: 1265917917}
+  ScreenSpaceWidth: 0
+  MapScaleUITransform: {fileID: 1899294909}
+  Label: {fileID: 1716451179}
 --- !u!1001 &1741485347
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11986,6 +12032,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1891904753}
   m_CullTransparentMesh: 1
+--- !u!224 &1899294909 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6326528040067523050, guid: b9c8a0357b5bb214bb7478c690dea72d,
+    type: 3}
+  m_PrefabInstance: {fileID: 48974965}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1918792630
 PrefabInstance:
   m_ObjectHideFlags: 0
