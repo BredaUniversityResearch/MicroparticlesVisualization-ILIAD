@@ -1,10 +1,14 @@
 using System;
+using System.Collections;
 using CesiumForUnity;
-using Unity.Mathematics;
+using Unity.Collections;
+using Unity.Entities;
 using static Unity.Mathematics.math;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+
+using float3 = Unity.Mathematics.float3;
 using double3 = Unity.Mathematics.double3;
 using quaternion = Unity.Mathematics.quaternion;
 
@@ -14,6 +18,12 @@ using quaternion = Unity.Mathematics.quaternion;
 public class CameraController : MonoBehaviour
 {
     #region Public Properties
+
+    /// <summary>
+    /// Used to query the current time value, so we can reset the camera
+    /// to the current particle positions.
+    /// </summary>
+    public AbstractMapInterface Map;
 
     /// <summary>
     /// The input action map that defines the actions and bindings.
@@ -126,7 +136,6 @@ public class CameraController : MonoBehaviour
 
     #endregion
 
-
     void ConfigureInputs()
     {
         if (ActionMap == null)
@@ -218,7 +227,8 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        // Reset the camera to focus on the particles.
+        ResetCamera();
     }
 
     /// <summary>
@@ -260,9 +270,9 @@ public class CameraController : MonoBehaviour
     public bool IntersectEllipsoid(double3 o, double3 d, double3 e, out double3 p)
     {
         double3 e2 = e * e;
-        double a = dot(d, d/e2);
-        double b = dot(o, d/e2);
-        double c = dot(o, o/e2);
+        double a = dot(d, d / e2);
+        double b = dot(o, d / e2);
+        double c = dot(o, o / e2);
         double h = b * b - a * (c - 1.0);
 
         if (h < 0.0f)
@@ -566,8 +576,7 @@ public class CameraController : MonoBehaviour
     {
         if (resetAction.WasPressedThisFrame())
         {
-            globeAnchor.longitudeLatitudeHeight = initialPosition;
-            globeAnchor.rotationEastUpNorth = initialRotation;
+            ResetCamera();
         }
 
         if (restoreHeight)
@@ -618,18 +627,60 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    IEnumerator ResetCameraCoroutine()
+    {
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        // Query for all entities that have a ParticleProperties component.
+        var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ParticleProperties>());
+
+        while (query.IsEmpty)
+        {
+            yield return null;
+        }
+
+        var particleProperties = query.ToComponentDataArray<ParticleProperties>(Allocator.Temp);
+
+        float3 minPosition = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
+        float3 maxPosition = new float3(float.MinValue, float.MinValue, float.MinValue);
+
+        // Compute the current index to query based on the current time value of the timeline view
+        // and the number of values in the particle properties.
+        int index = Map ? (int)(Map.timelineTestValue * particleProperties[0].Value.Value.m_lons.Length) : 0;
+
+        foreach (var p in particleProperties)
+        {
+            float3 pos = float3(p.Value.Value.m_lons[index], p.Value.Value.m_lats[index], p.Value.Value.m_depths[index]);
+            minPosition = min(minPosition, pos);
+            maxPosition = max(maxPosition, pos);
+        }
+
+        globeAnchor.longitudeLatitudeHeight = double3((minPosition.x + maxPosition.x) / 2.0, (minPosition.y + maxPosition.y) / 2.0, initialPosition.z);
+        globeAnchor.rotationEastUpNorth = initialRotation;
+
+        particleProperties.Dispose();
+    }
+
+    /// <summary>
+    /// Resets the camera so that it is positioned at the average position of all the particles.
+    /// </summary>
+    public void ResetCamera()
+    {
+        // Use a coroutine in case the particles aren't loaded yet.
+        StartCoroutine(ResetCameraCoroutine());
+    }
+
 #if UNITY_EDITOR
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-//        Gizmos.DrawSphere(previousMousePosition, 100);
+        //        Gizmos.DrawSphere(previousMousePosition, 100);
         if (georeference != null)
         {
             var p = georeference.TransformEarthCenteredEarthFixedPositionToUnity(previousMousePositionECEF);
             var o = georeference.TransformEarthCenteredEarthFixedPositionToUnity(double3.zero);
 
-            var P = new Vector3((float) p.x, (float) p.y, (float) p.z);
-            var O = new Vector3((float) o.x, (float) o.y, (float) o.z);
+            var P = new Vector3((float)p.x, (float)p.y, (float)p.z);
+            var O = new Vector3((float)o.x, (float)o.y, (float)o.z);
 
             Gizmos.DrawSphere(P, Height * 0.05f);
             Gizmos.DrawLine(O, P);

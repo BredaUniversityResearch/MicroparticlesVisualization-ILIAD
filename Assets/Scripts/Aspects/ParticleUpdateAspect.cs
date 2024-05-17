@@ -10,9 +10,9 @@ public readonly partial struct ParticleUpdateAspect : IAspect
 {
     private readonly RefRW<LocalTransform> m_transform;
     private readonly RefRO<ParticleProperties> m_particleProperties;
-	private readonly RefRW<ParticleColourComponent> m_colour;
-	private readonly RefRW<ColourComponent> m_colourGradient;
-	private readonly RefRW<DarknessComponent> m_darkness;
+    private readonly RefRW<ParticleColourComponent> m_colour;
+    private readonly RefRW<ColourComponent> m_colourGradient;
+    private readonly RefRW<DarknessComponent> m_darkness;
 
     /// <summary>
     /// Get the number of particles in the particles array.
@@ -32,11 +32,11 @@ public readonly partial struct ParticleUpdateAspect : IAspect
 
     /// <summary>
     /// Get the interpolated position of the particle at a floating-point index.
-    /// Note: t must be in the range [0 ... n) where n is the number of particles.
+    /// Note: t must be in the range [0 ... n) where n is the number of indices.
     /// </summary>
-    /// <param name="t"></param>
-    /// <returns></returns>
-    public float3 this[float t] 
+    /// <param name="t">The floating-point index in the range [0 ... n).</param>
+    /// <returns>The interpolated position of the particle.</returns>
+    public float3 this[float t]
     {
         get
         {
