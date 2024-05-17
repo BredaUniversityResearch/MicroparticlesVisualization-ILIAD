@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6270112424689125985
 RectTransform:
   m_ObjectHideFlags: 0
@@ -468,4 +468,4 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
-  colourAsset: {fileID: 11400000, guid: 033799c9fcf3bb24582632b1d4815e66, type: 2}
+  colourAsset: {fileID: 0}
