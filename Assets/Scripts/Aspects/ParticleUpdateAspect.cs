@@ -2,6 +2,7 @@
 using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine.UIElements;
 using static Unity.Mathematics.math;
@@ -13,12 +14,13 @@ public readonly partial struct ParticleUpdateAspect : IAspect
     private readonly RefRW<ParticleColourComponent> m_colour;
     private readonly RefRW<ColourComponent> m_colourGradient;
     private readonly RefRW<DarknessComponent> m_darkness;
+	private readonly EnabledRefRW<MaterialMeshInfo> m_meshInfo;
 
-    /// <summary>
-    /// Get the number of particles in the particles array.
-    /// The length of the `m_lons` array should be the same as `m_lats` and `m_depths`.
-    /// </summary>
-    public int NumParticles => m_particleProperties.ValueRO.Value.Value.m_lons.Length;
+	/// <summary>
+	/// Get the number of particles in the particles array.
+	/// The length of the `m_lons` array should be the same as `m_lats` and `m_depths`.
+	/// </summary>
+	public int NumParticles => m_particleProperties.ValueRO.Value.Value.m_lons.Length;
 
     /// <summary>
     /// Get the particle longitude/latitude/depth at a specific index.
@@ -76,4 +78,19 @@ public readonly partial struct ParticleUpdateAspect : IAspect
     {
         set => m_darkness.ValueRW.Value = value;
     }
+
+	public void ApplyFilter(float a_time, float4 a_sizeDepthFilter, int a_typeFilter)
+	{
+		int idx0 = (int)a_time;
+		float alpha = a_time - idx0;
+		int idx1 = min(idx0 + 1, NumParticles - 1);
+        float depthAtT = lerp(m_particleProperties.ValueRO.Value.Value.m_depths[idx0],
+            m_particleProperties.ValueRO.Value.Value.m_depths[idx1],
+            alpha);
+
+        //TODO: also filter by type and size
+
+		bool filter = a_sizeDepthFilter[2] <= depthAtT && a_sizeDepthFilter[3] >= depthAtT;
+		m_meshInfo.ValueRW = filter;
+	}
 }
