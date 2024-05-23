@@ -17,6 +17,9 @@ public class DataLoader : MonoBehaviour
     // Used to query the current timeline value of the particles.
     private AbstractMapInterface m_MapInterface;
 
+    // An entity query that is used to query particle data.
+    private EntityQuery m_ParticleDataEntityQuery;
+
     private int m_nextRequestIndex = -1;
     private bool m_isLoading;
 
@@ -54,6 +57,12 @@ public class DataLoader : MonoBehaviour
             return;
         }
         m_instance = this;
+
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        // Query for all entities that have a ParticleProperties component.
+        // It's better to define the query once and reuse it when we need the particle data.
+        m_ParticleDataEntityQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ParticleProperties>());
+
         DontDestroyOnLoad(gameObject);
     }
 
@@ -362,25 +371,24 @@ public class DataLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// This co-routine waits for the particles to be available in the Entities world and fires
-    /// an event when they are loaded.
+    /// Query for the center point of the particles in the scene.
     /// </summary>
-    IEnumerator WaitForParticles()
+    /// <param name="longitudeLatitudeHeight"></param>
+    /// <returns>true if query succeeded, false if there were no particles to query.</returns>
+    public bool GetParticlesCenterPoint(ref float3 longitudeLatitudeHeight)
     {
-        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        // Query for all entities that have a ParticleProperties component.
-        var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ParticleProperties>());
-
-        // Wait until the particles are available in the scene.
-        while (query.IsEmpty)
+        // If there are no particles loaded yet, return false.
+        if (m_ParticleDataEntityQuery.IsEmpty)
         {
-            yield return null;
+            return false;
         }
+
+        // Particles are loaded...
 
         float3 minPosition = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
         float3 maxPosition = new float3(float.MinValue, float.MinValue, float.MinValue);
 
-        var particleProperties = query.ToComponentDataArray<ParticleProperties>(Allocator.Temp);
+        var particleProperties = m_ParticleDataEntityQuery.ToComponentDataArray<ParticleProperties>(Allocator.Temp);
 
         // Compute the current index to query based on the current time value of the timeline view
         // and the number of values in the particle properties.
@@ -392,9 +400,28 @@ public class DataLoader : MonoBehaviour
             minPosition = min(minPosition, pos);
             maxPosition = max(maxPosition, pos);
         }
+
         particleProperties.Dispose();
 
-        m_onParticlesReadyEvent?.Invoke((minPosition + maxPosition) / 2.0f);
+        longitudeLatitudeHeight = (minPosition + maxPosition) / 2.0f;
+
+        return true;
+    }
+
+    /// <summary>
+    /// This co-routine waits for the particles to be available in the Entities world and fires
+    /// an event when they are loaded.
+    /// </summary>
+    IEnumerator WaitForParticles()
+    {
+        float3 longitudeLatitudeDepth = new float3();
+
+        while (!GetParticlesCenterPoint(ref longitudeLatitudeDepth))
+        {
+            yield return null;
+        }
+
+        m_onParticlesReadyEvent?.Invoke(longitudeLatitudeDepth);
     }
 
     void FlushParticles()
