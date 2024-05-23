@@ -5,6 +5,8 @@ using Unity.Entities;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -12,11 +14,16 @@ public class DataLoader : MonoBehaviour
 {
     static DataLoader m_instance;
 
+    // Used to query the current timeline value of the particles.
+    private AbstractMapInterface m_MapInterface;
+
     private int m_nextRequestIndex = -1;
     private bool m_isLoading;
 
     public event Action m_onLoadStartEvent;
     public event Action<bool> m_onLoadEndEvent;
+    // This event is fired when particles are ready. The arguments to the action are the longitude, latitude and height of the center point of the particles.
+    public event Action<float3> m_onParticlesReadyEvent;
 
     public bool IsLoading => m_isLoading;
 
@@ -48,6 +55,12 @@ public class DataLoader : MonoBehaviour
         }
         m_instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    void Start()
+    {
+        // There should be a component in the scene for controlling the particle simulation time.
+        m_MapInterface = FindObjectOfType<AbstractMapInterface>();
     }
 
     void OnLoadStart()
@@ -231,7 +244,9 @@ public class DataLoader : MonoBehaviour
 				m_timePerIndex = 0.5f //TODO: set this
 			});
 		}
-	}
+
+        StartCoroutine(WaitForParticles());
+    }
 
     void SetParticleSpawnData(DataSet a_data)
     {
@@ -316,6 +331,8 @@ public class DataLoader : MonoBehaviour
 				m_timePerIndex = 0.5f //TODO: set this
 			});
 		}
+
+        StartCoroutine(WaitForParticles());
     }
 
     public void UpdateParticleVisualizationSettingsData(int a_colourIndex, int a_darknessIndex)
@@ -344,6 +361,41 @@ public class DataLoader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This co-routine waits for the particles to be available in the Entities world and fires
+    /// an event when they are loaded.
+    /// </summary>
+    IEnumerator WaitForParticles()
+    {
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        // Query for all entities that have a ParticleProperties component.
+        var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ParticleProperties>());
+
+        // Wait until the particles are available in the scene.
+        while (query.IsEmpty)
+        {
+            yield return null;
+        }
+
+        float3 minPosition = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
+        float3 maxPosition = new float3(float.MinValue, float.MinValue, float.MinValue);
+
+        var particleProperties = query.ToComponentDataArray<ParticleProperties>(Allocator.Temp);
+
+        // Compute the current index to query based on the current time value of the timeline view
+        // and the number of values in the particle properties.
+        int index = m_MapInterface ? (int)(m_MapInterface.timelineTestValue * particleProperties[0].Value.Value.m_lons.Length) : 0;
+
+        foreach (var p in particleProperties)
+        {
+            float3 pos = float3(p.Value.Value.m_lons[index], p.Value.Value.m_lats[index], p.Value.Value.m_depths[index]);
+            minPosition = min(minPosition, pos);
+            maxPosition = max(maxPosition, pos);
+        }
+        particleProperties.Dispose();
+
+        m_onParticlesReadyEvent?.Invoke((minPosition + maxPosition) / 2.0f);
+    }
 
     void FlushParticles()
     {
