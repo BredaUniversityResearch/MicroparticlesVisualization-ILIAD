@@ -188,14 +188,22 @@ public class DataLoader : MonoBehaviour
         BlobBuilderArray<float> latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, a_data.lats.Length);
         BlobBuilderArray<float> lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, a_data.lons.Length);
 
+        float depthMin = float.MaxValue;
+        float depthMax = float.MinValue;
         for (int i = 0; i < a_data.lons.Length; i++)
         {
-            depthArrayBuilder[i] = a_data.zs[i];
+            float depth = a_data.zs[i];
+            if (depth < depthMin)
+                depthMin = depth;
+            if (depth > depthMax)
+                depthMax = depth;
+            depthArrayBuilder[i] = depth;
             latArrayBuilder[i] = a_data.lats[i];
             lonArrayBuilder[i] = a_data.lons[i];
         }
+        FilterManager.Instance.SetFilterRanges(depthMin, depthMax, 0f, 100f, new string[] { "Copepods", "Oil Droplets", "Microplastics"});
 
-        BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
+		BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
 		if (entityManager.HasComponent<ParticleSpawnData>(root))
 		{
 			entityManager.SetComponentData(root, new ParticleSpawnData
@@ -267,19 +275,27 @@ public class DataLoader : MonoBehaviour
         BlobBuilderArray<float> latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, dataAmount);
         BlobBuilderArray<float> lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, dataAmount);
 
-        int index = 0;
+		float depthMin = float.MaxValue;
+		float depthMax = float.MinValue;
+		int index = 0;
         for (int i = 0; i < numberParticles; i++)
         {
             for (int j = 0; j < entriesPerParticle; j++)
             {
-                depthArrayBuilder[index] = (float)z.GetValue(i, j);
-                latArrayBuilder[index] = (float)lat.GetValue(i, j);
+				float depth = (float)z.GetValue(i, j);
+				if (depth < depthMin)
+					depthMin = depth;
+				if (depth > depthMax)
+					depthMax = depth;
+                depthArrayBuilder[index] = depth;
+				latArrayBuilder[index] = (float)lat.GetValue(i, j);
                 lonArrayBuilder[index] = (float)lon.GetValue(i, j);
                 index++;
             }
         }
+		FilterManager.Instance.SetFilterRanges(depthMin, depthMax, 0f, 100f, new string[] { "Copepods", "Oil Droplets", "Microplastics" });
 
-        BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
+		BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
 		
 		if(entityManager.HasComponent<ParticleSpawnData>(root))
         {

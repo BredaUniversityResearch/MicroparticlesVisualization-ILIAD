@@ -91,6 +91,6 @@ public readonly partial struct ParticleUpdateAspect : IAspect
         //TODO: also filter by type and size
 
 		bool filter = a_sizeDepthFilter[2] <= depthAtT && a_sizeDepthFilter[3] >= depthAtT;
-		m_meshInfo.ValueRW = filter;
+        m_meshInfo.ValueRW = filter;
 	}
 }
