@@ -629,35 +629,15 @@ public class CameraController : MonoBehaviour
 
     IEnumerator ResetCameraCoroutine()
     {
-        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        // Query for all entities that have a ParticleProperties component.
-        var query = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ParticleProperties>());
-
-        while (query.IsEmpty)
+        float3 longitudeLatitudeHeight = new float3();
+        // We might have to wait for the particle data to be ready.
+        while (!DataLoader.Instance.GetParticlesCenterPoint(ref longitudeLatitudeHeight))
         {
             yield return null;
         }
 
-        var particleProperties = query.ToComponentDataArray<ParticleProperties>(Allocator.Temp);
-
-        float3 minPosition = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
-        float3 maxPosition = new float3(float.MinValue, float.MinValue, float.MinValue);
-
-        // Compute the current index to query based on the current time value of the timeline view
-        // and the number of values in the particle properties.
-        int index = Map ? (int)(Map.timelineTestValue * particleProperties[0].Value.Value.m_lons.Length) : 0;
-
-        foreach (var p in particleProperties)
-        {
-            float3 pos = float3(p.Value.Value.m_lons[index], p.Value.Value.m_lats[index], p.Value.Value.m_depths[index]);
-            minPosition = min(minPosition, pos);
-            maxPosition = max(maxPosition, pos);
-        }
-
-        globeAnchor.longitudeLatitudeHeight = double3((minPosition.x + maxPosition.x) / 2.0, (minPosition.y + maxPosition.y) / 2.0, initialPosition.z);
+        globeAnchor.longitudeLatitudeHeight = double3(longitudeLatitudeHeight.x, longitudeLatitudeHeight.y, initialPosition.z);
         globeAnchor.rotationEastUpNorth = initialRotation;
-
-        particleProperties.Dispose();
     }
 
     /// <summary>

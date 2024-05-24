@@ -18,9 +18,8 @@ public class WeatherInfo : MonoBehaviour
 
     string m_appid_path = "Assets/Secrets/OpenWeatherAPIKey.txt";
     string m_appid;
+    string m_apiEndpoint = "https://api.openweathermap.org/data/2.5/forecast";
 
-    string m_apiUrl;
-    
     [SerializeField]
     SpriteDictionary m_spriteDictionary;
 
@@ -40,7 +39,6 @@ public class WeatherInfo : MonoBehaviour
     void Start()
     {
         m_appid = File.ReadAllText(m_appid_path);
-        m_apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&units=metric&cnt=6&appid={API_key}";
 
         StartCoroutine(CallWeatherApi());
         m_homePageToggle.onValueChanged.AddListener((isOn) => {
@@ -60,7 +58,7 @@ public class WeatherInfo : MonoBehaviour
     
     string ComposeUrl()
     {
-        string finalApiUrl = m_apiUrl.Replace("{lat}", m_lat).Replace("{lon}", m_lon).Replace("{API_key}", m_appid);
+        string finalApiUrl = $"{m_apiEndpoint}?lat={m_lat}&lon={m_lon}&units=metric&cnt=6&appid={m_appid}";
         //Debug.Log("The completed url is: " + finalApiUrl);
         return finalApiUrl;
     }

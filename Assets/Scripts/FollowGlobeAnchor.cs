@@ -4,7 +4,7 @@ using static Unity.Mathematics.math;
 using UnityEngine;
 
 /// <summary>
-/// This component will update it's onw GlobeAnchor's longitude and latitude values to match the
+/// This component will update it's own GlobeAnchor's longitude and latitude values to match the
 /// longitude/latitude of a target globe anchor. The height is not sync'd with the target globe anchor.
 /// </summary>
 [RequireComponent(typeof(CesiumGlobeAnchor))]
