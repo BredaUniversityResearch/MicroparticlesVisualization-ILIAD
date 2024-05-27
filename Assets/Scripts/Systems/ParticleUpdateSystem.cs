@@ -1,5 +1,6 @@
 ﻿using CesiumForUnity;
 using Unity.Burst;
+using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -8,8 +9,6 @@ using static Unity.Mathematics.math;
 [BurstCompile]
 public partial struct ParticlePositioningSystem : ISystem
 {
-    private EntityQuery query;
-
     [BurstCompile]
     public void OnCreate(ref SystemState a_state)
     {
@@ -52,7 +51,7 @@ public partial struct ParticlePositioningSystem : ISystem
     }
 }
 
-[BurstCompile]
+[BurstCompile, WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
 public partial struct PositionParticleJob : IJobEntity
 {
     public float Time;
