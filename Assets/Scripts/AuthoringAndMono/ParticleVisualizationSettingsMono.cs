@@ -1,5 +1,6 @@
 using Unity.Entities;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class ParticleVisualizationSettingsMono : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class ParticleVisualizationSettingsMono : MonoBehaviour
                 m_particlePrefab = GetEntity(authoring.m_particlePrefab, TransformUsageFlags.None),
                 m_colourIndex = customDropdownGroup.m_colourIndex,
                 m_darknessIndex = customDropdownGroup.m_darknessIndex,
+                m_sizeDepthFilter = new float4(float.NegativeInfinity, float.PositiveInfinity, -150f, 0f),
+                m_typeFilter = int.MaxValue
             });
         }
     }

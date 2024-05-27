@@ -1,5 +1,6 @@
 ﻿using CesiumForUnity;
 using Unity.Burst;
+using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -8,8 +9,6 @@ using static Unity.Mathematics.math;
 [BurstCompile]
 public partial struct ParticlePositioningSystem : ISystem
 {
-    private EntityQuery query;
-
     [BurstCompile]
     public void OnCreate(ref SystemState a_state)
     {
@@ -26,10 +25,12 @@ public partial struct ParticlePositioningSystem : ISystem
     {
         Entity particleTimingEnt = SystemAPI.GetSingletonEntity<ParticleTimingData>();
         Entity abstractMapDataEnt = SystemAPI.GetSingletonEntity<AbstractMapData>();
-        ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
+
+		ParticleTimingAspect particleTimingAspect = SystemAPI.GetAspect<ParticleTimingAspect>(particleTimingEnt);
         AbstractMapData abstractMapData = SystemAPI.GetComponent<AbstractMapData>(abstractMapDataEnt);
         ParticleVisualizationSettingsData particleVisualizationSettingsData = SystemAPI.GetComponent<ParticleVisualizationSettingsData>(SystemAPI.GetSingletonEntity<ParticleVisualizationSettingsData>());
-        float time = particleTimingAspect.IndexAtTime(abstractMapData.timelineValue * particleTimingAspect.TotalTime);
+
+		float time = particleTimingAspect.IndexAtTime(abstractMapData.timelineValue * particleTimingAspect.TotalTime);
 
         new PositionParticleJob
         {
@@ -37,18 +38,20 @@ public partial struct ParticlePositioningSystem : ISystem
             ECEFtoLocal = abstractMapData.ECEFMatrix,
             CameraHeight = abstractMapData.cameraHeight,
             ParticleSize = abstractMapData.particleSize,
-            ParticleMinSize = abstractMapData.particleMinSize,            
-            //TODO: Implement type info within abstractMapData.
-            //ParticleType = abstractMapData.particleType,
+            ParticleMinSize = abstractMapData.particleMinSize,
+            SizeDepthFilter = particleVisualizationSettingsData.m_sizeDepthFilter,
+            TypeFilter = particleVisualizationSettingsData.m_typeFilter,
+			//TODO: Implement type info within abstractMapData.
+			//ParticleType = abstractMapData.particleType,
 
-            ParticleColour = particleVisualizationSettingsData.m_colourIndex,
+			ParticleColour = particleVisualizationSettingsData.m_colourIndex,
             ParticleDarkness = particleVisualizationSettingsData.m_darknessIndex
 
         }.ScheduleParallel();
     }
 }
 
-[BurstCompile]
+[BurstCompile, WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
 public partial struct PositionParticleJob : IJobEntity
 {
     public float Time;
@@ -58,6 +61,8 @@ public partial struct PositionParticleJob : IJobEntity
     public float ParticleMinSize;
     public int ParticleColour;
     public int ParticleDarkness;
+    public float4 SizeDepthFilter;
+    public int TypeFilter;
 
     [BurstCompile]
     private void Execute(ParticleUpdateAspect a_particle)
@@ -89,7 +94,9 @@ public partial struct PositionParticleJob : IJobEntity
         }
 
         SetPositionAndScale(a_particle);
-    }
+        a_particle.ApplyFilter(Time, SizeDepthFilter, TypeFilter);
+
+	}
 
     [BurstCompile]
     private void SetDepthColour(ParticleUpdateAspect a_particle)
@@ -141,7 +148,8 @@ public partial struct PositionParticleJob : IJobEntity
 
     }
 
-    private void SetPositionAndScale(ParticleUpdateAspect a_particle)
+	//[BurstCompile]
+	private void SetPositionAndScale(ParticleUpdateAspect a_particle)
     {
         // Get the particle position in longitude/latitude/depth values.
         var pos = a_particle[Time];
