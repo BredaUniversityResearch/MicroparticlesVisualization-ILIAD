@@ -1,10 +1,8 @@
 ﻿using System;
 using Unity.Entities;
-using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
-using UnityEngine.UIElements;
 using static Unity.Mathematics.math;
 
 public readonly partial struct ParticleUpdateAspect : IAspect
