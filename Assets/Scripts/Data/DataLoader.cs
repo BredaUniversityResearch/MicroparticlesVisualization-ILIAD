@@ -5,6 +5,8 @@ using Unity.Entities;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -12,11 +14,19 @@ public class DataLoader : MonoBehaviour
 {
     static DataLoader m_instance;
 
+    // Used to query the current timeline value of the particles.
+    private AbstractMapInterface m_MapInterface;
+
+    // An entity query that is used to query particle data.
+    private EntityQuery m_ParticleDataEntityQuery;
+
     private int m_nextRequestIndex = -1;
     private bool m_isLoading;
 
     public event Action m_onLoadStartEvent;
     public event Action<bool> m_onLoadEndEvent;
+    // This event is fired when particles are ready. The arguments to the action are the longitude, latitude and height of the center point of the particles.
+    public event Action<float3> m_onParticlesReadyEvent;
 
     public bool IsLoading => m_isLoading;
 
@@ -47,7 +57,19 @@ public class DataLoader : MonoBehaviour
             return;
         }
         m_instance = this;
+
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        // Query for all entities that have a ParticleProperties component.
+        // It's better to define the query once and reuse it when we need the particle data.
+        m_ParticleDataEntityQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<ParticleProperties>());
+
         DontDestroyOnLoad(gameObject);
+    }
+
+    void Start()
+    {
+        // There should be a component in the scene for controlling the particle simulation time.
+        m_MapInterface = FindObjectOfType<AbstractMapInterface>();
     }
 
     void OnLoadStart()
@@ -239,7 +261,9 @@ public class DataLoader : MonoBehaviour
 				m_timePerIndex = 0.5f //TODO: set this
 			});
 		}
-	}
+
+        StartCoroutine(WaitForParticles());
+    }
 
     void SetParticleSpawnData(DataSet a_data)
     {
@@ -332,6 +356,8 @@ public class DataLoader : MonoBehaviour
 				m_timePerIndex = 0.5f //TODO: set this
 			});
 		}
+
+        StartCoroutine(WaitForParticles());
     }
 
     public void UpdateParticleVisualizationSettingsData(int a_colourIndex, int a_darknessIndex)
@@ -360,6 +386,59 @@ public class DataLoader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Query for the center point of the particles in the scene.
+    /// </summary>
+    /// <param name="longitudeLatitudeHeight"></param>
+    /// <returns>true if query succeeded, false if there were no particles to query.</returns>
+    public bool GetParticlesCenterPoint(ref float3 longitudeLatitudeHeight)
+    {
+        // If there are no particles loaded yet, return false.
+        if (m_ParticleDataEntityQuery.IsEmpty)
+        {
+            return false;
+        }
+
+        // Particles are loaded...
+
+        float3 minPosition = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
+        float3 maxPosition = new float3(float.MinValue, float.MinValue, float.MinValue);
+
+        var particleProperties = m_ParticleDataEntityQuery.ToComponentDataArray<ParticleProperties>(Allocator.Temp);
+
+        // Compute the current index to query based on the current time value of the timeline view
+        // and the number of values in the particle properties.
+        int index = m_MapInterface ? (int)(m_MapInterface.timelineTestValue * particleProperties[0].Value.Value.m_lons.Length) : 0;
+
+        foreach (var p in particleProperties)
+        {
+            float3 pos = float3(p.Value.Value.m_lons[index], p.Value.Value.m_lats[index], p.Value.Value.m_depths[index]);
+            minPosition = min(minPosition, pos);
+            maxPosition = max(maxPosition, pos);
+        }
+
+        particleProperties.Dispose();
+
+        longitudeLatitudeHeight = (minPosition + maxPosition) / 2.0f;
+
+        return true;
+    }
+
+    /// <summary>
+    /// This co-routine waits for the particles to be available in the Entities world and fires
+    /// an event when they are loaded.
+    /// </summary>
+    IEnumerator WaitForParticles()
+    {
+        float3 longitudeLatitudeDepth = new float3();
+
+        while (!GetParticlesCenterPoint(ref longitudeLatitudeDepth))
+        {
+            yield return null;
+        }
+
+        m_onParticlesReadyEvent?.Invoke(longitudeLatitudeDepth);
+    }
 
     void FlushParticles()
     {
