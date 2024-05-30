@@ -72,10 +72,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75665d4e0806f8b43ba1f90826dbeea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_toggleEntry: {fileID: 0}
+  m_toggleEntry: {fileID: 3806595511214766873}
   m_infoToggle: {fileID: 1308900570910075417}
   m_toggleEntryVisual: {fileID: 0}
-  m_infoButtonVisual: {fileID: 0}
+  m_infoToggleVisual: {fileID: 0}
+  m_canvasOutliner: {fileID: 0}
 --- !u!1 &3169885541848330887
 GameObject:
   m_ObjectHideFlags: 0
