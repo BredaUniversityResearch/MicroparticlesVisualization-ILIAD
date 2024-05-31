@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
-/// This script will populate the widgets on the home screen when particle data is available.
+/// This script will populate the widgets on the home screen when particle data is available for the first time.
 /// </summary>
 public class PopulateWidget : MonoBehaviour
 {
