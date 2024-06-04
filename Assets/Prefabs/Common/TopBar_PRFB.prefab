@@ -281,6 +281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_mapInformationToggle: {fileID: 757076375880196290}
   m_timeViewToggle: {fileID: 8744891815420627476}
+  m_legendToggle: {fileID: 0}
   m_externalDataWindow: {fileID: 0}
   m_mapInformationWindow: {fileID: 0}
   m_legendWindow: {fileID: 0}
@@ -397,7 +398,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: App Title
+  m_text: GeoViz
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 18cee9760efcb4e4492ca32ba61f5acc, type: 2}
   m_sharedMaterial: {fileID: 7939425901369369162, guid: 18cee9760efcb4e4492ca32ba61f5acc,
