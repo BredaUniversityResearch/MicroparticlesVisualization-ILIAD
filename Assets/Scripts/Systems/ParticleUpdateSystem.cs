@@ -101,6 +101,8 @@ public partial struct PositionParticleJob : IJobEntity
     [BurstCompile]
     private void SetDepthColour(ParticleUpdateAspect a_particle)
     {
+        a_particle.Darkness = 1f;
+
         // Get the particle position in longitude/latitude/depth values.
         var pos = a_particle[Time];
 
