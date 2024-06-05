@@ -134,6 +134,9 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private CharacterController characterController;
 
+    [SerializeField]
+    private bool showDebugGizmo = false;
+
     #endregion
 
     void ConfigureInputs()
@@ -654,7 +657,7 @@ public class CameraController : MonoBehaviour
     {
         Gizmos.color = Color.red;
         //        Gizmos.DrawSphere(previousMousePosition, 100);
-        if (georeference != null)
+        if (showDebugGizmo && georeference != null)
         {
             var p = georeference.TransformEarthCenteredEarthFixedPositionToUnity(previousMousePositionECEF);
             var o = georeference.TransformEarthCenteredEarthFixedPositionToUnity(double3.zero);
