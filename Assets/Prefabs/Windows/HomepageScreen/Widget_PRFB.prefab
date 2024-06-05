@@ -242,7 +242,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 6 September
+  m_text: Date
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 26fada9d2c102e84a95a856f74d61958, type: 2}
   m_sharedMaterial: {fileID: 3251825312225276567, guid: 26fada9d2c102e84a95a856f74d61958,
@@ -377,7 +377,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Trondheim
+  m_text: Location
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 26fada9d2c102e84a95a856f74d61958, type: 2}
   m_sharedMaterial: {fileID: 3251825312225276567, guid: 26fada9d2c102e84a95a856f74d61958,
@@ -512,7 +512,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "14\xB0"
+  m_text: "0.0\xB0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 26fada9d2c102e84a95a856f74d61958, type: 2}
   m_sharedMaterial: {fileID: 3251825312225276567, guid: 26fada9d2c102e84a95a856f74d61958,
@@ -647,7 +647,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cloudy
+  m_text: Weather
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 26fada9d2c102e84a95a856f74d61958, type: 2}
   m_sharedMaterial: {fileID: 3251825312225276567, guid: 26fada9d2c102e84a95a856f74d61958,
@@ -1262,7 +1262,7 @@ PrefabInstance:
     - target: {fileID: 1067872736810417590, guid: 7aa01c425a252774f878e366ec8a8545,
         type: 3}
       propertyPath: m_text
-      value: 61%
+      value: 0%
       objectReference: {fileID: 0}
     - target: {fileID: 2126305299928084179, guid: 7aa01c425a252774f878e366ec8a8545,
         type: 3}
@@ -1433,7 +1433,7 @@ PrefabInstance:
     - target: {fileID: 5188876317850958157, guid: e5ac200e2bd57f344a25c53e84e47eff,
         type: 3}
       propertyPath: m_text
-      value: "15\xB0C"
+      value: "0\xB0C"
       objectReference: {fileID: 0}
     - target: {fileID: 5490030774706516538, guid: e5ac200e2bd57f344a25c53e84e47eff,
         type: 3}
@@ -1725,7 +1725,7 @@ PrefabInstance:
     - target: {fileID: 1067872736810417590, guid: 7aa01c425a252774f878e366ec8a8545,
         type: 3}
       propertyPath: m_text
-      value: 14 km/h
+      value: 0 km/h
       objectReference: {fileID: 0}
     - target: {fileID: 2126305299928084179, guid: 7aa01c425a252774f878e366ec8a8545,
         type: 3}
@@ -1896,7 +1896,7 @@ PrefabInstance:
     - target: {fileID: 5188876317850958157, guid: e5ac200e2bd57f344a25c53e84e47eff,
         type: 3}
       propertyPath: m_text
-      value: "16\xB0C"
+      value: "0\xB0C"
       objectReference: {fileID: 0}
     - target: {fileID: 5490030774706516538, guid: e5ac200e2bd57f344a25c53e84e47eff,
         type: 3}
