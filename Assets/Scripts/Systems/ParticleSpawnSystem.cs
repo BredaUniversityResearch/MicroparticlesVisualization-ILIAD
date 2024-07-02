@@ -52,54 +52,6 @@ public partial class ParticleSpawnSystem : SystemBase
 			ecbSystem.AddJobHandleForProducer(jobHandle);
 		}
 	}
-
-	//public void OnUpdate(ref SystemState a_state)
-	//{
-	//	a_state.Enabled = false;
-
-	//	Entity settingsEntity = SystemAPI.GetSingletonEntity<ParticleSpawnData>();
-	//	RefRO<ParticleSpawnData> spawnData = SystemAPI.GetComponentRO<ParticleSpawnData>(settingsEntity);
-	//	RefRO<ParticleVisualizationSettingsData> visualizationData = SystemAPI.GetComponentRO<ParticleVisualizationSettingsData>(settingsEntity);
-	//	var ecb = new EntityCommandBuffer(Allocator.Temp);
-
-	//	int i = 0;
-	//	while (i < spawnData.ValueRO.m_lats.Length)
-	//	{
-	//		Entity newParticle = ecb.Instantiate(visualizationData.ValueRO.m_particlePrefab);
-	//		LocalTransform newTransform = new LocalTransform
-	//		{
-	//			Position = float3.zero,
-	//			Rotation = quaternion.identity,
-	//			Scale = 0.0001f
-	//		};
-	//		ecb.SetComponent(newParticle, newTransform);
-
-	//		BlobBuilder builder = new BlobBuilder(Allocator.Temp);
-	//		ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
-	//		var depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, spawnData.ValueRO.m_entriesPerParticle);
-	//		var latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, spawnData.ValueRO.m_entriesPerParticle);
-	//		var lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, spawnData.ValueRO.m_entriesPerParticle);
-
-	//		for (var j = 0; j < spawnData.ValueRO.m_entriesPerParticle; j++)
-	//		{
-	//			depthArrayBuilder[j] = spawnData.ValueRO.m_depths[i + j];
-	//			latArrayBuilder[j] = spawnData.ValueRO.m_lats[i + j];
-	//			lonArrayBuilder[j] = spawnData.ValueRO.m_lons[i + j];
-	//		}
-
-	//		var blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
-	//		ecb.AddComponent(newParticle, new ParticleProperties
-	//		{
-	//			Value = blobAsset
-	//		});
-	//		builder.Dispose();
-	//		//Important note: the created blob assets are not currently disposed
-
-	//		i += spawnData.ValueRO.m_entriesPerParticle;
-	//	}
-	//	ecb.RemoveComponent<ParticleSpawnData>(settingsEntity);
-	//	ecb.Playback(a_state.EntityManager);
-	//}
 }
 
 [BurstCompile]
@@ -131,6 +83,8 @@ public partial struct SpawnParticleJob : IJobParallelFor
 		var depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, m_entriesPerParticle);
 		var latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, m_entriesPerParticle);
 		var lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, m_entriesPerParticle);
+		var sizeArrayBuilder = builder.Allocate(ref ppBlob.m_sizes, 1);
+		var typeArrayBuilder = builder.Allocate(ref ppBlob.m_types, 1);
 
 		for (var j = 0; j < m_entriesPerParticle; j++)
 		{
@@ -138,6 +92,8 @@ public partial struct SpawnParticleJob : IJobParallelFor
 			latArrayBuilder[j] = m_spawnData.Value.m_lats[a_index * m_entriesPerParticle + j];
 			lonArrayBuilder[j] = m_spawnData.Value.m_lons[a_index * m_entriesPerParticle + j];
 		}
+		sizeArrayBuilder[0] = m_spawnData.Value.m_sizes[a_index];
+		typeArrayBuilder[0] = m_spawnData.Value.m_types[a_index];
 
 		var blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
 		m_ecb.AddComponent(a_index, newParticle, new ParticleProperties
@@ -145,7 +101,6 @@ public partial struct SpawnParticleJob : IJobParallelFor
 			Value = blobAsset
 		});
 		builder.Dispose();
-		//Debug.Log($"Thread {a_index} complete");
 		//Important note: the created blob assets are not currently disposed, apply cleanup tags
 	}
 }

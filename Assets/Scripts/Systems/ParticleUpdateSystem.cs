@@ -41,9 +41,6 @@ public partial struct ParticlePositioningSystem : ISystem
             ParticleMinSize = abstractMapData.particleMinSize,
             SizeDepthFilter = particleVisualizationSettingsData.m_sizeDepthFilter,
             TypeFilter = particleVisualizationSettingsData.m_typeFilter,
-			//TODO: Implement type info within abstractMapData.
-			//ParticleType = abstractMapData.particleType,
-
 			ParticleColour = particleVisualizationSettingsData.m_colourIndex,
             ParticleDarkness = particleVisualizationSettingsData.m_darknessIndex
 

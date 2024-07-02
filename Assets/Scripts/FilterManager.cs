@@ -25,6 +25,7 @@ public class FilterManager : MonoBehaviour
 
 	[SerializeField] FilterRange m_depthFilter;
 	[SerializeField] FilterRange m_sizeFilter;
+	[SerializeField] CategoryFilter m_typeFilter;
 
 	private void Awake()
 	{
@@ -35,14 +36,13 @@ public class FilterManager : MonoBehaviour
 		m_instance = this;
 		m_depthFilter.m_onValueChangedCallback = OnDepthSizeFilterChanged;
 		m_sizeFilter.m_onValueChangedCallback = OnDepthSizeFilterChanged;
-		//TODO: deal with particle type toggles
 	}
 
-	public void SetFilterRanges(float a_depthMin, float a_depthMax, float a_sizeMin, float a_sizeMax, string[] a_types)
+	public void SetFilterRanges(float a_depthMin, float a_depthMax, float a_sizeMin, float a_sizeMax, List<string> a_types)
 	{
 		m_depthFilter.SetAvailableRange(a_depthMin, a_depthMax, true);
 		m_sizeFilter.SetAvailableRange(a_sizeMin, a_sizeMax, true);
-		//TODO: deal with particle type toggles
+		m_typeFilter.SetFilters(a_types, OnDepthSizeFilterChanged);
 	}
 
 	void OnDepthSizeFilterChanged()
@@ -67,6 +67,7 @@ public class FilterManager : MonoBehaviour
 			settingsData.m_sizeDepthFilter = new Unity.Mathematics.float4(
 				m_sizeFilter.SelectedRangeMin, m_sizeFilter.SelectedRangeMax,
 				m_depthFilter.SelectedRangeMin, m_depthFilter.SelectedRangeMax);
+			settingsData.m_typeFilter = m_typeFilter.CurrentFilter;
 
 			entityManager.SetComponentData(settingsEntity, settingsData);
 		}

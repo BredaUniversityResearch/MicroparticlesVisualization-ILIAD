@@ -12,7 +12,7 @@ public struct ParticlePropertiesBlob
 	public BlobArray<float> m_lons;
     public BlobArray<float> m_lats;
 	public BlobArray<float> m_depths;
-    //public float m_size;
-    //public int m_type;
+    public BlobArray<float> m_sizes;
+    public BlobArray<int> m_types;
 }
 
