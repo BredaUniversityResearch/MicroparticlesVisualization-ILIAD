@@ -114,58 +114,6 @@ public partial struct PositionParticleJob : IJobEntity
         return (float)a_particle.ParticleType / (float)(NumberTypes-1);
     }
 
-    //[BurstCompile]
-    //private void SetDepthColour(ParticleUpdateAspect a_particle)
-    //{
-    //    a_particle.Darkness = 1f;
-
-    //    // Get the particle position in longitude/latitude/depth values.
-    //    var pos = ;
-
-    //    float b = 1f - pow(abs(pos.z) / 100f, 2);
-
-    //    a_particle.ColourGradient = b;
-    //}
-
-    //[BurstCompile]
-    //private void SetDepthDarkness(ParticleUpdateAspect a_particle)
-    //{
-    //    a_particle.ColourGradient = 1f;
-
-    //    var pos = a_particle[Time];
-
-    //    float b = 1f - pow(abs(pos.z) / 100f, 2);
-
-    //    b = 0.1f + b * 0.9f;
-
-    //    a_particle.Darkness = b;
-    //}
-    
-    //[BurstCompile]
-    //private void SetTypeColour(ParticleUpdateAspect a_particle)
-    //{
-    //    //TODO: Set the colour based on the particle type.
-    //    //This will use the rainbow gradient.
-    //}
-
-    //[BurstCompile]
-    //private void SetTypeDarkness(ParticleUpdateAspect a_particle)
-    //{
-
-    //}
-    
-    //[BurstCompile]
-    //private void SetSizeColour(ParticleUpdateAspect a_particle)
-    //{
-
-    //}
-
-    //[BurstCompile]
-    //private void SetSizeDarkness(ParticleUpdateAspect a_particle)
-    //{
-
-    //}
-
 	//[BurstCompile]
 	private void SetPositionAndScale(ParticleUpdateAspect a_particle)
     {

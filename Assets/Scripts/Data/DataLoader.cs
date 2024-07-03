@@ -170,21 +170,21 @@ public class DataLoader : MonoBehaviour
 		}
 
 		try
-        {
-            DataSet ds = DataSet.Open(a_filePath);
+		{
+			DataSet ds = DataSet.Open(a_filePath);
 			SetParticleSpawnData(ds);
             success = true;
-        }
-        catch (Exception ex)
-        {
-            Debug.Log($"Error reading NetCDF file: {ex.Message}");
-        }
-        finally
+		}
+		catch (Exception ex)
 		{
-            a_completedCallback?.Invoke(success);
-            OnLoadEnd(success);
-        }
-    }
+			Debug.Log($"Error reading NetCDF file: {ex.Message}");
+		}
+		finally
+		{
+			a_completedCallback?.Invoke(success);
+			OnLoadEnd(success);
+		}
+	}
 
     public void LoadNCDFURL(string a_url, Action<bool> a_completedCallback)
     {
