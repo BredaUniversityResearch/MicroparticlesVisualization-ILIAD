@@ -11,20 +11,13 @@ public class LoadParticlesOnStart : MonoBehaviour
 
     bool m_initialized;
 
-    //float m_timePassed = 10f;
 
     public void Update()
     {
-        //m_timePassed += Time.deltaTime;
-        //if(m_timePassed > 5f)
-        //{
-        //    m_timePassed = 0f;
-        //    DataLoader.Instance.LoadNCDFFile(Application.dataPath + "/Data/sintefset.nc", OnLoadComplete);
-        //}
 		if (m_initialized)
 			return;
 		m_initialized = true;
-		DataLoader.Instance.LoadNCDFFile(Application.dataPath + "/Data/sintefset.nc", OnLoadComplete);
+		//DataLoader.Instance.LoadNCDFFile(Application.dataPath + "/Data/sintefset.nc", OnLoadComplete);
     }
 
     void OnLoadComplete(bool a_success)

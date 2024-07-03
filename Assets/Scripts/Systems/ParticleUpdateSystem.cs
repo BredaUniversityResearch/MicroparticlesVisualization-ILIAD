@@ -42,8 +42,8 @@ public partial struct ParticlePositioningSystem : ISystem
             SizeDepthFilter = particleVisualizationSettingsData.m_sizeDepthFilter,
             TypeFilter = particleVisualizationSettingsData.m_typeFilter,
 			ParticleColour = particleVisualizationSettingsData.m_colourIndex,
-            ParticleDarkness = particleVisualizationSettingsData.m_darknessIndex
-
+            ParticleDarkness = particleVisualizationSettingsData.m_darknessIndex,
+            NumberTypes = particleVisualizationSettingsData.m_numberTypes
         }.ScheduleParallel();
     }
 }
@@ -60,6 +60,7 @@ public partial struct PositionParticleJob : IJobEntity
     public int ParticleDarkness;
     public float4 SizeDepthFilter;
     public int TypeFilter;
+    public int NumberTypes;
 
     [BurstCompile]
     private void Execute(ParticleUpdateAspect a_particle)
@@ -67,26 +68,26 @@ public partial struct PositionParticleJob : IJobEntity
         switch(ParticleColour)
         {
             case 0:
-                SetTypeColour(a_particle);
+                a_particle.ColourGradient = GetTypeT(a_particle);
                 break;
             case 1:
-                SetSizeColour(a_particle);
+                a_particle.ColourGradient = GetSizeT(a_particle);
                 break;
             case 2:
-                SetDepthColour(a_particle);
+                a_particle.ColourGradient = GetDepthT(a_particle);
                 break;
         }
 
         switch(ParticleDarkness)
         {
             case 0:
-                SetTypeDarkness(a_particle);
+                a_particle.Darkness = GetTypeT(a_particle);
                 break;
             case 1:
-                SetSizeDarkness(a_particle);
+                a_particle.Darkness = GetSizeT(a_particle);
                 break;
             case 2:
-                SetDepthDarkness(a_particle);
+                a_particle.Darkness = GetDepthT(a_particle);
                 break;
         }
 
@@ -96,56 +97,74 @@ public partial struct PositionParticleJob : IJobEntity
 	}
 
     [BurstCompile]
-    private void SetDepthColour(ParticleUpdateAspect a_particle)
-    {
-        a_particle.Darkness = 1f;
-
-        // Get the particle position in longitude/latitude/depth values.
-        var pos = a_particle[Time];
-
-        float b = 1f - pow(abs(pos.z) / 100f, 2);
-
-        a_particle.ColourGradient = b;
+    private float GetDepthT(ParticleUpdateAspect a_particle)
+	{
+        return (a_particle[Time].z - SizeDepthFilter[2]) / (SizeDepthFilter[3] - SizeDepthFilter[2]);
     }
 
     [BurstCompile]
-    private void SetDepthDarkness(ParticleUpdateAspect a_particle)
+    private float GetSizeT(ParticleUpdateAspect a_particle)
     {
-        a_particle.ColourGradient = 1f;
-
-        var pos = a_particle[Time];
-
-        float b = 1f - pow(abs(pos.z) / 100f, 2);
-
-        b = 0.1f + b * 0.9f;
-
-        a_particle.Darkness = b;
+        return (a_particle.ParticleSize - SizeDepthFilter[2]) / (SizeDepthFilter[3] - SizeDepthFilter[2]);
     }
+
+    [BurstCompile]
+    private float GetTypeT(ParticleUpdateAspect a_particle)
+    {
+        return (float)a_particle.ParticleType / (float)(NumberTypes-1);
+    }
+
+    //[BurstCompile]
+    //private void SetDepthColour(ParticleUpdateAspect a_particle)
+    //{
+    //    a_particle.Darkness = 1f;
+
+    //    // Get the particle position in longitude/latitude/depth values.
+    //    var pos = ;
+
+    //    float b = 1f - pow(abs(pos.z) / 100f, 2);
+
+    //    a_particle.ColourGradient = b;
+    //}
+
+    //[BurstCompile]
+    //private void SetDepthDarkness(ParticleUpdateAspect a_particle)
+    //{
+    //    a_particle.ColourGradient = 1f;
+
+    //    var pos = a_particle[Time];
+
+    //    float b = 1f - pow(abs(pos.z) / 100f, 2);
+
+    //    b = 0.1f + b * 0.9f;
+
+    //    a_particle.Darkness = b;
+    //}
     
-    [BurstCompile]
-    private void SetTypeColour(ParticleUpdateAspect a_particle)
-    {
-        //TODO: Set the colour based on the particle type.
-        //This will use the rainbow gradient.
-    }
+    //[BurstCompile]
+    //private void SetTypeColour(ParticleUpdateAspect a_particle)
+    //{
+    //    //TODO: Set the colour based on the particle type.
+    //    //This will use the rainbow gradient.
+    //}
 
-    [BurstCompile]
-    private void SetTypeDarkness(ParticleUpdateAspect a_particle)
-    {
+    //[BurstCompile]
+    //private void SetTypeDarkness(ParticleUpdateAspect a_particle)
+    //{
 
-    }
+    //}
     
-    [BurstCompile]
-    private void SetSizeColour(ParticleUpdateAspect a_particle)
-    {
+    //[BurstCompile]
+    //private void SetSizeColour(ParticleUpdateAspect a_particle)
+    //{
 
-    }
+    //}
 
-    [BurstCompile]
-    private void SetSizeDarkness(ParticleUpdateAspect a_particle)
-    {
+    //[BurstCompile]
+    //private void SetSizeDarkness(ParticleUpdateAspect a_particle)
+    //{
 
-    }
+    //}
 
 	//[BurstCompile]
 	private void SetPositionAndScale(ParticleUpdateAspect a_particle)

@@ -277,6 +277,9 @@ public class DataLoader : MonoBehaviour
 		}
 		Entity root = query.GetSingletonEntity();
 
+        foreach(var v in a_data.Variables)
+            Debug.Log(v);
+
 		// Get the variables 'lon', 'lat', 'z', 'particle_size_distribution', 'particle_classification'
 		Array lon = a_data["lon"].GetData();
         Array lat = a_data["lat"].GetData();
@@ -293,14 +296,14 @@ public class DataLoader : MonoBehaviour
 		}
 
 
-        int dataAmount = lon.GetLength(0) * lon.GetLength(1);
+        int dataAmount = numberParticles * entriesPerParticle;
         BlobBuilder builder = new BlobBuilder(Allocator.Temp);
         ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
         BlobBuilderArray<float> depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, dataAmount);
         BlobBuilderArray<float> latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, dataAmount);
         BlobBuilderArray<float> lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, dataAmount);
-        BlobBuilderArray<float> sizeArrayBuilder = builder.Allocate(ref ppBlob.m_sizes, dataAmount);
-        BlobBuilderArray<int> typeArrayBuilder = builder.Allocate(ref ppBlob.m_types, dataAmount);
+        BlobBuilderArray<float> sizeArrayBuilder = builder.Allocate(ref ppBlob.m_sizes, numberParticles);
+        BlobBuilderArray<int> typeArrayBuilder = builder.Allocate(ref ppBlob.m_types, numberParticles);
         Dictionary<string, int> typesDict = new Dictionary<string, int>();
         List<string> typesList = new List<string>();
 

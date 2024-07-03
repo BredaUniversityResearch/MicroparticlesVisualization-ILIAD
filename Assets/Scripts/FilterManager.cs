@@ -27,6 +27,8 @@ public class FilterManager : MonoBehaviour
 	[SerializeField] FilterRange m_sizeFilter;
 	[SerializeField] CategoryFilter m_typeFilter;
 
+	List<string> m_types;
+
 	private void Awake()
 	{
 		if(m_instance != null && m_instance != this)
@@ -43,6 +45,8 @@ public class FilterManager : MonoBehaviour
 		m_depthFilter.SetAvailableRange(a_depthMin, a_depthMax, true);
 		m_sizeFilter.SetAvailableRange(a_sizeMin, a_sizeMax, true);
 		m_typeFilter.SetFilters(a_types, OnDepthSizeFilterChanged);
+		m_types = a_types;
+		OnDepthSizeFilterChanged();
 	}
 
 	void OnDepthSizeFilterChanged()
@@ -68,6 +72,7 @@ public class FilterManager : MonoBehaviour
 				m_sizeFilter.SelectedRangeMin, m_sizeFilter.SelectedRangeMax,
 				m_depthFilter.SelectedRangeMin, m_depthFilter.SelectedRangeMax);
 			settingsData.m_typeFilter = m_typeFilter.CurrentFilter;
+			settingsData.m_numberTypes = m_types == null ? 0 : m_types.Count;
 
 			entityManager.SetComponentData(settingsEntity, settingsData);
 		}

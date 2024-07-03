@@ -29,7 +29,7 @@ public class CategoryFilter : MonoBehaviour
 		}
 		m_entries = new List<CategoryFilterEntry>(a_categories.Count);
 		m_currentFilter = int.MaxValue;
-		for (int i = 0 i < a_categories.Count; i++)
+		for (int i = 0; i < a_categories.Count; i++)
 		{
 			CategoryFilterEntry newEntry = GameObject.Instantiate(m_entryPrefab, m_entryParent).GetComponent<CategoryFilterEntry>();
 			int index = i;
