@@ -12,22 +12,26 @@ public class FilterRange : MonoBehaviour
 	[SerializeField] Slider m_minSlider;
 	[SerializeField] Slider m_maxSlider;
 	[SerializeField] RectTransform m_sliderFill;
+	[SerializeField] TextMeshProUGUI m_unit;
 
 	float m_availableRangeMin;
 	float m_availableRangeMax;
 	bool m_ignoreCallbacks;
 	float m_selectedRangeMin;
 	float m_selectedRangeMax;
+	float m_unitMultiplier;
 
 	public Action m_onValueChangedCallback;
-	public float SelectedRangeMin => m_selectedRangeMin;
-	public float SelectedRangeMax => m_selectedRangeMax;
+	public float SelectedRangeMin => m_selectedRangeMin / m_unitMultiplier;
+	public float SelectedRangeMax => m_selectedRangeMax / m_unitMultiplier;
 
-	public void SetAvailableRange(float a_min, float a_max, bool m_setRangeToMinMax = false)
+	public void SetAvailableRange(float a_min, float a_max, string a_unit = "m", float a_unitMultiplier = 1f, bool m_setRangeToMinMax = false)
 	{
 		m_ignoreCallbacks = true;
-		m_availableRangeMin = a_min;
-		m_availableRangeMax = a_max;
+		m_unit.text = a_unit;
+		m_unitMultiplier = a_unitMultiplier;
+		m_availableRangeMin = a_min * a_unitMultiplier;
+		m_availableRangeMax = a_max * a_unitMultiplier;
 		m_minSlider.minValue = m_availableRangeMin;
 		m_minSlider.maxValue = m_availableRangeMax;
 		m_maxSlider.minValue = m_availableRangeMin;
@@ -129,9 +133,9 @@ public class FilterRange : MonoBehaviour
 
 	void UpdateRangeDisplay()
 	{
-		m_minInput.text = m_selectedRangeMin.ToString("N1");
+		m_minInput.text = m_selectedRangeMin.ToString("N2");
 		m_minSlider.value = m_selectedRangeMin;
-		m_maxInput.text = m_selectedRangeMax.ToString("N1");
+		m_maxInput.text = m_selectedRangeMax.ToString("N2");
 		m_maxSlider.value = m_selectedRangeMax;
 		m_sliderFill.anchorMin = new Vector2(m_minSlider.normalizedValue, 0f);
 		m_sliderFill.anchorMax = new Vector2(m_maxSlider.normalizedValue, 1f);

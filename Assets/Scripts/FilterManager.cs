@@ -42,8 +42,8 @@ public class FilterManager : MonoBehaviour
 
 	public void SetFilterRanges(float a_depthMin, float a_depthMax, float a_sizeMin, float a_sizeMax, List<string> a_types)
 	{
-		m_depthFilter.SetAvailableRange(a_depthMin, a_depthMax, true);
-		m_sizeFilter.SetAvailableRange(a_sizeMin, a_sizeMax, true);
+		m_depthFilter.SetAvailableRange(a_depthMin, a_depthMax, "m", 1f, true);
+		m_sizeFilter.SetAvailableRange(a_sizeMin, a_sizeMax, "mm", 1000f, true);
 		m_typeFilter.SetFilters(a_types, OnDepthSizeFilterChanged);
 		m_types = a_types;
 		OnDepthSizeFilterChanged();
