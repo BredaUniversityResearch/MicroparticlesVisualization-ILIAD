@@ -8,4 +8,5 @@ public struct ParticleVisualizationSettingsData : IComponentData
 	public int m_darknessIndex;
 	public float4 m_sizeDepthFilter; //[sizemin, sizemax, depthmin, depthmax]
 	public int m_typeFilter; //type bitmask
+	public int m_numberTypes;
 }

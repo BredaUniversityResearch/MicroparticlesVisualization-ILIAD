@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Microsoft.Research.Science.Data;
 using Unity.Entities;
 using Unity.Collections;
@@ -169,21 +170,21 @@ public class DataLoader : MonoBehaviour
 		}
 
 		try
-        {
-            DataSet ds = DataSet.Open(a_filePath);
+		{
+			DataSet ds = DataSet.Open(a_filePath);
 			SetParticleSpawnData(ds);
             success = true;
-        }
-        catch (Exception ex)
-        {
-            Debug.Log($"Error reading NetCDF file: {ex.Message}");
-        }
-        finally
+		}
+		catch (Exception ex)
 		{
-            a_completedCallback?.Invoke(success);
-            OnLoadEnd(success);
-        }
-    }
+			Debug.Log($"Error reading NetCDF file: {ex.Message}");
+		}
+		finally
+		{
+			a_completedCallback?.Invoke(success);
+			OnLoadEnd(success);
+		}
+	}
 
     public void LoadNCDFURL(string a_url, Action<bool> a_completedCallback)
     {
@@ -223,7 +224,7 @@ public class DataLoader : MonoBehaviour
             latArrayBuilder[i] = a_data.lats[i];
             lonArrayBuilder[i] = a_data.lons[i];
         }
-        FilterManager.Instance.SetFilterRanges(depthMin, depthMax, 0f, 100f, new string[] { "Copepods", "Oil Droplets", "Microplastics"});
+        FilterManager.Instance.SetFilterRanges(depthMin, depthMax, 0f, 100f, new List<string>() { "Copepods", "Oil Droplets", "Microplastics"});
 
 		BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
 		if (entityManager.HasComponent<ParticleSpawnData>(root))
@@ -276,14 +277,17 @@ public class DataLoader : MonoBehaviour
 		}
 		Entity root = query.GetSingletonEntity();
 
+        foreach(var v in a_data.Variables)
+            Debug.Log(v);
+
 		// Get the variables 'lon', 'lat', 'z', 'particle_size_distribution', 'particle_classification'
 		Array lon = a_data["lon"].GetData();
         Array lat = a_data["lat"].GetData();
         Array z = a_data["z"].GetData();
-        //Array particleSizeDistribution = ds["particle_size_distribution"].GetData();
-        //Array particleClassification = ds["particle_classification"].GetData();
+		Array diameter = a_data["particulate_diameter"].GetData();
+		Array types = a_data["particulate_class"].GetData();
 
-        int numberParticles = lat.GetLength(0);
+		int numberParticles = lat.GetLength(0);
         int entriesPerParticle = lat.GetLength(1);
         if (lon.GetLength(1) != entriesPerParticle || entriesPerParticle != z.GetLength(1))
         {
@@ -292,20 +296,27 @@ public class DataLoader : MonoBehaviour
 		}
 
 
-        int dataAmount = lon.GetLength(0) * lon.GetLength(1);
+        int dataAmount = numberParticles * entriesPerParticle;
         BlobBuilder builder = new BlobBuilder(Allocator.Temp);
         ref ParticlePropertiesBlob ppBlob = ref builder.ConstructRoot<ParticlePropertiesBlob>();
         BlobBuilderArray<float> depthArrayBuilder = builder.Allocate(ref ppBlob.m_depths, dataAmount);
         BlobBuilderArray<float> latArrayBuilder = builder.Allocate(ref ppBlob.m_lats, dataAmount);
         BlobBuilderArray<float> lonArrayBuilder = builder.Allocate(ref ppBlob.m_lons, dataAmount);
+        BlobBuilderArray<float> sizeArrayBuilder = builder.Allocate(ref ppBlob.m_sizes, numberParticles);
+        BlobBuilderArray<int> typeArrayBuilder = builder.Allocate(ref ppBlob.m_types, numberParticles);
+        Dictionary<string, int> typesDict = new Dictionary<string, int>();
+        List<string> typesList = new List<string>();
 
 		float depthMin = float.MaxValue;
 		float depthMax = float.MinValue;
-		int index = 0;
+        float sizeMin = float.MaxValue;
+        float sizeMax = float.MinValue;
+        int index = 0;
         for (int i = 0; i < numberParticles; i++)
         {
             for (int j = 0; j < entriesPerParticle; j++)
             {
+                //z, lat, lon
 				float depth = (float)z.GetValue(i, j);
 				if (depth < depthMin)
 					depthMin = depth;
@@ -316,8 +327,29 @@ public class DataLoader : MonoBehaviour
                 lonArrayBuilder[index] = (float)lon.GetValue(i, j);
                 index++;
             }
+
+            //Size
+            float size = (float)diameter.GetValue(i, 0);
+            if (size < sizeMin)
+                sizeMin = size;
+            if (size > sizeMax)
+                sizeMax = size;
+            sizeArrayBuilder[i] = size;
+
+            //Type
+            string type = (string)types.GetValue(i, 0);
+            if (typesDict.TryGetValue(type, out var t))
+            {
+                typeArrayBuilder[i] = t;
+            }
+            else
+            {
+                typeArrayBuilder[i] = typesDict.Count;
+                typesDict.Add(type, typesDict.Count);
+                typesList.Add(type);
+            }
         }
-		FilterManager.Instance.SetFilterRanges(depthMin, depthMax, 0f, 100f, new string[] { "Copepods", "Oil Droplets", "Microplastics" });
+		FilterManager.Instance.SetFilterRanges(depthMin, depthMax, sizeMin, sizeMax, typesList);
 
 		BlobAssetReference<ParticlePropertiesBlob> blobAsset = builder.CreateBlobAssetReference<ParticlePropertiesBlob>(Allocator.Persistent);
 		

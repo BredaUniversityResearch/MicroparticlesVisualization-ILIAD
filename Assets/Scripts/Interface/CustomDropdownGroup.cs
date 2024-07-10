@@ -8,97 +8,74 @@ public class CustomDropdownGroup : MonoBehaviour
     [SerializeField]
     List<CustomDropdown> m_dropdowns;
 
-    [SerializeField]
-    List<GameObject> m_legendDropdowns;
+    [SerializeField] LegendDisplay m_colourLegend;
+    [SerializeField] LegendDisplay m_darknessLegend;
 
-    public int m_colourIndex, m_darknessIndex = -1;
+    public int m_colourIndex = -1;
+    public int m_darknessIndex = -1;
+    bool m_ignoreCallback;
 
     private void Awake()
     {
-        foreach (CustomDropdown dropdown in m_dropdowns)
+        for(int i = 0; i < m_dropdowns.Count; i++)
         {
-            dropdown.onValueChanged.AddListener((b) => { CheckDropdowns(b, dropdown); UpdateIndices(b, dropdown); });
+            int index = i;
+			m_dropdowns[i].onValueChanged.AddListener((b) => 
+            { 
+                UpdateIndices(b, index); 
+            });
         }
     }
 
-    public void CheckDropdowns(int a_dropdownValue, CustomDropdown a_dropdown)
+    public void UpdateIndices(int a_dropdownValue, int a_dropdownIndex)
     {
-        foreach (CustomDropdown otherDropdown in m_dropdowns)
-        {
-            if (otherDropdown != a_dropdown)
-            {
-                if(a_dropdownValue == otherDropdown.value)
-                {
-                    otherDropdown.value = 0;
-                }
-            }
-        }
-    }
+        if (m_ignoreCallback)
+            return;
 
-    public void UpdateIndices(int a_dropdownValue, CustomDropdown a_dropdown)
-    {
         if(a_dropdownValue == 0)
         {
-            ClearLegendEntry(m_dropdowns.IndexOf(a_dropdown));
+			if (m_colourIndex == a_dropdownIndex)
+			{
+				m_colourIndex = -1;
+			}
+			if (m_darknessIndex == a_dropdownIndex)
+			{
+				m_darknessIndex = -1;
+			}
         }
         if (a_dropdownValue == 1) // Colour
         {
-            if(m_darknessIndex == m_dropdowns.IndexOf(a_dropdown))
+            if(m_colourIndex != -1 && m_colourIndex != a_dropdownIndex)
+            {
+                m_ignoreCallback = true;
+                m_dropdowns[m_colourIndex].value = 0;
+				m_ignoreCallback = false;
+            }
+
+            if(m_darknessIndex == a_dropdownIndex)
             {
                 m_darknessIndex = -1;
-                ClearLegendEntry(m_dropdowns.IndexOf(a_dropdown));
             }
-            m_colourIndex = m_dropdowns.IndexOf(a_dropdown);
-
-            UpdateLegendWindow(m_dropdowns.IndexOf(a_dropdown), a_dropdownValue);
+            m_colourIndex = a_dropdownIndex;
         }
         else if (a_dropdownValue == 2) // Darkness
         {
-            if (m_colourIndex == m_dropdowns.IndexOf(a_dropdown))
+			if (m_darknessIndex != -1 && m_darknessIndex != a_dropdownIndex)
+			{
+				m_ignoreCallback = true;
+				m_dropdowns[m_darknessIndex].value = 0;
+				m_ignoreCallback = false;
+			}
+
+			if (m_colourIndex == a_dropdownIndex)
             {
                 m_colourIndex = -1;
-            }
-            m_darknessIndex = m_dropdowns.IndexOf(a_dropdown);
-
-            UpdateLegendWindow(m_dropdowns.IndexOf(a_dropdown), a_dropdownValue);
+			}
+            m_darknessIndex = a_dropdownIndex;
         }
+        m_colourLegend.DisplayValuesChanged(m_colourIndex);
+        m_darknessLegend.DisplayValuesChanged(m_darknessIndex);
 
-        DataLoader.Instance.UpdateParticleVisualizationSettingsData(m_colourIndex, m_darknessIndex);
-    }
-
-    private void UpdateLegendWindow(int a_categoryIndex, int a_legendValue)
-    {
-        if(!m_legendDropdowns[a_categoryIndex].gameObject.activeSelf)
-        {
-            //Type/Size/Depth Dropdown
-            m_legendDropdowns[a_categoryIndex].SetActive(true);
-
-            //Colour/Darkness Dropdown
-            m_legendDropdowns[a_categoryIndex].transform.GetChild(1).GetChild(a_legendValue - 1).gameObject.SetActive(true);
-        }
-        else
-        {
-            m_legendDropdowns[a_categoryIndex].transform.GetChild(1).GetChild(a_legendValue - 1).gameObject.SetActive(true);
-
-            switch(a_legendValue)
-            {
-                case 1:
-                    m_legendDropdowns[a_categoryIndex].transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
-                    break;
-                case 2:
-                    m_legendDropdowns[a_categoryIndex].transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-                    break;
-                default:
-                    break;
-            }
-        }        
-    }
-
-    private void ClearLegendEntry(int a_categoryIndex)
-    {
-        m_legendDropdowns[a_categoryIndex].transform.GetChild(1).GetChild(0).gameObject.SetActive(false);
-        m_legendDropdowns[a_categoryIndex].transform.GetChild(1).GetChild(1).gameObject.SetActive(false);
-
-        m_legendDropdowns[a_categoryIndex].SetActive(false);
+		DataLoader.Instance.UpdateParticleVisualizationSettingsData(m_colourIndex, m_darknessIndex);
     }
 }

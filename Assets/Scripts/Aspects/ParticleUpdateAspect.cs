@@ -50,6 +50,16 @@ public readonly partial struct ParticleUpdateAspect : IAspect
         }
     }
 
+    public float ParticleSize
+    {
+        get => m_particleProperties.ValueRO.Value.Value.m_sizes[0];
+    }
+
+    public int ParticleType
+    {
+        get => m_particleProperties.ValueRO.Value.Value.m_types[0];
+    }
+
     public float3 Position
     {
         get => m_transform.ValueRO.Position;
@@ -86,9 +96,9 @@ public readonly partial struct ParticleUpdateAspect : IAspect
             m_particleProperties.ValueRO.Value.Value.m_depths[idx1],
             alpha);
 
-        //TODO: also filter by type and size
-
-		bool filter = a_sizeDepthFilter[2] <= depthAtT && a_sizeDepthFilter[3] >= depthAtT;
+        bool filter = a_sizeDepthFilter[2] <= depthAtT && a_sizeDepthFilter[3] >= depthAtT
+            && a_sizeDepthFilter[0] <= ParticleSize && a_sizeDepthFilter[1] >= ParticleSize &&
+            (a_typeFilter & (1 << ParticleType)) != 0;
         m_meshInfo.ValueRW = filter;
 	}
 }
