@@ -1052,6 +1052,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1620756108646656835}
   - component: {fileID: 323073206802675839}
+  - component: {fileID: 4464276273924329794}
   m_Layer: 5
   m_Name: LeftBar_PRFB
   m_TagString: Untagged
@@ -1091,6 +1092,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3371564876725926580}
   m_CullTransparentMesh: 1
+--- !u!114 &4464276273924329794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3371564876725926580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b461d65c0333254cb6f1c14de9e5660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_objectsActiveAfterLoad:
+  - {fileID: 3503160429510911219}
+  - {fileID: 2077249718164761338}
+  - {fileID: 7935782196255263926}
+  - {fileID: 3530385857759419284}
 --- !u!1 &3503160429510911219
 GameObject:
   m_ObjectHideFlags: 0
@@ -5456,6 +5474,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 4629387928899155832}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3530385857759419284 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8124653091167661292, guid: bbb71692ab0a3234f8136533f15b9fa0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4629387928899155832}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &4933701904235022636 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 308184823201742420, guid: bbb71692ab0a3234f8136533f15b9fa0,
@@ -7777,6 +7801,12 @@ PrefabInstance:
       addedObject: {fileID: 3781158342893493352}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ccfc622397f9dd4b80b6c0e90347d21, type: 3}
+--- !u!1 &2077249718164761338 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8364909198505371154, guid: 8ccfc622397f9dd4b80b6c0e90347d21,
+    type: 3}
+  m_PrefabInstance: {fileID: 7549720743600377064}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2437584034732514797 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5265260777821425925, guid: 8ccfc622397f9dd4b80b6c0e90347d21,

@@ -117,21 +117,22 @@ PrefabInstance:
         type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5635056557442321498, guid: 96ecb6b2373e51744bfc70512087cefb,
+        type: 3}
     - target: {fileID: 5635056557442321498, guid: 96ecb6b2373e51744bfc70512087cefb,
         type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5635056557442321498, guid: 96ecb6b2373e51744bfc70512087cefb,
         type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 102
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5635056557442321498, guid: 96ecb6b2373e51744bfc70512087cefb,
         type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5635056557442321498, guid: 96ecb6b2373e51744bfc70512087cefb,
         type: 3}
@@ -397,7 +398,7 @@ PrefabInstance:
     - target: {fileID: 8572409532672916133, guid: 96ecb6b2373e51744bfc70512087cefb,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
-      value: No filter
+      value: No visualisation
       objectReference: {fileID: 0}
     - target: {fileID: 8572409532672916133, guid: 96ecb6b2373e51744bfc70512087cefb,
         type: 3}

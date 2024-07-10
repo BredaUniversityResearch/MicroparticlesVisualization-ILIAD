@@ -29,6 +29,11 @@ public class FilterManager : MonoBehaviour
 
 	List<string> m_types;
 
+	public Vector2 SizeFilter => new Vector2(m_sizeFilter.SelectedRangeMin, m_sizeFilter.SelectedRangeMax);
+	public Vector2 DepthFilter => new Vector2(m_depthFilter.SelectedRangeMin, m_depthFilter.SelectedRangeMax);
+	public List<string> Types => m_types;
+	public event Action m_onFiltersChangedCallback;
+
 	private void Awake()
 	{
 		if(m_instance != null && m_instance != this)
@@ -76,6 +81,7 @@ public class FilterManager : MonoBehaviour
 
 			entityManager.SetComponentData(settingsEntity, settingsData);
 		}
+		m_onFiltersChangedCallback?.Invoke();
 	}
 }
 

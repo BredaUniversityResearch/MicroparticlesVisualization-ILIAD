@@ -76,7 +76,11 @@ public partial struct PositionParticleJob : IJobEntity
             case 2:
                 a_particle.ColourGradient = GetDepthT(a_particle);
                 break;
-        }
+            default:
+                a_particle.ColourGradient = 1f;
+                break;
+
+		}
 
         switch(ParticleDarkness)
         {
@@ -89,7 +93,10 @@ public partial struct PositionParticleJob : IJobEntity
             case 2:
                 a_particle.Darkness = GetDepthT(a_particle);
                 break;
-        }
+			default:
+				a_particle.Darkness = 1f;
+				break;
+		}
 
         SetPositionAndScale(a_particle);
         a_particle.ApplyFilter(Time, SizeDepthFilter, TypeFilter);
@@ -105,7 +112,7 @@ public partial struct PositionParticleJob : IJobEntity
     [BurstCompile]
     private float GetSizeT(ParticleUpdateAspect a_particle)
     {
-        return (a_particle.ParticleSize - SizeDepthFilter[2]) / (SizeDepthFilter[3] - SizeDepthFilter[2]);
+        return (a_particle.ParticleSize - SizeDepthFilter[0]) / (SizeDepthFilter[1] - SizeDepthFilter[0]);
     }
 
     [BurstCompile]
