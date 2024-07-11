@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 using TMPro;
 
@@ -32,11 +32,11 @@ public class FirstSetup : MonoBehaviour
             m_setupApiButton.GetComponentInChildren<TextMeshProUGUI>().text = PlayerPrefs.GetString(APIEndpoint);
         }
 
-        if(EditorApplication.isPlaying)
+        /*if(EditorApplication.isPlaying)
         {
             // Instantiate your prefab here
             InstantiatePrefab();
-        }
+        }*/
     }
 
     private void InstantiatePrefab()
